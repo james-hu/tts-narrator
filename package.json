@@ -1,0 +1,30 @@
+{
+  "name": "tts-narrator",
+  "version": "1.0.0",
+  "description": "Generate narration with Text-To-Speech technology",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/james-hu/tts-narrator.git"
+  },
+  "keywords": [
+    "tts",
+    "narrator",
+    "narration",
+    "slides",
+    "pptx",
+    "powerpoint"
+  ],
+  "author": "James Hu",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/james-hu/tts-narrator/issues"
+  },
+  "homepage": "https://github.com/james-hu/tts-narrator#readme",
+  "devDependencies": {
+    "@handy-common-utils/dev-dependencies": "^1.0.14"
+  }
+}
