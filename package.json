@@ -2,10 +2,24 @@
   "name": "tts-narrator",
   "version": "1.0.0",
   "description": "Generate narration with Text-To-Speech technology",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "mocha"
+    "pretest": "eslint . --ext .ts",
+    "test": "nyc mocha",
+    "prepare": "shx rm -rf dist && tsc && es-check",
+    "preversion": "generate-api-docs-and-update-readme && git add README.md"
   },
+  "devDependencies": {
+    "@handy-common-utils/dev-dependencies": "^1.0.16"
+  },
+  "files": [
+    "package.json",
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "homepage": "https://github.com/james-hu/tts-narrator#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/james-hu/tts-narrator.git"
@@ -22,9 +36,5 @@
   "license": "UNLICENSED",
   "bugs": {
     "url": "https://github.com/james-hu/tts-narrator/issues"
-  },
-  "homepage": "https://github.com/james-hu/tts-narrator#readme",
-  "devDependencies": {
-    "@handy-common-utils/dev-dependencies": "^1.0.14"
   }
 }
