@@ -10,7 +10,7 @@
     "pretest": "eslint . --ext .ts",
     "test": "nyc mocha",
     "prepare": "shx rm -rf dist && tsc && es-check",
-    "preversion": "generate-api-docs-and-update-readme && git add README.md"
+    "disabled_preversion": "generate-api-docs-and-update-readme && git add README.md"
   },
   "devDependencies": {
     "@handy-common-utils/dev-dependencies": "^1.0.16",
