@@ -1,0 +1,49 @@
+settings:
+  voice:
+    name: voice name
+    language: en-US
+chapters:
+  - key: chapter1
+    sections:
+      - key: section 1
+        paragraphs:
+          - settings:
+              name: voice name2
+            text: This is the text for the first paragraph of the first section of the first chapter
+          - settings:
+              name: voice name3
+            text: This is the text for the second paragraph of the first section of the first chapter
+          - text: This is the text for the third paragraph of the first section of the first chapter
+  - key: chapter2
+    sections:
+      - key: section 1 of chapter 2
+        paragraphs:
+          - settings:
+              name: voice name2
+            text: This is the text for the first paragraph of the first section of the second chapter
+          - text: This is the text for the second paragraph of the first section of the second chapter
+          - text: This is the text for the third paragraph of the first section of the second chapter
+      - key: section 2 of chapter 2
+        paragraphs:
+          - text: |-
+              This is the first line.
+              This is the second line.
+
+
+              There are two blank lines above.
+          - text: single line text
+          - text: |-
+              First line.
+
+
+
+              Second line.
+                Third line has two speces indent.
+      - key: section 3 of chapter 2
+        paragraphs:
+          - text: p1 of s3 of c2
+  - key: chapter3
+    sections:
+      - key: section 1 of chapter 3
+        paragraphs:
+          - text: p1 of s1 of c3
