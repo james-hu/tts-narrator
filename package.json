@@ -10,14 +10,14 @@
     "pretest": "eslint . --ext .ts",
     "test": "nyc mocha",
     "prepare": "shx rm -rf dist && tsc && es-check",
-    "disabled_preversion": "generate-api-docs-and-update-readme && git add README.md"
+    "preversion": "generate-api-docs-and-update-readme && git add README.md"
   },
   "devDependencies": {
     "@handy-common-utils/dev-dependencies": "^1.0.16",
     "@types/js-yaml": "^4.0.3",
     "@types/lodash": "^4.14.172",
     "@types/node": "^10.17.60",
-    "typedoc-plugin-markdown": "^3.10.4"
+    "typedoc-plugin-markdown": "^3.7.1"
   },
   "files": [
     "package.json",
