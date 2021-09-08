@@ -3,6 +3,7 @@
   "version": "1.0.3",
   "description": "Generate narration with Text-To-Speech technology",
   "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
   "engines": {
     "node": ">=10"
   },
@@ -13,7 +14,7 @@
     "preversion": "generate-api-docs-and-update-readme && git add README.md"
   },
   "devDependencies": {
-    "@handy-common-utils/dev-dependencies": "^1.0.17",
+    "@handy-common-utils/dev-dependencies": "^1.0.18",
     "@types/js-yaml": "^4.0.3",
     "@types/lodash": "^4.14.172"
   },
