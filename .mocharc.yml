@@ -1,4 +1,5 @@
 spec:
   - test/**/*.spec.ts
+  - test/**/*.spec.int.ts
 require:
   - ts-node/register
