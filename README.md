@@ -14,10 +14,138 @@ tts-narrator
 
 #### Modules
 
+- [audio-utils](#modulesaudio_utilsmd)
+- [azure-tts-service](#modulesazure_tts_servicemd)
 - [index](#modulesindexmd)
 - [narration-script](#modulesnarration_scriptmd)
+- [tts-service](#modulestts_servicemd)
 
 ## Classes
+
+
+<a name="classesazure_tts_serviceazurettsservicemd"></a>
+
+[tts-narrator](#readmemd) / [azure-tts-service](#modulesazure_tts_servicemd) / AzureTtsService
+
+### Class: AzureTtsService
+
+[azure-tts-service](#modulesazure_tts_servicemd).AzureTtsService
+
+#### Hierarchy
+
+- [`BaseTtsService`](#classestts_servicebasettsservicemd)
+
+  ↳ **`AzureTtsService`**
+
+#### Table of contents
+
+##### Constructors
+
+- [constructor](#constructor)
+
+##### Methods
+
+- [generateAudio](#generateaudio)
+- [generateSSML](#generatessml)
+- [generateSsmlWithoutValidation](#generatessmlwithoutvalidation)
+- [validateXML](#validatexml)
+
+#### Constructors
+
+##### constructor
+
+• **new AzureTtsService**()
+
+###### Inherited from
+
+[BaseTtsService](#classestts_servicebasettsservicemd).[constructor](#constructor)
+
+#### Methods
+
+##### generateAudio
+
+▸ **generateAudio**(`ssml`, `options`): `Promise`<`any`\>
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `ssml` | `string` |
+| `options` | [`AzureAudioGenerationOptions`](#interfacesazure_tts_serviceazureaudiogenerationoptionsmd) |
+
+###### Returns
+
+`Promise`<`any`\>
+
+###### Overrides
+
+[BaseTtsService](#classestts_servicebasettsservicemd).[generateAudio](#generateaudio)
+
+___
+
+##### generateSSML
+
+▸ **generateSSML**(`paragraph`): `Promise`<`string`\>
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `paragraph` | [`NarrationParagraph`](#classesnarration_scriptnarrationparagraphmd) |
+
+###### Returns
+
+`Promise`<`string`\>
+
+###### Inherited from
+
+[BaseTtsService](#classestts_servicebasettsservicemd).[generateSSML](#generatessml)
+
+___
+
+##### generateSsmlWithoutValidation
+
+▸ `Protected` **generateSsmlWithoutValidation**(`paragraph`): `Object`
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `paragraph` | [`NarrationParagraph`](#classesnarration_scriptnarrationparagraphmd) |
+
+###### Returns
+
+`Object`
+
+| Name | Type |
+| :------ | :------ |
+| `lineOffset` | `number` |
+| `ssml` | `string` |
+
+###### Inherited from
+
+[BaseTtsService](#classestts_servicebasettsservicemd).[generateSsmlWithoutValidation](#generatessmlwithoutvalidation)
+
+___
+
+##### validateXML
+
+▸ `Protected` **validateXML**(`xml`, `lineOffset`): `void`
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `xml` | `string` |
+| `lineOffset` | `number` |
+
+###### Returns
+
+`void`
+
+###### Inherited from
+
+[BaseTtsService](#classestts_servicebasettsservicemd).[validateXML](#validatexml)
 
 
 <a name="classesnarration_scriptnarrationchaptermd"></a>
@@ -410,7 +538,169 @@ ___
 
 [Section](#interfacesnarration_scriptnarrationscriptfilesectionmd).[key](#key)
 
+
+<a name="classestts_servicebasettsservicemd"></a>
+
+[tts-narrator](#readmemd) / [tts-service](#modulestts_servicemd) / BaseTtsService
+
+### Class: BaseTtsService
+
+[tts-service](#modulestts_servicemd).BaseTtsService
+
+#### Hierarchy
+
+- **`BaseTtsService`**
+
+  ↳ [`AzureTtsService`](#classesazure_tts_serviceazurettsservicemd)
+
+#### Implements
+
+- [`TtsService`](#interfacestts_servicettsservicemd)
+
+#### Table of contents
+
+##### Constructors
+
+- [constructor](#constructor)
+
+##### Methods
+
+- [generateAudio](#generateaudio)
+- [generateSSML](#generatessml)
+- [generateSsmlWithoutValidation](#generatessmlwithoutvalidation)
+- [validateXML](#validatexml)
+
+#### Constructors
+
+##### constructor
+
+• **new BaseTtsService**()
+
+#### Methods
+
+##### generateAudio
+
+▸ **generateAudio**(`_ssml`, `_options`): `Promise`<`void`\>
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `_ssml` | `string` |
+| `_options` | [`AudioGenerationOptions`](#interfacestts_serviceaudiogenerationoptionsmd) |
+
+###### Returns
+
+`Promise`<`void`\>
+
+###### Implementation of
+
+[TtsService](#interfacestts_servicettsservicemd).[generateAudio](#generateaudio)
+
+___
+
+##### generateSSML
+
+▸ **generateSSML**(`paragraph`): `Promise`<`string`\>
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `paragraph` | [`NarrationParagraph`](#classesnarration_scriptnarrationparagraphmd) |
+
+###### Returns
+
+`Promise`<`string`\>
+
+###### Implementation of
+
+[TtsService](#interfacestts_servicettsservicemd).[generateSSML](#generatessml)
+
+___
+
+##### generateSsmlWithoutValidation
+
+▸ `Protected` **generateSsmlWithoutValidation**(`paragraph`): `Object`
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `paragraph` | [`NarrationParagraph`](#classesnarration_scriptnarrationparagraphmd) |
+
+###### Returns
+
+`Object`
+
+| Name | Type |
+| :------ | :------ |
+| `lineOffset` | `number` |
+| `ssml` | `string` |
+
+___
+
+##### validateXML
+
+▸ `Protected` **validateXML**(`xml`, `lineOffset`): `void`
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `xml` | `string` |
+| `lineOffset` | `number` |
+
+###### Returns
+
+`void`
+
 ## Interfaces
+
+
+<a name="interfacesazure_tts_serviceazureaudiogenerationoptionsmd"></a>
+
+[tts-narrator](#readmemd) / [azure-tts-service](#modulesazure_tts_servicemd) / AzureAudioGenerationOptions
+
+### Interface: AzureAudioGenerationOptions
+
+[azure-tts-service](#modulesazure_tts_servicemd).AzureAudioGenerationOptions
+
+#### Hierarchy
+
+- [`AudioGenerationOptions`](#interfacestts_serviceaudiogenerationoptionsmd)
+
+  ↳ **`AzureAudioGenerationOptions`**
+
+#### Table of contents
+
+##### Properties
+
+- [outputFilePath](#outputfilepath)
+- [serviceRegion](#serviceregion)
+- [subscriptionKey](#subscriptionkey)
+
+#### Properties
+
+##### outputFilePath
+
+• **outputFilePath**: `string`
+
+###### Inherited from
+
+[AudioGenerationOptions](#interfacestts_serviceaudiogenerationoptionsmd).[outputFilePath](#outputfilepath)
+
+___
+
+##### serviceRegion
+
+• `Optional` **serviceRegion**: `string`
+
+___
+
+##### subscriptionKey
+
+• `Optional` **subscriptionKey**: `string`
 
 
 <a name="interfacesnarration_scriptnarrationscriptfilechaptermd"></a>
@@ -589,7 +879,150 @@ ___
 
 • `Optional` **name**: `string`
 
+
+<a name="interfacestts_serviceaudiogenerationoptionsmd"></a>
+
+[tts-narrator](#readmemd) / [tts-service](#modulestts_servicemd) / AudioGenerationOptions
+
+### Interface: AudioGenerationOptions
+
+[tts-service](#modulestts_servicemd).AudioGenerationOptions
+
+#### Hierarchy
+
+- **`AudioGenerationOptions`**
+
+  ↳ [`AzureAudioGenerationOptions`](#interfacesazure_tts_serviceazureaudiogenerationoptionsmd)
+
+#### Table of contents
+
+##### Properties
+
+- [outputFilePath](#outputfilepath)
+
+#### Properties
+
+##### outputFilePath
+
+• **outputFilePath**: `string`
+
+
+<a name="interfacestts_servicettsservicemd"></a>
+
+[tts-narrator](#readmemd) / [tts-service](#modulestts_servicemd) / TtsService
+
+### Interface: TtsService
+
+[tts-service](#modulestts_servicemd).TtsService
+
+#### Implemented by
+
+- [`BaseTtsService`](#classestts_servicebasettsservicemd)
+
+#### Table of contents
+
+##### Methods
+
+- [generateAudio](#generateaudio)
+- [generateSSML](#generatessml)
+
+#### Methods
+
+##### generateAudio
+
+▸ **generateAudio**(`ssml`, `options`): `Promise`<`void`\>
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `ssml` | `string` |
+| `options` | [`AudioGenerationOptions`](#interfacestts_serviceaudiogenerationoptionsmd) |
+
+###### Returns
+
+`Promise`<`void`\>
+
+___
+
+##### generateSSML
+
+▸ **generateSSML**(`paragraph`): `Promise`<`string`\>
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `paragraph` | [`NarrationParagraph`](#classesnarration_scriptnarrationparagraphmd) |
+
+###### Returns
+
+`Promise`<`string`\>
+
 ## Modules
+
+
+<a name="modulesaudio_utilsmd"></a>
+
+[tts-narrator](#readmemd) / audio-utils
+
+### Module: audio-utils
+
+#### Table of contents
+
+##### Functions
+
+- [getAudioFileDuration](#getaudiofileduration)
+- [playMp3File](#playmp3file)
+
+#### Functions
+
+##### getAudioFileDuration
+
+▸ **getAudioFileDuration**(`filePath`): `Promise`<`number`\>
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `filePath` | `string` |
+
+###### Returns
+
+`Promise`<`number`\>
+
+___
+
+##### playMp3File
+
+▸ **playMp3File**(`filePath`): `Promise`<`void`\>
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `filePath` | `string` |
+
+###### Returns
+
+`Promise`<`void`\>
+
+
+<a name="modulesazure_tts_servicemd"></a>
+
+[tts-narrator](#readmemd) / azure-tts-service
+
+### Module: azure-tts-service
+
+#### Table of contents
+
+##### Classes
+
+- [AzureTtsService](#classesazure_tts_serviceazurettsservicemd)
+
+##### Interfaces
+
+- [AzureAudioGenerationOptions](#interfacesazure_tts_serviceazureaudiogenerationoptionsmd)
 
 
 <a name="modulesindexmd"></a>
@@ -758,4 +1191,22 @@ ___
 ###### Returns
 
 `Promise`<`void`\>
+
+
+<a name="modulestts_servicemd"></a>
+
+[tts-narrator](#readmemd) / tts-service
+
+### Module: tts-service
+
+#### Table of contents
+
+##### Classes
+
+- [BaseTtsService](#classestts_servicebasettsservicemd)
+
+##### Interfaces
+
+- [AudioGenerationOptions](#interfacestts_serviceaudiogenerationoptionsmd)
+- [TtsService](#interfacestts_servicettsservicemd)
 <!-- API end -->
