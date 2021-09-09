@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import { AzureTtsService } from '../src/azure-tts-service';
 import { getAudioFileDuration, playMp3File } from '../src/audio-utils';
 
-describe('azure-tts-service', () => {
+describe.skip('azure-tts-service', () => {
   const tts = new AzureTtsService();
   const outputFilePath = 'test/fixtures/tmp1.mp3';
 
