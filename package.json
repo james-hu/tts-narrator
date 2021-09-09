@@ -22,7 +22,7 @@
     "@types/lodash": "^4.14.172"
   },
   "dependencies": {
-    "@handy-common-utils/oclif-utils": "^1.0.3",
+    "@handy-common-utils/oclif-utils": "^1.0.4",
     "@handy-common-utils/promise-utils": "^1.1.1",
     "@oclif/command": "^1.8.0",
     "@oclif/config": "^1.17.0",
