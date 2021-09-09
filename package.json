@@ -2,8 +2,8 @@
   "name": "tts-narrator",
   "version": "1.0.4",
   "description": "Generate narration with Text-To-Speech technology",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "main": "dist/types.js",
+  "types": "dist/types.d.ts",
   "engines": {
     "node": ">=10"
   },
@@ -11,16 +11,22 @@
     "pretest": "eslint . --ext .ts",
     "test": "nyc mocha",
     "prepare": "shx rm -rf dist api-docs && tsc && es-check",
-    "preversion": "generate-api-docs-and-update-readme && git add README.md"
+    "preversion": "generate-api-docs-and-update-readme && ./bin/run --update-readme.md && git add README.md"
   },
   "devDependencies": {
     "@handy-common-utils/dev-dependencies": "^1.0.19",
+    "@oclif/dev-cli": "^1.26.0",
+    "@oclif/test": "^1.2.8",
     "@types/av": "^0.4.1",
     "@types/js-yaml": "^4.0.3",
     "@types/lodash": "^4.14.172"
   },
   "dependencies": {
+    "@handy-common-utils/oclif-utils": "^1.0.3",
     "@handy-common-utils/promise-utils": "^1.1.1",
+    "@oclif/command": "^1.8.0",
+    "@oclif/config": "^1.17.0",
+    "@oclif/plugin-help": "^3.2.3",
     "av": "^0.4.9",
     "fast-xml-parser": "^3.19.0",
     "js-yaml": "^4.1.0",
@@ -31,8 +37,15 @@
   },
   "files": [
     "package.json",
+    "bin",
     "dist"
   ],
+  "bin": {
+    "tts-narrator": "./bin/run"
+  },
+  "oclif": {
+    "bin": "tts-narrator"
+  },
   "publishConfig": {
     "access": "public"
   },
