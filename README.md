@@ -13,18 +13,17 @@ Generate narration with Text-To-Speech technology
 USAGE
   $ tts-narrator [FILE]
 
+ARGUMENTS
+  FILE  path to the script file (.yml)
+
 OPTIONS
-  -d, --debug
+  -d, --debug    output debug information
   -h, --help     show CLI help
   -v, --version  show CLI version
 
-EXAMPLES
-  tts-narrator -r ap-southeast-2 -s
-  tts-narrator -r ap-southeast-2 -s -i '*boi*' -i '*datahub*' \
-         -x '*jameshu*' -c
-  tts-narrator -r ap-southeast-2 -s -i '*lr-*' \
-         -i '*lead*' -x '*slack*' -x '*lead-prioritization*' \
-         -x '*lead-scor*' -x '*LeadCapture*' -c
+EXAMPLE
+  tts-narrator myscript.yml --play --interactive --service azure 
+  --subscription-key-env SUBSCRIPTION_KEY --region australiaeast
 ```
 
 <!-- help end -->
@@ -405,6 +404,7 @@ ___
 ##### Properties
 
 - [chapter](#chapter)
+- [index](#index)
 - [script](#script)
 - [sections](#sections)
 
@@ -420,13 +420,14 @@ ___
 
 ##### constructor
 
-• **new NarrationChapter**(`chapter`, `script`)
+• **new NarrationChapter**(`chapter`, `index`, `script`)
 
 ###### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `chapter` | [`Chapter`](#interfacesnarrationscriptfilechaptermd) |
+| `index` | `number` |
 | `script` | [`NarrationScript`](#classesnarrationscriptmd) |
 
 #### Properties
@@ -434,6 +435,12 @@ ___
 ##### chapter
 
 • `Protected` **chapter**: [`Chapter`](#interfacesnarrationscriptfilechaptermd)
+
+___
+
+##### index
+
+• **index**: `number`
 
 ___
 
@@ -501,12 +508,14 @@ ___
 ##### Properties
 
 - [chapter](#chapter)
+- [index](#index)
 - [paragraph](#paragraph)
 - [script](#script)
 - [section](#section)
 
 ##### Accessors
 
+- [key](#key)
 - [settings](#settings)
 - [text](#text)
 
@@ -514,13 +523,14 @@ ___
 
 ##### constructor
 
-• **new NarrationParagraph**(`paragraph`, `section`, `chapter`, `script`)
+• **new NarrationParagraph**(`paragraph`, `index`, `section`, `chapter`, `script`)
 
 ###### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `paragraph` | [`Paragraph`](#interfacesnarrationscriptfileparagraphmd) |
+| `index` | `number` |
 | `section` | [`NarrationSection`](#classesnarrationsectionmd) |
 | `chapter` | [`NarrationChapter`](#classesnarrationchaptermd) |
 | `script` | [`NarrationScript`](#classesnarrationscriptmd) |
@@ -530,6 +540,12 @@ ___
 ##### chapter
 
 • **chapter**: [`NarrationChapter`](#classesnarrationchaptermd)
+
+___
+
+##### index
+
+• **index**: `number`
 
 ___
 
@@ -550,6 +566,20 @@ ___
 • **section**: [`NarrationSection`](#classesnarrationsectionmd)
 
 #### Accessors
+
+##### key
+
+• `get` **key**(): `string`
+
+###### Returns
+
+`string`
+
+###### Implementation of
+
+[Paragraph](#interfacesnarrationscriptfileparagraphmd).[key](#key)
+
+___
 
 ##### settings
 
@@ -704,6 +734,7 @@ ___
 ##### Properties
 
 - [chapter](#chapter)
+- [index](#index)
 - [paragraphs](#paragraphs)
 - [script](#script)
 - [section](#section)
@@ -716,13 +747,14 @@ ___
 
 ##### constructor
 
-• **new NarrationSection**(`section`, `chapter`, `script`)
+• **new NarrationSection**(`section`, `index`, `chapter`, `script`)
 
 ###### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `section` | [`Section`](#interfacesnarrationscriptfilesectionmd) |
+| `index` | `number` |
 | `chapter` | [`NarrationChapter`](#classesnarrationchaptermd) |
 | `script` | [`NarrationScript`](#classesnarrationscriptmd) |
 
@@ -731,6 +763,12 @@ ___
 ##### chapter
 
 • **chapter**: [`NarrationChapter`](#classesnarrationchaptermd)
+
+___
+
+##### index
+
+• **index**: `number`
 
 ___
 
@@ -862,7 +900,7 @@ ___
 
 ##### key
 
-• **key**: `string`
+• `Optional` **key**: `string`
 
 ___
 
@@ -887,10 +925,17 @@ ___
 
 ##### Properties
 
+- [key](#key)
 - [settings](#settings)
 - [text](#text)
 
 #### Properties
+
+##### key
+
+• `Optional` **key**: `string`
+
+___
 
 ##### settings
 
@@ -958,7 +1003,7 @@ ___
 
 ##### key
 
-• **key**: `string`
+• `Optional` **key**: `string`
 
 ___
 
