@@ -19,6 +19,16 @@
     "@types/js-yaml": "^4.0.3",
     "@types/lodash": "^4.14.172"
   },
+  "dependencies": {
+    "@handy-common-utils/promise-utils": "^1.1.1",
+    "av": "^0.4.9",
+    "fast-xml-parser": "^3.19.0",
+    "js-yaml": "^4.1.0",
+    "lodash": "^4.17.21",
+    "microsoft-cognitiveservices-speech-sdk": "^1.18.1",
+    "mp3": "^0.1.0",
+    "speaker": "^0.5.3"
+  },
   "files": [
     "package.json",
     "dist"
@@ -43,15 +53,5 @@
   "license": "UNLICENSED",
   "bugs": {
     "url": "https://github.com/james-hu/tts-narrator/issues"
-  },
-  "dependencies": {
-    "@handy-common-utils/promise-utils": "^1.1.1",
-    "av": "^0.4.9",
-    "fast-xml-parser": "^3.19.0",
-    "js-yaml": "^4.1.0",
-    "lodash": "^4.17.21",
-    "microsoft-cognitiveservices-speech-sdk": "^1.18.1",
-    "mp3": "^0.1.0",
-    "speaker": "^0.5.3"
   }
 }
