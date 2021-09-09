@@ -1,5 +1,6 @@
 import { Command, flags } from '@oclif/command';
 import { CommandArgs, CommandFlags, CommandOptions, OclifUtils } from '@handy-common-utils/oclif-utils';
+import { CliProcessor } from './cli-processor';
 
 class TtsNarratorCli extends Command {
   static Options: CommandOptions<typeof TtsNarratorCli>;
@@ -9,18 +10,13 @@ class TtsNarratorCli extends Command {
     version: flags.version({ char: 'v' }),
     help: flags.help({ char: 'h' }),
     'update-readme.md': flags.boolean({ hidden: true, description: 'For developers only, don\'t use' }),
-    debug: flags.boolean({ char: 'd', name: 'debug' }),
+    debug: flags.boolean({ char: 'd', name: 'debug', description: 'output debug information' }),
   }
 
-  static args = [{ name: 'file' }];
+  static args = [{ name: 'file' as const, description: 'path to the script file (.yml)' }];
 
   static examples = [
-    '^ -r ap-southeast-2 -s',
-    `^ -r ap-southeast-2 -s -i '*boi*' -i '*datahub*' \\
-      -x '*jameshu*' -c`,
-    `^ -r ap-southeast-2 -s -i '*lr-*' \\
-      -i '*lead*' -x '*slack*' -x '*lead-prioritization*' \\
-      -x '*lead-scor*' -x '*LeadCapture*' -c`,
+    '^ myscript.yml --play --interactive --service azure --subscription-key-env SUBSCRIPTION_KEY --region australiaeast',
   ];
 
   protected async init(): Promise<any> {
@@ -31,15 +27,12 @@ class TtsNarratorCli extends Command {
   async run(argv?: string[]): Promise<void> {
     const options = this.parse<CommandFlags<typeof TtsNarratorCli>, CommandArgs<typeof TtsNarratorCli>>(TtsNarratorCli, argv);
     if (options.flags['update-readme.md']) {
-      OclifUtils.injectHelpTextIntoReadmeMd(this); // you need to have <!-- help start -->...<!-- help end --> in your README.md
+      OclifUtils.injectHelpTextIntoReadmeMd(this);
       return;
     }
 
-    if (options.flags.debug) {
-      console.log(`Command line: ${OclifUtils.reconstructCommandLine(this, options)}`);
-    }
-
-    console.log('Hello from TtsNarratorCli!');
+    const processor = new CliProcessor(options, OclifUtils.reconstructCommandLine(this, options));
+    await processor.run();
   }
 }
 

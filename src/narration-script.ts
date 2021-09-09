@@ -17,14 +17,15 @@ export interface ScriptSettings {
 export namespace NarrationScriptFile {
   export interface Paragraph {
     settings?: VoiceSettings;
+    key?: string;
     text: string;
   }
   export interface Section {
-    key: string;
+    key?: string;
     paragraphs: Paragraph[];
   }
   export interface Chapter {
-    key: string;
+    key?: string;
     sections: Section[];
   }
   export interface Script {
@@ -36,6 +37,7 @@ export namespace NarrationScriptFile {
 export class NarrationParagraph implements NarrationScriptFile.Paragraph {
   constructor(
     protected paragraph: NarrationScriptFile.Paragraph,
+    public index: number,
     public section: NarrationSection,
     public chapter: NarrationChapter,
     public script: NarrationScript,
@@ -43,6 +45,10 @@ export class NarrationParagraph implements NarrationScriptFile.Paragraph {
 
   get settings(): VoiceSettings {
     return ({ ...this.paragraph.settings, ...this.script.settings?.voice });
+  }
+
+  get key(): string {
+    return this.paragraph.key ?? String(this.index);
   }
 
   get text(): string {
@@ -54,14 +60,15 @@ export class NarrationSection implements NarrationScriptFile.Section {
 
   constructor(
     protected section: NarrationScriptFile.Section,
+    public index: number,
     public chapter: NarrationChapter,
     public script: NarrationScript,
   ) {
-    this.paragraphs = section.paragraphs.map(paragraph => new NarrationParagraph(paragraph, this, chapter, script));
+    this.paragraphs = section.paragraphs.map((paragraph, index) => new NarrationParagraph(paragraph, index + 1, this, chapter, script));
   }
 
   get key(): string {
-    return this.section.key;
+    return this.section.key ?? String(this.index);
   }
 }
 export class NarrationChapter implements NarrationScriptFile.Chapter {
@@ -70,13 +77,14 @@ export class NarrationChapter implements NarrationScriptFile.Chapter {
 
   constructor(
     protected chapter: NarrationScriptFile.Chapter,
+    public index: number,
     public script: NarrationScript,
   ) {
-    this.sections = chapter.sections.map(section => new NarrationSection(section, this, script));
+    this.sections = chapter.sections.map((section, index) => new NarrationSection(section, index + 1, this, script));
   }
 
   get key(): string {
-    return this.chapter.key;
+    return this.chapter.key ?? String(this.index);
   }
 
   getSectionByKey(key: string): NarrationSection | undefined {
@@ -94,7 +102,7 @@ export class NarrationScript implements NarrationScriptFile.Script {
     protected script: NarrationScriptFile.Script,
     public scriptFilePath: string,
   ) {
-    this.chapters = script.chapters.map(chapter => new NarrationChapter(chapter, this));
+    this.chapters = script.chapters.map((chapter, index) => new NarrationChapter(chapter, index + 1, this));
   }
 
   get settings(): ScriptSettings {
