@@ -1,3 +1,5 @@
+/* eslint-disable brace-style */
+/* eslint-disable max-statements-per-line */
 import * as stream from 'stream';
 import { timeoutReject } from '@handy-common-utils/promise-utils';
 import Speaker = require('speaker');
@@ -23,16 +25,17 @@ export function playMp3File(filePath: string): Promise<void> {
         // Write your buffer
         bufferStream.end(toBuffer(buffer));
 
-        bufferStream.on('end', () => resolve());
-        bufferStream.on('error', error => reject(error));
-
         // Pipe it to something else  (i.e. stdout)
-        bufferStream.pipe(new Speaker({
+        const speaker = new Speaker({
           channels: 1,
           bitDepth: 32,
           sampleRate: 16000,
           float: true,
-        } as Speaker.Options));
+        } as Speaker.Options);
+        bufferStream.pipe(speaker);
+        speaker.on('error', error => reject(error));
+        // speaker.on('end', () => { console.log('piped'); resolve(); });
+        speaker.on('close', () => resolve());
       });
     } catch (error) {
       reject(error);

@@ -1,5 +1,5 @@
 import { validate as validateXml } from 'fast-xml-parser';
-import { NarrationParagraph } from './narration-script';
+import { NarrationParagraph, VoiceSettings } from './narration-script';
 
 export interface AudioGenerationOptions {
   outputFilePath: string;
@@ -24,6 +24,10 @@ export abstract class BaseTtsService implements TtsService {
     }
   }
 
+  protected buildSpeakStartTag(voiceSettings: VoiceSettings): string {
+    return `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="${voiceSettings.language ?? 'en-US'}">`;
+  }
+
   protected generateSsmlWithoutValidation(paragraph: NarrationParagraph): {lineOffset: number, ssml: string} {
     const text = paragraph?.text?.trim();
     if (!text) {
@@ -38,7 +42,7 @@ export abstract class BaseTtsService implements TtsService {
     }
 
     const voiceSettings = paragraph.settings;
-    const speakStartTag = `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="${voiceSettings.language ?? 'en-US'}">`;
+    const speakStartTag = this.buildSpeakStartTag(voiceSettings);
     const speakEndTag = '</speak>';
 
     // <voice></voice> fragment

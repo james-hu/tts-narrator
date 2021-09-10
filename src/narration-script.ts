@@ -44,7 +44,7 @@ export class NarrationParagraph implements NarrationScriptFile.Paragraph {
   ) {}
 
   get settings(): VoiceSettings {
-    return ({ ...this.paragraph.settings, ...this.script.settings?.voice });
+    return ({ ...this.script.settings?.voice, ...this.paragraph.settings });
   }
 
   get key(): string {
