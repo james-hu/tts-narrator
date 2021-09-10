@@ -20,9 +20,40 @@ ARGUMENTS
   FILE  path to the script file (.yml)
 
 OPTIONS
-  -d, --debug    output debug information
-  -h, --help     show CLI help
-  -v, --version  show CLI version
+  -d, --debug                                  output debug information
+  -h, --help                                   show CLI help
+
+  -i, --interactive                            wait for key press before start
+                                               playing next paragraph
+
+  -k, --subscription-key=subscription-key      Azure Speech service subscription
+                                               key
+
+  -o, --overwrite                              always overwrite previously
+                                               generated audio files
+
+  -p, --[no-]play                              play generated audio
+
+  -r, --region=region                          region of the text-to-speech
+                                               service
+
+  -s, --service=azure                          text-to-speech service to use
+
+  -v, --version                                show CLI version
+
+  --chapters=chapters                          list of chapters to process,
+                                               examples: "1-10,13,15", "4-"
+
+  --dry-run                                    don't try to generate or play
+                                               audio
+
+  --sections=sections                          list of sections to process,
+                                               examples: "1-10,13,15", "5-"
+
+  --ssml                                       display generated SSML
+
+  --subscription-key-env=subscription-key-env  Name of the environment variable
+                                               that holds the subscription key
 
 EXAMPLE
   tts-narrator myscript.yml --play --interactive --service azure 
@@ -170,6 +201,7 @@ ___
 
 ##### Methods
 
+- [buildSpeakStartTag](#buildspeakstarttag)
 - [generateAudio](#generateaudio)
 - [generateSSML](#generatessml)
 - [generateSsmlWithoutValidation](#generatessmlwithoutvalidation)
@@ -186,6 +218,26 @@ ___
 [BaseTtsService](#classesbasettsservicemd).[constructor](#constructor)
 
 #### Methods
+
+##### buildSpeakStartTag
+
+▸ `Protected` **buildSpeakStartTag**(`voiceSettings`): `string`
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `voiceSettings` | [`VoiceSettings`](#interfacesvoicesettingsmd) |
+
+###### Returns
+
+`string`
+
+###### Overrides
+
+[BaseTtsService](#classesbasettsservicemd).[buildSpeakStartTag](#buildspeakstarttag)
+
+___
 
 ##### generateAudio
 
@@ -297,6 +349,7 @@ ___
 
 ##### Methods
 
+- [buildSpeakStartTag](#buildspeakstarttag)
 - [generateAudio](#generateaudio)
 - [generateSSML](#generatessml)
 - [generateSsmlWithoutValidation](#generatessmlwithoutvalidation)
@@ -309,6 +362,22 @@ ___
 • **new BaseTtsService**()
 
 #### Methods
+
+##### buildSpeakStartTag
+
+▸ `Protected` **buildSpeakStartTag**(`voiceSettings`): `string`
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `voiceSettings` | [`VoiceSettings`](#interfacesvoicesettingsmd) |
+
+###### Returns
+
+`string`
+
+___
 
 ##### generateAudio
 
