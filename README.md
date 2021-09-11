@@ -7,7 +7,7 @@ Generate narration with Text-To-Speech technology
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 
 
-This may be neededo on MacOS for avoiding `illegal hardware instruction` issue: `npm install speaker --mpg123-backend=openal`
+This may be needed on MacOS for avoiding `illegal hardware instruction` issue: `npm install speaker --mpg123-backend=openal`
 
 # CLI
 
