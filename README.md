@@ -25,8 +25,8 @@ OPTIONS
   -d, --debug                                  output debug information
   -h, --help                                   show CLI help
 
-  -i, --interactive                            wait for key press before start
-                                               playing next paragraph
+  -i, --interactive                            wait for key press before
+                                               entering each section
 
   -k, --subscription-key=subscription-key      Azure Speech service subscription
                                                key
