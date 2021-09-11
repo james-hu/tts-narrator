@@ -28,6 +28,10 @@ export abstract class BaseTtsService implements TtsService {
     return `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="${voiceSettings.language ?? 'en-US'}">`;
   }
 
+  protected buildVoiceStartTag(voiceSettings: VoiceSettings): string {
+    return `<voice name="${voiceSettings.name}">`;
+  }
+
   protected generateSsmlWithoutValidation(paragraph: NarrationParagraph): {lineOffset: number, ssml: string} {
     const text = paragraph?.text?.trim();
     if (!text) {
@@ -53,7 +57,7 @@ export abstract class BaseTtsService implements TtsService {
       return { lineOffset: 1, ssml: `${speakStartTag}\n${text}\n${speakEndTag}` };
     }
 
-    const voiceStartTag = `<voice name="${voiceSettings.name}">`;
+    const voiceStartTag = this.buildVoiceStartTag(voiceSettings);
     const voiceEndTag = '</voice>';
 
     // plain text or fragments containing other tags

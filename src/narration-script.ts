@@ -21,10 +21,12 @@ export namespace NarrationScriptFile {
     text: string;
   }
   export interface Section {
+    settings?: VoiceSettings;
     key?: string;
     paragraphs: Paragraph[];
   }
   export interface Chapter {
+    settings?: VoiceSettings;
     key?: string;
     sections: Section[];
   }
@@ -44,7 +46,7 @@ export class NarrationParagraph implements NarrationScriptFile.Paragraph {
   ) {}
 
   get settings(): VoiceSettings {
-    return ({ ...this.script.settings?.voice, ...this.paragraph.settings });
+    return ({ ...this.section.settings, ...this.paragraph.settings });
   }
 
   get key(): string {
@@ -67,6 +69,10 @@ export class NarrationSection implements NarrationScriptFile.Section {
     this.paragraphs = section.paragraphs.map((paragraph, index) => new NarrationParagraph(paragraph, index + 1, this, chapter, script));
   }
 
+  get settings(): VoiceSettings {
+    return ({ ...this.chapter.settings, ...this.section.settings });
+  }
+
   get key(): string {
     return this.section.key ?? String(this.index);
   }
@@ -81,6 +87,10 @@ export class NarrationChapter implements NarrationScriptFile.Chapter {
     public script: NarrationScript,
   ) {
     this.sections = chapter.sections.map((section, index) => new NarrationSection(section, index + 1, this, script));
+  }
+
+  get settings(): VoiceSettings {
+    return ({ ...this.script.settings?.voice, ...this.chapter.settings });
   }
 
   get key(): string {
