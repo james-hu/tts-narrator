@@ -34,6 +34,7 @@
     "microsoft-cognitiveservices-speech-sdk": "^1.18.1",
     "mp3": "^0.1.0",
     "multi-integer-range": "^4.0.9",
+    "murmurhash": "^2.0.0",
     "speaker": "^0.5.3"
   },
   "files": [

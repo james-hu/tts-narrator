@@ -1,6 +1,6 @@
 import { Command, flags } from '@oclif/command';
 import { CommandArgs, CommandFlags, CommandOptions, OclifUtils } from '@handy-common-utils/oclif-utils';
-import { CliProcessor, TtsServiceType } from './cli-processor';
+import { ScriptProcessor, TtsServiceType } from './script-processor';
 
 class TtsNarratorCli extends Command {
   static Options: CommandOptions<typeof TtsNarratorCli>;
@@ -46,7 +46,7 @@ class TtsNarratorCli extends Command {
       return;
     }
 
-    const processor = new CliProcessor(options, OclifUtils.reconstructCommandLine(this, options));
+    const processor = new ScriptProcessor(options, OclifUtils.reconstructCommandLine(this, options));
     await processor.run();
   }
 }

@@ -1,9 +1,11 @@
+/* eslint-disable complexity */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable max-depth */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable no-console */
 import * as fs from 'fs';
 import path from 'path';
+import * as murmurhash from 'murmurhash';
 import { CommandOptions } from '@handy-common-utils/oclif-utils';
 import { MultiRange } from 'multi-integer-range';
 import TtsNarratorCli from '.';
@@ -11,6 +13,11 @@ import { AzureAudioGenerationOptions, AzureTtsService } from './azure-tts-servic
 import { loadScript } from './narration-script';
 import { AudioGenerationOptions, TtsService } from './tts-service';
 import { getAudioFileDuration, playMp3File } from './audio-utils';
+
+function hash(text: string): string {
+  const hashNumber = murmurhash.v3(text, 2894);
+  return String(hashNumber).replace('-', '_');
+}
 
 /**
  * The base CLI context class.
@@ -106,24 +113,28 @@ export class ScriptProcessor extends BaseCliContext<typeof TtsNarratorCli> {
 
               // generate SSML and its hash
               const ssml = await tts.generateSSML(paragraph);
+              const ssmlHash = hash(ssml);
               if (this.options.flags.ssml) {
+                this.info(`SSML generated with hash ${ssmlHash}:`);
                 this.info(ssml);
               }
-
-              // check to see if the .mp3 file already exists
+              const outputFilePath = path.join(audioFileFolder, `${ssmlHash}.mp3`); // `${chapterIndex}-${sectionIndex}-${paragraphIndex}.mp3`);
 
               if (this.options.flags['dry-run']) {
                 this.debug('No action because of dry-run flag');
               } else {
-                // generate .mp3 file if needed
-                const outputFilePath = path.join(audioFileFolder, `${chapterIndex}-${sectionIndex}-${paragraphIndex}.mp3`);
-                await tts.generateAudio(ssml, {
-                  ...audioGenerationOptions,
-                  outputFilePath,
-                });
-
-                const audioDuration = await getAudioFileDuration(outputFilePath);
-                this.debug(`Generated audio of ${audioDuration / 1000}s: ${outputFilePath}`);
+                // check to see if the .mp3 file already exists
+                if (!this.options.flags.overwrite && fs.existsSync(outputFilePath)) {
+                  this.debug(`Re-using already existing audio file '${outputFilePath}' for ${chapterIndex}-${sectionIndex}-${paragraphIndex}`);
+                } else {
+                  // generate .mp3 file if needed
+                  await tts.generateAudio(ssml, {
+                    ...audioGenerationOptions,
+                    outputFilePath,
+                  });
+                  const audioDuration = await getAudioFileDuration(outputFilePath);
+                  this.debug(`Generated audio of ${audioDuration / 1000}s: ${outputFilePath}`);
+                }
 
                 // play .mp3 file if needed
                 if (this.options.flags.play) {
