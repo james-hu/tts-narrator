@@ -6,6 +6,7 @@
 import * as fs from 'fs';
 import path from 'path';
 import * as murmurhash from 'murmurhash';
+import prompts from 'prompts';
 import { CommandOptions } from '@handy-common-utils/oclif-utils';
 import { MultiRange } from 'multi-integer-range';
 import TtsNarratorCli from '.';
@@ -108,6 +109,19 @@ export class ScriptProcessor extends BaseCliContext<typeof TtsNarratorCli> {
             this.debug(`Entering section [${chapterIndex}-${sectionIndex}] ${section.key}`);
             for (const paragraph of section.paragraphs) {
               const paragraphIndex = paragraph.index;
+              // wait for user key press if needed
+              if (paragraphIndex === 1 && this.options.flags.interactive) {
+                this.info(`\n[${chapterIndex}-${sectionIndex}] ${section.key}`, paragraph.text);
+                const response = await prompts({
+                  initial: true,
+                  message: 'Press ENTER to continue or CTRL-C to abort)',
+                  name: 'r',
+                  type: 'confirm',
+                });
+                if (response.r === undefined) { // CTRL-C
+                  return;
+                }
+              }
               this.debug(`Entering paragraph [${chapterIndex}-${sectionIndex}-${paragraphIndex}] ${paragraph.key}`);
               this.debug(`Processing: ${paragraph.text}`);
 

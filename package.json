@@ -19,7 +19,8 @@
     "@oclif/test": "^1.2.8",
     "@types/av": "^0.4.1",
     "@types/js-yaml": "^4.0.3",
-    "@types/lodash": "^4.14.172"
+    "@types/lodash": "^4.14.172",
+    "@types/prompts": "^2.0.14"
   },
   "dependencies": {
     "@handy-common-utils/oclif-utils": "^1.0.4",
@@ -35,6 +36,7 @@
     "mp3": "^0.1.0",
     "multi-integer-range": "^4.0.9",
     "murmurhash": "^2.0.0",
+    "prompts": "^2.4.1",
     "speaker": "^0.5.3"
   },
   "files": [

@@ -18,7 +18,7 @@ class TtsNarratorCli extends Command {
     region: flags.string({ char: 'r', description: 'region of the text-to-speech service' }),
 
     play: flags.boolean({ char: 'p', default: true, allowNo: true, description: 'play generated audio' }),
-    interactive: flags.boolean({ char: 'i', default: false, description: 'wait for key press before start playing next paragraph' }),
+    interactive: flags.boolean({ char: 'i', default: false, description: 'wait for key press before entering each section' }),
 
     overwrite: flags.boolean({ char: 'o', default: false, description: 'always overwrite previously generated audio files' }),
     'dry-run': flags.boolean({ default: false, description: 'don\'t try to generate or play audio' }),
