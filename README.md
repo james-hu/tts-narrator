@@ -204,6 +204,7 @@ ___
 ##### Methods
 
 - [buildSpeakStartTag](#buildspeakstarttag)
+- [buildVoiceStartTag](#buildvoicestarttag)
 - [generateAudio](#generateaudio)
 - [generateSSML](#generatessml)
 - [generateSsmlWithoutValidation](#generatessmlwithoutvalidation)
@@ -238,6 +239,26 @@ ___
 ###### Overrides
 
 [BaseTtsService](#classesbasettsservicemd).[buildSpeakStartTag](#buildspeakstarttag)
+
+___
+
+##### buildVoiceStartTag
+
+▸ `Protected` **buildVoiceStartTag**(`voiceSettings`): `string`
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `voiceSettings` | [`VoiceSettings`](#interfacesvoicesettingsmd) |
+
+###### Returns
+
+`string`
+
+###### Inherited from
+
+[BaseTtsService](#classesbasettsservicemd).[buildVoiceStartTag](#buildvoicestarttag)
 
 ___
 
@@ -352,6 +373,7 @@ ___
 ##### Methods
 
 - [buildSpeakStartTag](#buildspeakstarttag)
+- [buildVoiceStartTag](#buildvoicestarttag)
 - [generateAudio](#generateaudio)
 - [generateSSML](#generatessml)
 - [generateSsmlWithoutValidation](#generatessmlwithoutvalidation)
@@ -368,6 +390,22 @@ ___
 ##### buildSpeakStartTag
 
 ▸ `Protected` **buildSpeakStartTag**(`voiceSettings`): `string`
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `voiceSettings` | [`VoiceSettings`](#interfacesvoicesettingsmd) |
+
+###### Returns
+
+`string`
+
+___
+
+##### buildVoiceStartTag
+
+▸ `Protected` **buildVoiceStartTag**(`voiceSettings`): `string`
 
 ###### Parameters
 
@@ -485,6 +523,7 @@ ___
 ##### Accessors
 
 - [key](#key)
+- [settings](#settings)
 
 ##### Methods
 
@@ -545,6 +584,20 @@ ___
 ###### Implementation of
 
 [Chapter](#interfacesnarrationscriptfilechaptermd).[key](#key)
+
+___
+
+##### settings
+
+• `get` **settings**(): [`VoiceSettings`](#interfacesvoicesettingsmd)
+
+###### Returns
+
+[`VoiceSettings`](#interfacesvoicesettingsmd)
+
+###### Implementation of
+
+[Chapter](#interfacesnarrationscriptfilechaptermd).[settings](#settings)
 
 #### Methods
 
@@ -816,6 +869,7 @@ ___
 ##### Accessors
 
 - [key](#key)
+- [settings](#settings)
 
 #### Constructors
 
@@ -879,6 +933,20 @@ ___
 ###### Implementation of
 
 [Section](#interfacesnarrationscriptfilesectionmd).[key](#key)
+
+___
+
+##### settings
+
+• `get` **settings**(): [`VoiceSettings`](#interfacesvoicesettingsmd)
+
+###### Returns
+
+[`VoiceSettings`](#interfacesvoicesettingsmd)
+
+###### Implementation of
+
+[Section](#interfacesnarrationscriptfilesectionmd).[settings](#settings)
 
 ## Interfaces
 
@@ -969,6 +1037,7 @@ ___
 
 - [key](#key)
 - [sections](#sections)
+- [settings](#settings)
 
 #### Properties
 
@@ -981,6 +1050,12 @@ ___
 ##### sections
 
 • **sections**: [`Section`](#interfacesnarrationscriptfilesectionmd)[]
+
+___
+
+##### settings
+
+• `Optional` **settings**: [`VoiceSettings`](#interfacesvoicesettingsmd)
 
 
 <a name="interfacesnarrationscriptfileparagraphmd"></a>
@@ -1072,6 +1147,7 @@ ___
 
 - [key](#key)
 - [paragraphs](#paragraphs)
+- [settings](#settings)
 
 #### Properties
 
@@ -1084,6 +1160,12 @@ ___
 ##### paragraphs
 
 • **paragraphs**: [`Paragraph`](#interfacesnarrationscriptfileparagraphmd)[]
+
+___
+
+##### settings
+
+• `Optional` **settings**: [`VoiceSettings`](#interfacesvoicesettingsmd)
 
 
 <a name="interfacesscriptsettingsmd"></a>
