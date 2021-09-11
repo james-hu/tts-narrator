@@ -40,7 +40,7 @@ export enum TtsServiceType {
   Azure = 'azure'
 }
 
-export class CliProcessor extends BaseCliContext<typeof TtsNarratorCli> {
+export class ScriptProcessor extends BaseCliContext<typeof TtsNarratorCli> {
   async run(): Promise<void> {
     this.debug(`Executing command line: ${this.reconstructedcommandLine}`);
 
