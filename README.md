@@ -6,6 +6,8 @@ Generate narration with Text-To-Speech technology
 [![Downloads/week](https://img.shields.io/npm/dw/tts-narrator.svg)](https://npmjs.org/package/tts-narrator)
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 
+The input is a script file in YAML format.
+Example script files can be found under [test/fixtures](test/fixtures).
 
 This may be needed on MacOS for avoiding `illegal hardware instruction` issue: `npm install speaker --mpg123-backend=openal`
 
