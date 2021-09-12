@@ -36,6 +36,9 @@ OPTIONS
 
   -p, --[no-]play                              play generated audio
 
+  -q, --quiet                                  output warn and error information
+                                               only
+
   -r, --region=region                          region of the text-to-speech
                                                service
 
@@ -57,9 +60,14 @@ OPTIONS
   --subscription-key-env=subscription-key-env  Name of the environment variable
                                                that holds the subscription key
 
-EXAMPLE
+EXAMPLES
   tts-narrator myscript.yml --play --interactive --service azure 
   --subscription-key-env SUBSCRIPTION_KEY --region australiaeast
+  tts-narrator ./test/fixtures/script3.yml -s azure --ssml -r australiaeast 
+  --subscription-key-env=TTS_SUB_KEY  --no-play --interactive -d
+  tts-narrator ./test/fixtures/script3.yml -s azure -r australiaeast 
+  --subscription-key-env=TTS_SUB_KEY --quiet
+  tts-narrator ./test/fixtures/script3.yml
 ```
 
 <!-- help end -->
@@ -79,6 +87,10 @@ tts-narrator
 
 - [NarrationScriptFile](#modulesnarrationscriptfilemd)
 
+#### Enumerations
+
+- [TtsServiceType](#enumsttsservicetypemd)
+
 #### Classes
 
 - [AzureTtsService](#classesazurettsservicemd)
@@ -87,6 +99,7 @@ tts-narrator
 - [NarrationParagraph](#classesnarrationparagraphmd)
 - [NarrationScript](#classesnarrationscriptmd)
 - [NarrationSection](#classesnarrationsectionmd)
+- [ScriptProcessor](#classesscriptprocessormd)
 
 #### Interfaces
 
@@ -96,12 +109,42 @@ tts-narrator
 - [TtsService](#interfacesttsservicemd)
 - [VoiceSettings](#interfacesvoicesettingsmd)
 
+#### Variables
+
+- [scriptProcessorFlags](#scriptprocessorflags)
+
 #### Functions
 
 - [getAudioFileDuration](#getaudiofileduration)
 - [loadScript](#loadscript)
 - [playMp3File](#playmp3file)
 - [saveScript](#savescript)
+
+### Variables
+
+#### scriptProcessorFlags
+
+• `Const` **scriptProcessorFlags**: `Object`
+
+CLI flags that are required/used by the ScriptProcessor.
+
+##### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `chapters` | `IOptionFlag`<`undefined` \| `string`\> |
+| `debug` | `IBooleanFlag`<`boolean`\> |
+| `dry-run` | `IBooleanFlag`<`boolean`\> |
+| `interactive` | `IBooleanFlag`<`boolean`\> |
+| `overwrite` | `IBooleanFlag`<`boolean`\> |
+| `play` | `IBooleanFlag`<`boolean`\> |
+| `quiet` | `IBooleanFlag`<`boolean`\> |
+| `region` | `IOptionFlag`<`undefined` \| `string`\> |
+| `sections` | `IOptionFlag`<`undefined` \| `string`\> |
+| `service` | `IOptionFlag`<`undefined` \| `string`\> |
+| `ssml` | `IBooleanFlag`<`boolean`\> |
+| `subscription-key` | `IOptionFlag`<`undefined` \| `string`\> |
+| `subscription-key-env` | `IOptionFlag`<`undefined` \| `string`\> |
 
 ### Functions
 
@@ -948,6 +991,228 @@ ___
 
 [Section](#interfacesnarrationscriptfilesectionmd).[settings](#settings)
 
+
+<a name="classesscriptprocessormd"></a>
+
+[tts-narrator](#readmemd) / ScriptProcessor
+
+### Class: ScriptProcessor
+
+#### Table of contents
+
+##### Constructors
+
+- [constructor](#constructor)
+
+##### Properties
+
+- [audioGenerationOptions](#audiogenerationoptions)
+- [chapterRange](#chapterrange)
+- [cliConsole](#cliconsole)
+- [flags](#flags)
+- [script](#script)
+- [scriptFilePath](#scriptfilepath)
+- [sectionRange](#sectionrange)
+- [ttsService](#ttsservice)
+
+##### Methods
+
+- [ensureAudioFileFolderExists](#ensureaudiofilefolderexists)
+- [hash](#hash)
+- [initialiseTtsServiceIfNeeded](#initialisettsserviceifneeded)
+- [loadScript](#loadscript)
+- [parseRanges](#parseranges)
+- [processGeneratedAudioFile](#processgeneratedaudiofile)
+- [run](#run)
+- [runWithoutCatch](#runwithoutcatch)
+
+#### Constructors
+
+##### constructor
+
+• **new ScriptProcessor**(`scriptFilePath`, `flags`)
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `scriptFilePath` | `string` |
+| `flags` | `Object` |
+
+#### Properties
+
+##### audioGenerationOptions
+
+• `Protected` **audioGenerationOptions**: `undefined` \| [`AudioGenerationOptions`](#interfacesaudiogenerationoptionsmd)
+
+___
+
+##### chapterRange
+
+• `Protected` **chapterRange**: `undefined` \| `MultiRange`
+
+___
+
+##### cliConsole
+
+• `Protected` **cliConsole**: `CliConsole`<`fn`, `fn`, `fn`, `fn`\>
+
+___
+
+##### flags
+
+• `Protected` **flags**: `Object`
+
+___
+
+##### script
+
+• `Protected` **script**: `undefined` \| [`NarrationScript`](#classesnarrationscriptmd)
+
+___
+
+##### scriptFilePath
+
+• `Protected` **scriptFilePath**: `string`
+
+___
+
+##### sectionRange
+
+• `Protected` **sectionRange**: `undefined` \| `MultiRange`
+
+___
+
+##### ttsService
+
+• `Protected` **ttsService**: `undefined` \| [`TtsService`](#interfacesttsservicemd)
+
+#### Methods
+
+##### ensureAudioFileFolderExists
+
+▸ `Protected` **ensureAudioFileFolderExists**(): `Promise`<`string`\>
+
+###### Returns
+
+`Promise`<`string`\>
+
+___
+
+##### hash
+
+▸ `Protected` **hash**(`ssml`, `_paragraph`): `string`
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `ssml` | `string` |
+| `_paragraph` | [`NarrationParagraph`](#classesnarrationparagraphmd) |
+
+###### Returns
+
+`string`
+
+___
+
+##### initialiseTtsServiceIfNeeded
+
+▸ `Protected` **initialiseTtsServiceIfNeeded**(): `Promise`<`void`\>
+
+###### Returns
+
+`Promise`<`void`\>
+
+___
+
+##### loadScript
+
+▸ `Protected` **loadScript**(): `Promise`<`void`\>
+
+###### Returns
+
+`Promise`<`void`\>
+
+___
+
+##### parseRanges
+
+▸ `Protected` **parseRanges**(): `void`
+
+###### Returns
+
+`void`
+
+___
+
+##### processGeneratedAudioFile
+
+▸ `Protected` **processGeneratedAudioFile**(`audioFilePath`): `Promise`<`string`\>
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `audioFilePath` | `string` |
+
+###### Returns
+
+`Promise`<`string`\>
+
+___
+
+##### run
+
+▸ **run**(`reconstructedcommandLine`): `Promise`<`void`\>
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `reconstructedcommandLine` | `string` |
+
+###### Returns
+
+`Promise`<`void`\>
+
+___
+
+##### runWithoutCatch
+
+▸ **runWithoutCatch**(`reconstructedcommandLine`): `Promise`<`void`\>
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `reconstructedcommandLine` | `string` |
+
+###### Returns
+
+`Promise`<`void`\>
+
+## Enums
+
+
+<a name="enumsttsservicetypemd"></a>
+
+[tts-narrator](#readmemd) / TtsServiceType
+
+### Enumeration: TtsServiceType
+
+#### Table of contents
+
+##### Enumeration members
+
+- [Azure](#azure)
+
+#### Enumeration members
+
+##### Azure
+
+• **Azure** = `"azure"`
+
 ## Interfaces
 
 
@@ -1178,9 +1443,16 @@ ___
 
 ##### Properties
 
+- [service](#service)
 - [voice](#voice)
 
 #### Properties
+
+##### service
+
+• `Optional` **service**: [`Azure`](#azure)
+
+___
 
 ##### voice
 
