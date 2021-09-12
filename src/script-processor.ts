@@ -7,65 +7,84 @@ import * as fs from 'fs';
 import path from 'path';
 import * as murmurhash from 'murmurhash';
 import prompts from 'prompts';
-import { CommandOptions } from '@handy-common-utils/oclif-utils';
+import chalk from 'chalk';
+import { flags } from '@oclif/command';
+import { cliConsoleWithColour, DefaultCliConsole, Flags } from '@handy-common-utils/oclif-utils';
 import { MultiRange } from 'multi-integer-range';
-import TtsNarratorCli from '.';
 import { AzureAudioGenerationOptions, AzureTtsService } from './azure-tts-service';
-import { loadScript } from './narration-script';
+import { loadScript, NarrationParagraph, NarrationScript } from './narration-script';
 import { AudioGenerationOptions, TtsService } from './tts-service';
 import { getAudioFileDuration, playMp3File } from './audio-utils';
-
-function hash(text: string): string {
-  const hashNumber = murmurhash.v3(text, 2894);
-  return String(hashNumber).replace('-', '_');
-}
-
-/**
- * The base CLI context class.
- * The info and debug functions rely on `options.flags.quiet` and `options.flags.debug`.
- */
-export class BaseCliContext<T extends { args: Array<{ name: string }>}> {
-  constructor(public options: CommandOptions<T>, public reconstructedcommandLine?: string) {}
-
-  info(message?: any, ...optionalParams: any[]): void {
-    if (this.options.flags.quiet !== true) {
-      console.log(message, ...optionalParams);
-    }
-  }
-
-  debug(message?: any, ...optionalParams: any[]): void {
-    if (this.options.flags.debug === true) {
-      console.log(message, ...optionalParams);
-    }
-  }
-
-  error(message?: any, ...optionalParams: any[]): void {
-    console.error(message, ...optionalParams);
-  }
-}
 
 export enum TtsServiceType {
   Azure = 'azure'
 }
 
-export class ScriptProcessor extends BaseCliContext<typeof TtsNarratorCli> {
-  async run(): Promise<void> {
-    this.debug(`Executing command line: ${this.reconstructedcommandLine}`);
+/**
+ * CLI flags that are required/used by the ScriptProcessor.
+ */
+export const scriptProcessorFlags = {
+  debug: flags.boolean({ char: 'd', description: 'output debug information' }),
 
-    const scriptFile = this.options.args.file;
-    const script = await loadScript(scriptFile);
-    this.debug(`Loaded script from ${scriptFile}`);
+  service: flags.string({ char: 's', options: Object.entries(TtsServiceType).map(([_name, value]) => value), description: 'text-to-speech service to use' }),
+  'subscription-key': flags.string({ char: 'k', description: 'Azure Speech service subscription key' }),
+  'subscription-key-env': flags.string({ description: 'Name of the environment variable that holds the subscription key' }),
+  region: flags.string({ char: 'r', description: 'region of the text-to-speech service' }),
+
+  play: flags.boolean({ char: 'p', default: true, allowNo: true, description: 'play generated audio' }),
+  interactive: flags.boolean({ char: 'i', default: false, description: 'wait for key press before entering each section' }),
+
+  overwrite: flags.boolean({ char: 'o', default: false, description: 'always overwrite previously generated audio files' }),
+  'dry-run': flags.boolean({ default: false, description: 'don\'t try to generate or play audio' }),
+  ssml: flags.boolean({ default: false, description: 'display generated SSML' }),
+
+  chapters: flags.string({ description: 'list of chapters to process, examples: "1-10,13,15", "4-"' }),
+  sections: flags.string({ description: 'list of sections to process, examples: "1-10,13,15", "5-"' }),
+};
+
+export class ScriptProcessor {
+  protected cliConsole: DefaultCliConsole;
+
+  constructor(protected scriptFilePath: string, protected flags: Flags<typeof scriptProcessorFlags>) {
+    this.cliConsole = cliConsoleWithColour(this.flags, chalk);
+  }
+
+  protected hash(ssml: string, _paragraph: NarrationParagraph): string {
+    const hashNumber = murmurhash.v3(ssml, 2894);
+    return String(hashNumber);
+  }
+
+  protected async loadScript(): Promise<NarrationScript> {
+    const script = await loadScript(this.scriptFilePath);
+    this.cliConsole.debug(`Loaded script from ${this.scriptFilePath}`);
+    return script;
+  }
+
+  async run(reconstructedcommandLine: string): Promise<void> {
+    try {
+      await this.runWithoutCatch(reconstructedcommandLine);
+    } catch (error: any) {
+      this.cliConsole.error(error.message);
+    }
+  }
+
+  async runWithoutCatch(reconstructedcommandLine: string): Promise<void> {
+    if (reconstructedcommandLine) {
+      this.cliConsole.debug(`Executing command line: ${reconstructedcommandLine}`);
+    }
+
+    const script = await this.loadScript();
 
     // initialise TTS service
     let tts: TtsService;
     let audioGenerationOptions: AudioGenerationOptions;
-    const ttsServiceType = this.options.flags.service;
+    const ttsServiceType = this.flags.service;
     switch (ttsServiceType) {
       case TtsServiceType.Azure:
         tts = new AzureTtsService();
         audioGenerationOptions = {
-          subscriptionKey: this.options.flags['subscription-key'] ?? (this.options.flags['subscription-key-env'] ? process.env[this.options.flags['subscription-key-env']] : undefined),
-          serviceRegion: this.options.flags.region,
+          subscriptionKey: this.flags['subscription-key'] ?? (this.flags['subscription-key-env'] ? process.env[this.flags['subscription-key-env']] : undefined),
+          serviceRegion: this.flags.region,
         } as AzureAudioGenerationOptions;
         break;
       default:
@@ -74,7 +93,7 @@ export class ScriptProcessor extends BaseCliContext<typeof TtsNarratorCli> {
 
     // chapter and section ranges
     let chapterRange: MultiRange|undefined;
-    const chapterRangeFlag = this.options.flags.chapters;
+    const chapterRangeFlag = this.flags.chapters;
     if (chapterRangeFlag) {
       try {
         chapterRange = new MultiRange(chapterRangeFlag);
@@ -83,7 +102,7 @@ export class ScriptProcessor extends BaseCliContext<typeof TtsNarratorCli> {
       }
     }
     let sectionRange: MultiRange|undefined;
-    const sectionRangeFlag = this.options.flags.sections;
+    const sectionRangeFlag = this.flags.sections;
     if (sectionRangeFlag) {
       try {
         sectionRange = new MultiRange(sectionRangeFlag);
@@ -102,16 +121,16 @@ export class ScriptProcessor extends BaseCliContext<typeof TtsNarratorCli> {
     for (const chapter of script.chapters) {
       const chapterIndex = chapter.index;
       if (!chapterRange || chapterRange.has(chapterIndex)) {
-        this.debug(`Entering chapter [${chapterIndex}] ${chapter.key}`);
+        this.cliConsole.debug(`Entering chapter [${chapterIndex}] ${chapter.key}`);
         for (const section of chapter.sections) {
           const sectionIndex = section.index;
           if (!sectionRange || sectionRange.has(sectionIndex)) {
-            this.debug(`Entering section [${chapterIndex}-${sectionIndex}] ${section.key}`);
+            this.cliConsole.debug(`Entering section [${chapterIndex}-${sectionIndex}] ${section.key}`);
             for (const paragraph of section.paragraphs) {
               const paragraphIndex = paragraph.index;
               // wait for user key press if needed
-              if (paragraphIndex === 1 && this.options.flags.interactive) {
-                this.info(`\n[${chapterIndex}-${sectionIndex}] ${section.key}`, paragraph.text);
+              if (paragraphIndex === 1 && this.flags.interactive) {
+                this.cliConsole.info(`\n[${chapterIndex}-${sectionIndex}] ${section.key}`, paragraph.text);
                 const response = await prompts({
                   initial: true,
                   message: 'Press ENTER to continue or CTRL-C to abort)',
@@ -122,24 +141,24 @@ export class ScriptProcessor extends BaseCliContext<typeof TtsNarratorCli> {
                   return;
                 }
               }
-              this.debug(`Entering paragraph [${chapterIndex}-${sectionIndex}-${paragraphIndex}] ${paragraph.key}`);
-              this.debug(`Processing: ${paragraph.text}`);
+              this.cliConsole.debug(`Entering paragraph [${chapterIndex}-${sectionIndex}-${paragraphIndex}] ${paragraph.key}`);
+              this.cliConsole.debug(`Processing: ${paragraph.text}`);
 
               // generate SSML and its hash
               const ssml = await tts.generateSSML(paragraph);
-              const ssmlHash = hash(ssml);
-              if (this.options.flags.ssml) {
-                this.info(`SSML generated with hash ${ssmlHash}:`);
-                this.info(ssml);
+              const ssmlHash = this.hash(ssml, paragraph);
+              if (this.flags.ssml) {
+                this.cliConsole.info(`SSML generated with hash ${ssmlHash}:`);
+                this.cliConsole.info(ssml);
               }
               const outputFilePath = path.join(audioFileFolder, `${ssmlHash}.mp3`); // `${chapterIndex}-${sectionIndex}-${paragraphIndex}.mp3`);
 
-              if (this.options.flags['dry-run']) {
-                this.debug('No action because of dry-run flag');
+              if (this.flags['dry-run']) {
+                this.cliConsole.debug('No action because of dry-run flag');
               } else {
                 // check to see if the .mp3 file already exists
-                if (!this.options.flags.overwrite && fs.existsSync(outputFilePath)) {
-                  this.debug(`Re-using already existing audio file '${outputFilePath}' for ${chapterIndex}-${sectionIndex}-${paragraphIndex}`);
+                if (!this.flags.overwrite && fs.existsSync(outputFilePath)) {
+                  this.cliConsole.debug(`Re-using already existing audio file '${outputFilePath}' for ${chapterIndex}-${sectionIndex}-${paragraphIndex}`);
                 } else {
                   // generate .mp3 file if needed
                   await tts.generateAudio(ssml, {
@@ -147,13 +166,13 @@ export class ScriptProcessor extends BaseCliContext<typeof TtsNarratorCli> {
                     outputFilePath,
                   });
                   const audioDuration = await getAudioFileDuration(outputFilePath);
-                  this.debug(`Generated audio of ${audioDuration / 1000}s: ${outputFilePath}`);
+                  this.cliConsole.debug(`Generated audio of ${audioDuration / 1000}s: ${outputFilePath}`);
                 }
 
                 // play .mp3 file if needed
-                if (this.options.flags.play) {
+                if (this.flags.play) {
                   await playMp3File(outputFilePath);
-                  this.debug(`Finished playing: ${outputFilePath}`);
+                  this.cliConsole.debug(`Finished playing: ${outputFilePath}`);
                 }
               }
             }
@@ -161,5 +180,6 @@ export class ScriptProcessor extends BaseCliContext<typeof TtsNarratorCli> {
         }
       }
     }
+    this.cliConsole.debug(`Finished processing ${this.scriptFilePath}`);
   }
 }
