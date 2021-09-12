@@ -3,6 +3,7 @@ import { promisify } from 'util';
 import * as fs from 'fs';
 import { load as loadYaml, dump as dumpYaml } from 'js-yaml';
 import { cloneDeep } from 'lodash';
+import { TtsServiceType } from './script-processor';
 
 const readFileAsPromise = promisify(fs.readFile);
 const writeFileAsPromise = promisify(fs.writeFile);
@@ -12,6 +13,7 @@ export interface VoiceSettings {
   language?: string;
 }
 export interface ScriptSettings {
+  service?: TtsServiceType;
   voice?: VoiceSettings;
 }
 export namespace NarrationScriptFile {

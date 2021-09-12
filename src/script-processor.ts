@@ -25,6 +25,7 @@ export enum TtsServiceType {
  */
 export const scriptProcessorFlags = {
   debug: flags.boolean({ char: 'd', description: 'output debug information' }),
+  quiet: flags.boolean({ char: 'q', description: 'output warn and error information only' }),
 
   service: flags.string({ char: 's', options: Object.entries(TtsServiceType).map(([_name, value]) => value), description: 'text-to-speech service to use' }),
   'subscription-key': flags.string({ char: 'k', description: 'Azure Speech service subscription key' }),
@@ -36,7 +37,7 @@ export const scriptProcessorFlags = {
 
   overwrite: flags.boolean({ char: 'o', default: false, description: 'always overwrite previously generated audio files' }),
   'dry-run': flags.boolean({ default: false, description: 'don\'t try to generate or play audio' }),
-  ssml: flags.boolean({ default: false, description: 'display generated SSML' }),
+  ssml: flags.boolean({ default: false, exclusive: ['quiet'], description: 'display generated SSML' }),
 
   chapters: flags.string({ description: 'list of chapters to process, examples: "1-10,13,15", "4-"' }),
   sections: flags.string({ description: 'list of sections to process, examples: "1-10,13,15", "5-"' }),
@@ -44,6 +45,11 @@ export const scriptProcessorFlags = {
 
 export class ScriptProcessor {
   protected cliConsole: DefaultCliConsole;
+  protected ttsService: TtsService|undefined;
+  protected audioGenerationOptions: AudioGenerationOptions|undefined;
+  protected script: NarrationScript|undefined;
+  protected chapterRange: MultiRange|undefined;
+  protected sectionRange: MultiRange|undefined;
 
   constructor(protected scriptFilePath: string, protected flags: Flags<typeof scriptProcessorFlags>) {
     this.cliConsole = cliConsoleWithColour(this.flags, chalk);
@@ -54,10 +60,57 @@ export class ScriptProcessor {
     return String(hashNumber);
   }
 
-  protected async loadScript(): Promise<NarrationScript> {
-    const script = await loadScript(this.scriptFilePath);
+  protected async loadScript(): Promise<void> {
+    this.script = await loadScript(this.scriptFilePath);
     this.cliConsole.debug(`Loaded script from ${this.scriptFilePath}`);
-    return script;
+  }
+
+  protected parseRanges(): void {
+    const chapterRangeFlag = this.flags.chapters;
+    if (chapterRangeFlag) {
+      try {
+        this.chapterRange = new MultiRange(chapterRangeFlag);
+      } catch (error) {
+        throw new Error(`Invalid chapter range '${chapterRangeFlag}': ${error}`);
+      }
+    }
+    const sectionRangeFlag = this.flags.sections;
+    if (sectionRangeFlag) {
+      try {
+        this.sectionRange = new MultiRange(sectionRangeFlag);
+      } catch (error) {
+        throw new Error(`Invalid section range '${sectionRangeFlag}': ${error}`);
+      }
+    }
+  }
+
+  protected async initialiseTtsServiceIfNeeded(): Promise<void> {
+    if (!this.ttsService) {
+      const ttsServiceType = this.flags.service ?? this.script!.settings.service;
+      switch (ttsServiceType) {
+        case TtsServiceType.Azure:
+          this.ttsService = new AzureTtsService();
+          this.audioGenerationOptions = {
+            subscriptionKey: this.flags['subscription-key'] ?? (this.flags['subscription-key-env'] ? process.env[this.flags['subscription-key-env']] : undefined),
+            serviceRegion: this.flags.region,
+          } as AzureAudioGenerationOptions;
+          break;
+        default:
+          throw new Error(`Unknown TTS service: ${ttsServiceType}`);
+      }
+    }
+  }
+
+  protected async ensureAudioFileFolderExists(): Promise<string> {
+    const audioFileFolder = this.script!.scriptFilePath.split('.').slice(0, -1).join('.') + '.tts';
+    if (!fs.existsSync(audioFileFolder)) {
+      fs.mkdirSync(audioFileFolder);
+    }
+    return audioFileFolder;
+  }
+
+  protected async processGeneratedAudioFile(audioFilePath: string): Promise<string> {
+    return audioFilePath;
   }
 
   async run(reconstructedcommandLine: string): Promise<void> {
@@ -73,67 +126,30 @@ export class ScriptProcessor {
       this.cliConsole.debug(`Executing command line: ${reconstructedcommandLine}`);
     }
 
-    const script = await this.loadScript();
-
-    // initialise TTS service
-    let tts: TtsService;
-    let audioGenerationOptions: AudioGenerationOptions;
-    const ttsServiceType = this.flags.service;
-    switch (ttsServiceType) {
-      case TtsServiceType.Azure:
-        tts = new AzureTtsService();
-        audioGenerationOptions = {
-          subscriptionKey: this.flags['subscription-key'] ?? (this.flags['subscription-key-env'] ? process.env[this.flags['subscription-key-env']] : undefined),
-          serviceRegion: this.flags.region,
-        } as AzureAudioGenerationOptions;
-        break;
-      default:
-        throw new Error(`Unknown TTS service: ${ttsServiceType}`);
-    }
+    await this.loadScript();
 
     // chapter and section ranges
-    let chapterRange: MultiRange|undefined;
-    const chapterRangeFlag = this.flags.chapters;
-    if (chapterRangeFlag) {
-      try {
-        chapterRange = new MultiRange(chapterRangeFlag);
-      } catch (error) {
-        throw new Error(`Invalid chapter range '${chapterRangeFlag}': ${error}`);
-      }
-    }
-    let sectionRange: MultiRange|undefined;
-    const sectionRangeFlag = this.flags.sections;
-    if (sectionRangeFlag) {
-      try {
-        sectionRange = new MultiRange(sectionRangeFlag);
-      } catch (error) {
-        throw new Error(`Invalid section range '${sectionRangeFlag}': ${error}`);
-      }
-    }
+    this.parseRanges();
 
     // make sure the audio folder exists
-    const audioFileFolder = script.scriptFilePath.split('.').slice(0, -1).join('.') + '.tts';
-    if (!fs.existsSync(audioFileFolder)) {
-      fs.mkdirSync(audioFileFolder);
-    }
+    const audioFileFolder = await this.ensureAudioFileFolderExists();
 
     // walk through the script
-    for (const chapter of script.chapters) {
+    for (const chapter of this.script!.chapters) {
       const chapterIndex = chapter.index;
-      if (!chapterRange || chapterRange.has(chapterIndex)) {
+      if (!this.chapterRange || this.chapterRange.has(chapterIndex)) {
         this.cliConsole.debug(`Entering chapter [${chapterIndex}] ${chapter.key}`);
         for (const section of chapter.sections) {
           const sectionIndex = section.index;
-          if (!sectionRange || sectionRange.has(sectionIndex)) {
+          if (!this.sectionRange || this.sectionRange.has(sectionIndex)) {
             this.cliConsole.debug(`Entering section [${chapterIndex}-${sectionIndex}] ${section.key}`);
             for (const paragraph of section.paragraphs) {
               const paragraphIndex = paragraph.index;
               // wait for user key press if needed
               if (paragraphIndex === 1 && this.flags.interactive) {
-                this.cliConsole.info(`\n[${chapterIndex}-${sectionIndex}] ${section.key}`, paragraph.text);
                 const response = await prompts({
                   initial: true,
-                  message: 'Press ENTER to continue or CTRL-C to abort)',
+                  message: `Press ENTER to continue or CTRL-C to abort => [${chapterIndex}-${sectionIndex}] ${section.key}`,
                   name: 'r',
                   type: 'confirm',
                 });
@@ -145,7 +161,8 @@ export class ScriptProcessor {
               this.cliConsole.debug(`Processing: ${paragraph.text}`);
 
               // generate SSML and its hash
-              const ssml = await tts.generateSSML(paragraph);
+              await this.initialiseTtsServiceIfNeeded();   // initialise in first use
+              const ssml = await this.ttsService!.generateSSML(paragraph);
               const ssmlHash = this.hash(ssml, paragraph);
               if (this.flags.ssml) {
                 this.cliConsole.info(`SSML generated with hash ${ssmlHash}:`);
@@ -161,18 +178,21 @@ export class ScriptProcessor {
                   this.cliConsole.debug(`Re-using already existing audio file '${outputFilePath}' for ${chapterIndex}-${sectionIndex}-${paragraphIndex}`);
                 } else {
                   // generate .mp3 file if needed
-                  await tts.generateAudio(ssml, {
-                    ...audioGenerationOptions,
+                  await this.ttsService!.generateAudio(ssml, {
+                    ...this.audioGenerationOptions,
                     outputFilePath,
                   });
                   const audioDuration = await getAudioFileDuration(outputFilePath);
                   this.cliConsole.debug(`Generated audio of ${audioDuration / 1000}s: ${outputFilePath}`);
                 }
 
+                // post-processing
+                const audioFilePath = await this.processGeneratedAudioFile(outputFilePath);
+
                 // play .mp3 file if needed
                 if (this.flags.play) {
-                  await playMp3File(outputFilePath);
-                  this.cliConsole.debug(`Finished playing: ${outputFilePath}`);
+                  await playMp3File(audioFilePath);
+                  this.cliConsole.debug(`Finished playing: ${audioFilePath}`);
                 }
               }
             }

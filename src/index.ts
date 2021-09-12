@@ -17,6 +17,9 @@ class TtsNarratorCli extends Command {
 
   static examples = [
     '^ myscript.yml --play --interactive --service azure --subscription-key-env SUBSCRIPTION_KEY --region australiaeast',
+    '^ ./test/fixtures/script3.yml -s azure --ssml -r australiaeast --subscription-key-env=TTS_SUB_KEY  --no-play --interactive -d',
+    '^ ./test/fixtures/script3.yml -s azure -r australiaeast --subscription-key-env=TTS_SUB_KEY --quiet',
+    '^ ./test/fixtures/script3.yml',
   ];
 
   protected async init(): Promise<any> {

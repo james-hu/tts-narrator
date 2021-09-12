@@ -1,4 +1,5 @@
 settings:
+  service: azure
   voice:
     name: zh-CN-XiaomoNeural
     language: zh-CN
