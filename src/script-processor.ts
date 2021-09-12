@@ -101,12 +101,13 @@ export class ScriptProcessor {
     }
   }
 
-  protected async ensureAudioFileFolderExists(): Promise<string> {
+  protected async determineAudioFilePath(ssmlHash: string, _paragraph: NarrationParagraph): Promise<string> {
     const audioFileFolder = this.script!.scriptFilePath.split('.').slice(0, -1).join('.') + '.tts';
     if (!fs.existsSync(audioFileFolder)) {
       fs.mkdirSync(audioFileFolder);
     }
-    return audioFileFolder;
+    const audioFilePath = path.join(audioFileFolder, `${ssmlHash}.mp3`);
+    return audioFilePath;
   }
 
   protected async processGeneratedAudioFile(audioFilePath: string): Promise<string> {
@@ -130,9 +131,6 @@ export class ScriptProcessor {
 
     // chapter and section ranges
     this.parseRanges();
-
-    // make sure the audio folder exists
-    const audioFileFolder = await this.ensureAudioFileFolderExists();
 
     // walk through the script
     for (const chapter of this.script!.chapters) {
@@ -168,26 +166,26 @@ export class ScriptProcessor {
                 this.cliConsole.info(`SSML generated with hash ${ssmlHash}:`);
                 this.cliConsole.info(ssml);
               }
-              const outputFilePath = path.join(audioFileFolder, `${ssmlHash}.mp3`); // `${chapterIndex}-${sectionIndex}-${paragraphIndex}.mp3`);
+              const generatedAudioFilePath = await this.determineAudioFilePath(ssmlHash, paragraph);
 
               if (this.flags['dry-run']) {
                 this.cliConsole.debug('No action because of dry-run flag');
               } else {
                 // check to see if the .mp3 file already exists
-                if (!this.flags.overwrite && fs.existsSync(outputFilePath)) {
-                  this.cliConsole.debug(`Re-using already existing audio file '${outputFilePath}' for ${chapterIndex}-${sectionIndex}-${paragraphIndex}`);
+                if (!this.flags.overwrite && fs.existsSync(generatedAudioFilePath)) {
+                  this.cliConsole.debug(`Re-using already existing audio file '${generatedAudioFilePath}' for ${chapterIndex}-${sectionIndex}-${paragraphIndex}`);
                 } else {
                   // generate .mp3 file if needed
                   await this.ttsService!.generateAudio(ssml, {
                     ...this.audioGenerationOptions,
-                    outputFilePath,
+                    outputFilePath: generatedAudioFilePath,
                   });
-                  const audioDuration = await getAudioFileDuration(outputFilePath);
-                  this.cliConsole.debug(`Generated audio of ${audioDuration / 1000}s: ${outputFilePath}`);
+                  const audioDuration = await getAudioFileDuration(generatedAudioFilePath);
+                  this.cliConsole.debug(`Generated audio of ${audioDuration / 1000}s: ${generatedAudioFilePath}`);
                 }
 
                 // post-processing
-                const audioFilePath = await this.processGeneratedAudioFile(outputFilePath);
+                const audioFilePath = await this.processGeneratedAudioFile(generatedAudioFilePath);
 
                 // play .mp3 file if needed
                 if (this.flags.play) {
