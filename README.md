@@ -1017,7 +1017,7 @@ ___
 
 ##### Methods
 
-- [ensureAudioFileFolderExists](#ensureaudiofilefolderexists)
+- [determineAudioFilePath](#determineaudiofilepath)
 - [hash](#hash)
 - [initialiseTtsServiceIfNeeded](#initialisettsserviceifneeded)
 - [loadScript](#loadscript)
@@ -1089,9 +1089,16 @@ ___
 
 #### Methods
 
-##### ensureAudioFileFolderExists
+##### determineAudioFilePath
 
-▸ `Protected` **ensureAudioFileFolderExists**(): `Promise`<`string`\>
+▸ `Protected` **determineAudioFilePath**(`ssmlHash`, `_paragraph`): `Promise`<`string`\>
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `ssmlHash` | `string` |
+| `_paragraph` | [`NarrationParagraph`](#classesnarrationparagraphmd) |
 
 ###### Returns
 
