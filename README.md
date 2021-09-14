@@ -9,7 +9,24 @@ Generate narration with Text-To-Speech technology
 The input is a script file in YAML format.
 Example script files can be found under [test/fixtures](test/fixtures).
 
-This may be needed on MacOS for avoiding `illegal hardware instruction` issue: `npm install speaker --mpg123-backend=openal`
+The script file is structured in this way:
+
+* `settings`: script settings
+  * `voice`: voice settings at script level
+* `chapters`: array of chapter
+  * each chapter can contain settings and multiple sections:
+    * `settings`: chapter level voice settings that can override script level voice settings
+    * `sections`: array of sections
+      * each section can contain settings and multiple paragraphs:
+        * `settings`: section level voice settings that can override upper level voice settings
+        * `paragraphs`: array of paragraphs
+          * each paragraph can contain settings and text:
+            * `settings`: paragraph level voice settings that can override upper level voice settings
+            * `text`: text content that needs to be converted into audio
+
+The `text` field of a paragraph can be pure text, or an SSML fragment. Multi-line strings are supported.
+
+When running on MacOS, to avoid `illegal hardware instruction` issue, try `npm install speaker --mpg123-backend=openal`
 
 # CLI
 
