@@ -1084,7 +1084,7 @@ ___
 
 ##### script
 
-• `Protected` **script**: `undefined` \| [`NarrationScript`](#classesnarrationscriptmd)
+• `Protected` **script**: [`NarrationScript`](#classesnarrationscriptmd)
 
 ___
 
@@ -1102,7 +1102,7 @@ ___
 
 ##### ttsService
 
-• `Protected` **ttsService**: `undefined` \| [`TtsService`](#interfacesttsservicemd)
+• `Protected` **ttsService**: [`TtsService`](#interfacesttsservicemd)
 
 #### Methods
 
