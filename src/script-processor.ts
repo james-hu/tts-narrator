@@ -45,9 +45,9 @@ export const scriptProcessorFlags = {
 
 export class ScriptProcessor {
   protected cliConsole: DefaultCliConsole;
-  protected ttsService: TtsService|undefined;
+  protected ttsService!: TtsService;
   protected audioGenerationOptions: AudioGenerationOptions|undefined;
-  protected script: NarrationScript|undefined;
+  protected script!: NarrationScript;
   protected chapterRange: MultiRange|undefined;
   protected sectionRange: MultiRange|undefined;
 
@@ -86,7 +86,7 @@ export class ScriptProcessor {
 
   protected async initialiseTtsServiceIfNeeded(): Promise<void> {
     if (!this.ttsService) {
-      const ttsServiceType = this.flags.service ?? this.script!.settings.service;
+      const ttsServiceType = this.flags.service ?? this.script.settings.service;
       switch (ttsServiceType) {
         case TtsServiceType.Azure:
           this.ttsService = new AzureTtsService();
@@ -102,7 +102,7 @@ export class ScriptProcessor {
   }
 
   protected async determineAudioFilePath(ssmlHash: string, _paragraph: NarrationParagraph): Promise<string> {
-    const audioFileFolder = this.script!.scriptFilePath.split('.').slice(0, -1).join('.') + '.tts';
+    const audioFileFolder = this.script.scriptFilePath.split('.').slice(0, -1).join('.') + '.tts';
     if (!fs.existsSync(audioFileFolder)) {
       fs.mkdirSync(audioFileFolder);
     }
@@ -133,7 +133,7 @@ export class ScriptProcessor {
     this.parseRanges();
 
     // walk through the script
-    for (const chapter of this.script!.chapters) {
+    for (const chapter of this.script.chapters) {
       const chapterIndex = chapter.index;
       if (!this.chapterRange || this.chapterRange.has(chapterIndex)) {
         this.cliConsole.debug(`Entering chapter [${chapterIndex}] ${chapter.key}`);
@@ -160,7 +160,7 @@ export class ScriptProcessor {
 
               // generate SSML and its hash
               await this.initialiseTtsServiceIfNeeded();   // initialise in first use
-              const ssml = await this.ttsService!.generateSSML(paragraph);
+              const ssml = await this.ttsService.generateSSML(paragraph);
               const ssmlHash = this.hash(ssml, paragraph);
               if (this.flags.ssml) {
                 this.cliConsole.info(`SSML generated with hash ${ssmlHash}:`);
@@ -176,7 +176,7 @@ export class ScriptProcessor {
                   this.cliConsole.debug(`Re-using already existing audio file '${generatedAudioFilePath}' for ${chapterIndex}-${sectionIndex}-${paragraphIndex}`);
                 } else {
                   // generate .mp3 file if needed
-                  await this.ttsService!.generateAudio(ssml, {
+                  await this.ttsService.generateAudio(ssml, {
                     ...this.audioGenerationOptions,
                     outputFilePath: generatedAudioFilePath,
                   });
