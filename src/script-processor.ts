@@ -114,7 +114,7 @@ export class ScriptProcessor {
     return audioFilePath;
   }
 
-  async run(reconstructedcommandLine: string): Promise<void> {
+  async run(reconstructedcommandLine?: string): Promise<void> {
     try {
       await this.runWithoutCatch(reconstructedcommandLine);
     } catch (error: any) {
@@ -122,7 +122,7 @@ export class ScriptProcessor {
     }
   }
 
-  async runWithoutCatch(reconstructedcommandLine: string): Promise<void> {
+  async runWithoutCatch(reconstructedcommandLine?: string): Promise<void> {
     if (reconstructedcommandLine) {
       this.cliConsole.debug(`Executing command line: ${reconstructedcommandLine}`);
     }
