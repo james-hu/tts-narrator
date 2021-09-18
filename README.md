@@ -4,8 +4,7 @@ Generate narration with Text-To-Speech technology
 
 [![Version](https://img.shields.io/npm/v/tts-narrator.svg)](https://npmjs.org/package/tts-narrator)
 [![Downloads/week](https://img.shields.io/npm/dw/tts-narrator.svg)](https://npmjs.org/package/tts-narrator)
-![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/james-hu/tts-narrator/CI/master)
-[![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
+[![CI](https://github.com/james-hu/tts-narrator/actions/workflows/ci.yml/badge.svg)](https://github.com/james-hu/tts-narrator/actions/workflows/ci.yml)
 
 The input is a script file in YAML format.
 Example script files can be found under [test/fixtures](test/fixtures).
