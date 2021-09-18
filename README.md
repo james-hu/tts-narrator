@@ -1188,13 +1188,13 @@ ___
 
 ##### run
 
-▸ **run**(`reconstructedcommandLine`): `Promise`<`void`\>
+▸ **run**(`reconstructedcommandLine?`): `Promise`<`void`\>
 
 ###### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `reconstructedcommandLine` | `string` |
+| `reconstructedcommandLine?` | `string` |
 
 ###### Returns
 
@@ -1204,13 +1204,13 @@ ___
 
 ##### runWithoutCatch
 
-▸ **runWithoutCatch**(`reconstructedcommandLine`): `Promise`<`void`\>
+▸ **runWithoutCatch**(`reconstructedcommandLine?`): `Promise`<`void`\>
 
 ###### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `reconstructedcommandLine` | `string` |
+| `reconstructedcommandLine?` | `string` |
 
 ###### Returns
 
