@@ -694,6 +694,7 @@ ___
 
 ##### Properties
 
+- [audioFilePath](#audiofilepath)
 - [chapter](#chapter)
 - [index](#index)
 - [paragraph](#paragraph)
@@ -723,6 +724,14 @@ ___
 | `script` | [`NarrationScript`](#classesnarrationscriptmd) |
 
 #### Properties
+
+##### audioFilePath
+
+• `Optional` **audioFilePath**: `string`
+
+Path of the generated audio file. Only for in-memory processing, not supposed to be stored in file.
+
+___
 
 ##### chapter
 
@@ -1023,14 +1032,18 @@ ___
 
 ##### Properties
 
+- [\_script](#_script)
 - [audioGenerationOptions](#audiogenerationoptions)
 - [chapterRange](#chapterrange)
 - [cliConsole](#cliconsole)
 - [flags](#flags)
-- [script](#script)
 - [scriptFilePath](#scriptfilepath)
 - [sectionRange](#sectionrange)
 - [ttsService](#ttsservice)
+
+##### Accessors
+
+- [script](#script)
 
 ##### Methods
 
@@ -1058,6 +1071,12 @@ ___
 
 #### Properties
 
+##### \_script
+
+• `Protected` **\_script**: [`NarrationScript`](#classesnarrationscriptmd)
+
+___
+
 ##### audioGenerationOptions
 
 • `Protected` **audioGenerationOptions**: `undefined` \| [`AudioGenerationOptions`](#interfacesaudiogenerationoptionsmd)
@@ -1082,12 +1101,6 @@ ___
 
 ___
 
-##### script
-
-• `Protected` **script**: [`NarrationScript`](#classesnarrationscriptmd)
-
-___
-
 ##### scriptFilePath
 
 • `Protected` **scriptFilePath**: `string`
@@ -1103,6 +1116,16 @@ ___
 ##### ttsService
 
 • `Protected` **ttsService**: [`TtsService`](#interfacesttsservicemd)
+
+#### Accessors
+
+##### script
+
+• `get` **script**(): [`NarrationScript`](#classesnarrationscriptmd)
+
+###### Returns
+
+[`NarrationScript`](#classesnarrationscriptmd)
 
 #### Methods
 
