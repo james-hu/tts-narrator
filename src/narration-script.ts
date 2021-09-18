@@ -39,6 +39,10 @@ export namespace NarrationScriptFile {
 }
 
 export class NarrationParagraph implements NarrationScriptFile.Paragraph {
+  /**
+   * Path of the generated audio file. Only for in-memory processing, not supposed to be stored in file.
+   */
+  public audioFilePath?: string;
   constructor(
     protected paragraph: NarrationScriptFile.Paragraph,
     public index: number,

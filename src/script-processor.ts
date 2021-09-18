@@ -47,7 +47,7 @@ export class ScriptProcessor {
   protected cliConsole: DefaultCliConsole;
   protected ttsService!: TtsService;
   protected audioGenerationOptions: AudioGenerationOptions|undefined;
-  protected script!: NarrationScript;
+  protected _script!: NarrationScript;
   protected chapterRange: MultiRange|undefined;
   protected sectionRange: MultiRange|undefined;
 
@@ -61,7 +61,7 @@ export class ScriptProcessor {
   }
 
   protected async loadScript(): Promise<void> {
-    this.script = await loadScript(this.scriptFilePath);
+    this._script = await loadScript(this.scriptFilePath);
     this.cliConsole.debug(`Loaded script from ${this.scriptFilePath}`);
   }
 
@@ -86,7 +86,7 @@ export class ScriptProcessor {
 
   protected async initialiseTtsServiceIfNeeded(): Promise<void> {
     if (!this.ttsService) {
-      const ttsServiceType = this.flags.service ?? this.script.settings.service;
+      const ttsServiceType = this.flags.service ?? this._script.settings.service;
       switch (ttsServiceType) {
         case TtsServiceType.Azure:
           this.ttsService = new AzureTtsService();
@@ -102,7 +102,7 @@ export class ScriptProcessor {
   }
 
   protected async determineAudioFilePath(ssmlHash: string, _paragraph: NarrationParagraph): Promise<string> {
-    const audioFileFolder = this.script.scriptFilePath.split('.').slice(0, -1).join('.') + '.tts';
+    const audioFileFolder = this._script.scriptFilePath.split('.').slice(0, -1).join('.') + '.tts';
     if (!fs.existsSync(audioFileFolder)) {
       fs.mkdirSync(audioFileFolder);
     }
@@ -133,7 +133,7 @@ export class ScriptProcessor {
     this.parseRanges();
 
     // walk through the script
-    for (const chapter of this.script.chapters) {
+    for (const chapter of this._script.chapters) {
       const chapterIndex = chapter.index;
       if (!this.chapterRange || this.chapterRange.has(chapterIndex)) {
         this.cliConsole.debug(`Entering chapter [${chapterIndex}] ${chapter.key}`);
@@ -186,6 +186,7 @@ export class ScriptProcessor {
 
                 // post-processing
                 const audioFilePath = await this.processGeneratedAudioFile(generatedAudioFilePath);
+                paragraph.audioFilePath = audioFilePath;
 
                 // play .mp3 file if needed
                 if (this.flags.play) {
@@ -199,5 +200,9 @@ export class ScriptProcessor {
       }
     }
     this.cliConsole.debug(`Finished processing ${this.scriptFilePath}`);
+  }
+
+  public get script(): NarrationScript {
+    return this.script;
   }
 }
