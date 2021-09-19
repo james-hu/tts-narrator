@@ -104,7 +104,7 @@ export class ScriptProcessor {
   protected async determineAudioFilePath(ssmlHash: string, _paragraph: NarrationParagraph): Promise<string> {
     const audioFileFolder = this._script.scriptFilePath.split('.').slice(0, -1).join('.') + '.tts';
     if (!fs.existsSync(audioFileFolder)) {
-      fs.mkdirSync(audioFileFolder);
+      fs.mkdirSync(audioFileFolder, { recursive: true });
     }
     const audioFilePath = path.join(audioFileFolder, `${ssmlHash}.mp3`);
     return audioFilePath;
@@ -203,6 +203,6 @@ export class ScriptProcessor {
   }
 
   public get script(): NarrationScript {
-    return this.script;
+    return this._script;
   }
 }
