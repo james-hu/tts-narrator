@@ -119,6 +119,7 @@ export class ScriptProcessor {
       await this.runWithoutCatch(reconstructedcommandLine);
     } catch (error: any) {
       this.cliConsole.error(error.message);
+      this.cliConsole.debug(error);
     }
   }
 
