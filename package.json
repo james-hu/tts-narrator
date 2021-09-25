@@ -21,6 +21,7 @@
     "@types/js-yaml": "^4.0.3",
     "@types/lodash": "^4.14.172",
     "@types/prompts": "^2.0.14",
+    "speaker": "^0.5.3",
     "typedoc-plugin-remove-references": "^0.0.5"
   },
   "dependencies": {
@@ -38,8 +39,7 @@
     "mp3": "^0.1.0",
     "multi-integer-range": "^4.0.9",
     "murmurhash": "^2.0.0",
-    "prompts": "^2.4.1",
-    "speaker": "^0.5.3"
+    "prompts": "^2.4.1"
   },
   "files": [
     "package.json",
