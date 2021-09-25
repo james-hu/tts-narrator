@@ -191,8 +191,7 @@ export class ScriptProcessor {
 
                 // play .mp3 file if needed
                 if (this.flags.play) {
-                  await playMp3File(audioFilePath);
-                  this.cliConsole.debug(`Finished playing: ${audioFilePath}`);
+                  await playMp3File(audioFilePath, this.cliConsole.info);
                 }
               }
             }

@@ -2,7 +2,6 @@
 /* eslint-disable max-statements-per-line */
 import * as stream from 'stream';
 import { timeoutReject } from '@handy-common-utils/promise-utils';
-import Speaker = require('speaker');
 import * as AV from 'av';
 import 'mp3';
 
@@ -15,7 +14,26 @@ function toBuffer(arr: Float32Array) {
     Buffer.from(arr);
 }
 
-export function playMp3File(filePath: string): Promise<void> {
+let speakerClassOrError: any|Error;
+function getSpeakerClass(errorLogger: (msg: string) => void): any {
+  if (!speakerClassOrError) {
+    try {
+      // eslint-disable-next-line unicorn/prefer-module
+      speakerClassOrError = require('speaker');
+    } catch (error) {
+      speakerClassOrError = error;
+      errorLogger(`Library for playing MP3 is not available: ${error}`);
+    }
+  }
+  return typeof speakerClassOrError === 'string' ? undefined : speakerClassOrError;
+}
+
+export async function playMp3File(filePath: string, infoLogger: (msg: string) => void): Promise<void> {
+  const Speaker = getSpeakerClass(infoLogger);
+  if (!Speaker) {
+    infoLogger(`Skipped playing MP3 because underlying library is not available: ${filePath}`);
+    return;
+  }
   return new Promise((resolve, reject) => {
     try {
       const asset = AV.Asset.fromFile(filePath);
@@ -26,14 +44,15 @@ export function playMp3File(filePath: string): Promise<void> {
         bufferStream.end(toBuffer(buffer));
 
         // Pipe it to something else  (i.e. stdout)
+
         const speaker = new Speaker({
           channels: 1,
           bitDepth: 32,
           sampleRate: 16000,
           float: true,
-        } as Speaker.Options);
+        }); // as Speaker.Options);
         bufferStream.pipe(speaker);
-        speaker.on('error', error => reject(error));
+        speaker.on('error', (error: any) => reject(error));
         // speaker.on('end', () => { console.log('piped'); resolve(); });
         speaker.on('close', () => resolve());
       });
