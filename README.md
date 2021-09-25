@@ -1065,7 +1065,7 @@ ___
 
 ##### constructor
 
-• **new ScriptProcessor**(`scriptFilePath`, `flags`)
+• **new ScriptProcessor**(`scriptFilePath`, `flags`, `cliConsole?`)
 
 ###### Parameters
 
@@ -1073,6 +1073,7 @@ ___
 | :------ | :------ |
 | `scriptFilePath` | `string` |
 | `flags` | `Object` |
+| `cliConsole?` | `CliConsole`<`fn`, `fn`, `fn`, `fn`\> |
 
 #### Properties
 
