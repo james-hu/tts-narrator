@@ -51,8 +51,8 @@ export class ScriptProcessor {
   protected chapterRange: MultiRange|undefined;
   protected sectionRange: MultiRange|undefined;
 
-  constructor(protected scriptFilePath: string, protected flags: Flags<typeof scriptProcessorFlags>) {
-    this.cliConsole = cliConsoleWithColour(this.flags, chalk);
+  constructor(protected scriptFilePath: string, protected flags: Flags<typeof scriptProcessorFlags>, cliConsole?: DefaultCliConsole) {
+    this.cliConsole = cliConsole ?? cliConsoleWithColour(this.flags, chalk);
   }
 
   protected hash(ssml: string, _paragraph: NarrationParagraph): string {
