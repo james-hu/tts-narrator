@@ -26,7 +26,11 @@ The script file is structured in this way:
 
 The `text` field of a paragraph can be pure text, or an SSML fragment. Multi-line strings are supported.
 
-When running on MacOS, to avoid `illegal hardware instruction` issue, try `npm install speaker --mpg123-backend=openal`
+It has command line flags `--play` and `--no-play` to control whether generated MP3s should be played back.
+This feature is supported by a dev dependency [node-speaker](https://www.npmjs.com/package/speaker).
+If you use it as a library in your project, and would like to have the play back capability, you need to install [node-speaker](https://www.npmjs.com/package/speaker) as a dependency in your project.
+
+When running on MacOS, to avoid `illegal hardware instruction` issue, try `npm i speaker --mpg123-backend=openal`
 
 # CLI
 
