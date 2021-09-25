@@ -21,8 +21,8 @@ function getSpeakerClass(errorLogger: (msg: string) => void): any {
       // eslint-disable-next-line unicorn/prefer-module
       speakerClassOrError = require('speaker');
     } catch (error) {
-      speakerClassOrError = error;
-      errorLogger(`Library for playing MP3 is not available: ${error}`);
+      speakerClassOrError = `${error}`;
+      errorLogger(`Library for playing MP3 is not available: ${speakerClassOrError}`);
     }
   }
   return typeof speakerClassOrError === 'string' ? undefined : speakerClassOrError;
