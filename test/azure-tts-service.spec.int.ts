@@ -33,6 +33,6 @@ describe.skip('azure-tts-service', () => {
     const duration = await getAudioFileDuration(outputFilePath);
     console.log(duration);
     expect(duration > 10);
-    await playMp3File(outputFilePath);
+    await playMp3File(outputFilePath, console.log);
   });
 });
