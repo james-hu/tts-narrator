@@ -203,13 +203,14 @@ ___
 
 #### playMp3File
 
-▸ **playMp3File**(`filePath`): `Promise`<`void`\>
+▸ **playMp3File**(`filePath`, `infoLogger`): `Promise`<`void`\>
 
 ##### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `filePath` | `string` |
+| `infoLogger` | (`msg`: `string`) => `void` |
 
 ##### Returns
 
