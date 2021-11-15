@@ -14,19 +14,18 @@
     "preversion": "generate-api-docs-and-update-readme && ./bin/run --update-readme.md && git add README.md"
   },
   "devDependencies": {
-    "@handy-common-utils/dev-dependencies": "^1.0.20",
+    "@handy-common-utils/dev-dependencies": "^1.0.31",
     "@oclif/dev-cli": "^1.26.0",
     "@oclif/test": "^1.2.8",
     "@types/av": "^0.4.1",
     "@types/js-yaml": "^4.0.3",
     "@types/lodash": "^4.14.172",
     "@types/prompts": "^2.0.14",
-    "speaker": "^0.5.3",
-    "typedoc-plugin-remove-references": "^0.0.5"
+    "speaker": "^0.5.3"
   },
   "dependencies": {
-    "@handy-common-utils/oclif-utils": "^1.0.7",
-    "@handy-common-utils/promise-utils": "^1.1.1",
+    "@handy-common-utils/oclif-utils": "^1.0.9",
+    "@handy-common-utils/promise-utils": "^1.2.5",
     "@oclif/command": "^1.8.0",
     "@oclif/config": "^1.17.0",
     "@oclif/plugin-help": "^3.2.3",
