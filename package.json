@@ -31,7 +31,7 @@
     "@oclif/plugin-help": "^3.2.3",
     "av": "^0.4.9",
     "chalk": "^4.1.2",
-    "fast-xml-parser": "^3.19.0",
+    "fast-xml-parser": "^4.2.4",
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
     "microsoft-cognitiveservices-speech-sdk": "^1.18.1",
