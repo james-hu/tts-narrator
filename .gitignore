@@ -9,3 +9,5 @@ tmp1.mp3
 test/fixtures/script2.tts
 test/fixtures/script3.tts
 test/fixtures/scriptT.tts
+demo.sh
+test/fixtures/demo.*
