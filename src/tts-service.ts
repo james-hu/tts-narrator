@@ -1,4 +1,4 @@
-import { validate as validateXml } from 'fast-xml-parser';
+import { XMLValidator } from 'fast-xml-parser';
 import { NarrationParagraph, VoiceSettings } from './narration-script';
 
 export interface AudioGenerationOptions {
@@ -17,7 +17,7 @@ export abstract class BaseTtsService implements TtsService {
   }
 
   protected validateXML(xml: string, lineOffset: number): void {
-    const validatioinResult = validateXml(xml);
+    const validatioinResult = XMLValidator.validate(xml);
     if (validatioinResult !== true) {
       const err = validatioinResult.err;
       throw new Error(`Invalid markup at line ${err.line - lineOffset}. ${err.code}: ${err.msg}`);

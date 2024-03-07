@@ -17,11 +17,11 @@
     "@handy-common-utils/dev-dependencies": "^1.0.31",
     "@oclif/dev-cli": "^1.26.0",
     "@oclif/test": "^1.2.8",
-    "@types/av": "^0.4.1",
-    "@types/js-yaml": "^4.0.3",
-    "@types/lodash": "^4.14.172",
-    "@types/prompts": "^2.0.14",
-    "speaker": "^0.5.3"
+    "@types/av": "^0.4.4",
+    "@types/js-yaml": "^4.0.9",
+    "@types/lodash": "^4.14.202",
+    "@types/prompts": "^2.4.9",
+    "speaker": "^0.5.4"
   },
   "dependencies": {
     "@handy-common-utils/oclif-utils": "^1.0.9",
@@ -31,14 +31,14 @@
     "@oclif/plugin-help": "^3.2.3",
     "av": "^0.4.9",
     "chalk": "^4.1.2",
-    "fast-xml-parser": "^3.19.0",
+    "fast-xml-parser": "^4.3.5",
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
-    "microsoft-cognitiveservices-speech-sdk": "^1.18.1",
+    "microsoft-cognitiveservices-speech-sdk": "^1.36.0",
     "mp3": "^0.1.0",
-    "multi-integer-range": "^4.0.9",
-    "murmurhash": "^2.0.0",
-    "prompts": "^2.4.1"
+    "multi-integer-range": "^5.2.0",
+    "murmurhash": "^2.0.1",
+    "prompts": "^2.4.2"
   },
   "files": [
     "package.json",
