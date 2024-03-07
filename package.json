@@ -34,7 +34,7 @@
     "fast-xml-parser": "^3.19.0",
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
-    "microsoft-cognitiveservices-speech-sdk": "^1.18.1",
+    "microsoft-cognitiveservices-speech-sdk": "^1.36.0",
     "mp3": "^0.1.0",
     "multi-integer-range": "^4.0.9",
     "murmurhash": "^2.0.0",
