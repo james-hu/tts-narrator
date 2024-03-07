@@ -17,9 +17,9 @@ export abstract class BaseTtsService implements TtsService {
   }
 
   protected validateXML(xml: string, lineOffset: number): void {
-    const validatioinResult = XMLValidator.validate(xml);
-    if (validatioinResult !== true) {
-      const err = validatioinResult.err;
+    const validationResult = XMLValidator.validate(xml);
+    if (validationResult !== true) {
+      const err = validationResult.err;
       throw new Error(`Invalid markup at line ${err.line - lineOffset}. ${err.code}: ${err.msg}`);
     }
   }
