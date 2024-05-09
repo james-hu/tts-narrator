@@ -1,4 +1,5 @@
 import { XMLValidator } from 'fast-xml-parser';
+
 import { NarrationParagraph, VoiceSettings } from './narration-script';
 
 export interface AudioGenerationOptions {

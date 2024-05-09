@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+
 // import { inspect } from 'util';
 import { loadScript, saveScript } from '../src/narration-script';
 

@@ -1,8 +1,9 @@
-import { unlinkSync, existsSync } from 'fs';
 import { expect } from 'chai';
+import { existsSync, unlinkSync } from 'node:fs';
+
+import { getAudioFileDuration, playMp3File } from '../src/audio-utils';
 // import { inspect } from 'util';
 import { AzureTtsService } from '../src/azure-tts-service';
-import { getAudioFileDuration, playMp3File } from '../src/audio-utils';
 
 describe.skip('azure-tts-service', () => {
   const tts = new AzureTtsService();

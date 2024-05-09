@@ -1,6 +1,3 @@
+root: true
 extends:
-  - ./node_modules/@handy-common-utils/dev-utils/.eslintrc.yml
-rules:
-  unicorn/no-array-reduce: off
-  no-useless-constructor: off
-  unicorn/prefer-node-protocol: off
+  - sensible-prettier-typescript

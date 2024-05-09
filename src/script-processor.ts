@@ -2,20 +2,21 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable max-depth */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable no-console */
-import * as fs from 'fs';
-import path from 'path';
-import * as murmurhash from 'murmurhash';
-import prompts from 'prompts';
-import chalk from 'chalk';
-import { Flags } from '@oclif/core';
 import { ConsoleLineLogger, consoleWithColour } from '@handy-common-utils/misc-utils';
-import { MultiRange } from 'multi-integer-range';
-import { AzureAudioGenerationOptions, AzureTtsService } from './azure-tts-service';
-import { loadScript, NarrationParagraph, NarrationScript } from './narration-script';
-import { AudioGenerationOptions, TtsService } from './tts-service';
-import { getAudioFileDuration, playMp3File } from './audio-utils';
 import { CommandOptions } from '@handy-common-utils/oclif-utils';
+import { Flags } from '@oclif/core';
+import chalk from 'chalk';
+import { MultiRange } from 'multi-integer-range';
+import * as murmurhash from 'murmurhash';
+import * as fs from 'node:fs';
+import path from 'node:path';
+// eslint-disable-next-line import/no-named-as-default
+import prompts from 'prompts';
+
+import { getAudioFileDuration, playMp3File } from './audio-utils';
+import { AzureAudioGenerationOptions, AzureTtsService } from './azure-tts-service';
+import { NarrationParagraph, NarrationScript, loadScript } from './narration-script';
+import { AudioGenerationOptions, TtsService } from './tts-service';
 
 export enum TtsServiceType {
   Azure = 'azure'
@@ -89,15 +90,17 @@ export class ScriptProcessor {
     if (!this.ttsService) {
       const ttsServiceType = this.flags.service ?? this._script.settings.service;
       switch (ttsServiceType) {
-        case TtsServiceType.Azure:
+        case TtsServiceType.Azure: {
           this.ttsService = new AzureTtsService();
           this.audioGenerationOptions = {
             subscriptionKey: this.flags['subscription-key'] ?? (this.flags['subscription-key-env'] ? process.env[this.flags['subscription-key-env']] : undefined),
             serviceRegion: this.flags.region,
           } as AzureAudioGenerationOptions;
           break;
-        default:
+        }
+        default: {
           throw new Error(`Unknown TTS service: ${ttsServiceType}`);
+        }
       }
     }
   }

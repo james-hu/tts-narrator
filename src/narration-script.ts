@@ -1,8 +1,9 @@
 /* eslint-disable no-use-before-define */
-import { promisify } from 'util';
-import * as fs from 'fs';
-import { load as loadYaml, dump as dumpYaml } from 'js-yaml';
+import { dump as dumpYaml, load as loadYaml } from 'js-yaml';
 import { cloneDeep } from 'lodash';
+import * as fs from 'node:fs';
+import { promisify } from 'node:util';
+
 import { TtsServiceType } from './script-processor';
 
 const readFileAsPromise = promisify(fs.readFile);
@@ -16,6 +17,7 @@ export interface ScriptSettings {
   service?: TtsServiceType;
   voice?: VoiceSettings;
 }
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace NarrationScriptFile {
   export interface Paragraph {
     settings?: VoiceSettings;

@@ -1,10 +1,8 @@
-/* eslint-disable brace-style */
-/* eslint-disable max-statements-per-line */
-import * as stream from 'stream';
-import fs from 'fs/promises';
 import { timeoutReject } from '@handy-common-utils/promise-utils';
 import * as AV from 'av';
 import 'mp3';
+import fs from 'node:fs/promises';
+import * as stream from 'node:stream';
 
 function toBuffer(arr: Float32Array) {
   return ArrayBuffer.isView(arr) ?
@@ -38,6 +36,7 @@ export async function playMp3File(filePath: string, infoLogger: (msg: string) =>
   const fileContent = await fs.readFile(filePath);
   return new Promise((resolve, reject) => {
     try {
+      // eslint-disable-next-line import/namespace
       const asset = AV.Asset.fromBuffer(fileContent);
       asset.decodeToBuffer(buffer => {
         // Initiate the source
@@ -66,6 +65,7 @@ export async function playMp3File(filePath: string, infoLogger: (msg: string) =>
 
 export async function getAudioFileDuration(filePath: string): Promise<number> {
   const fileContent = await fs.readFile(filePath);
+  // eslint-disable-next-line import/namespace
   const asset = AV.Asset.fromBuffer(fileContent);
   return timeoutReject(new Promise((resolve, reject) => {
     try {

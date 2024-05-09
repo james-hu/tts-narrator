@@ -1,5 +1,6 @@
-import { Args, Command } from '@oclif/core';
 import { enhancedFlags, reconstructCommandLine, withEnhancedFlagsHandled } from '@handy-common-utils/oclif-utils';
+import { Args, Command } from '@oclif/core';
+
 import { ScriptProcessor, scriptProcessorFlags } from './script-processor';
 
 class TtsNarratorCli extends Command {
@@ -9,7 +10,7 @@ class TtsNarratorCli extends Command {
   static flags = {
     ...enhancedFlags,
     ...scriptProcessorFlags,
-  }
+  };
 
   static args = {
     file: Args.string({
@@ -27,7 +28,7 @@ class TtsNarratorCli extends Command {
 
   async run(): Promise<void> {
     const options = await withEnhancedFlagsHandled(this, () => this.parse(TtsNarratorCli));
-    const {args, flags} = options;
+    const { args, flags } = options;
 
     const processor = new ScriptProcessor(args.file, flags);
     await processor.run(reconstructCommandLine(this, options));

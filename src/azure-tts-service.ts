@@ -1,4 +1,5 @@
 import { AudioConfig, ResultReason, SpeechConfig, SpeechSynthesisOutputFormat, SpeechSynthesizer } from 'microsoft-cognitiveservices-speech-sdk';
+
 import { VoiceSettings } from './narration-script';
 import { AudioGenerationOptions, BaseTtsService } from './tts-service';
 
