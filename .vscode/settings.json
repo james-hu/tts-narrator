@@ -4,6 +4,7 @@
     "murmurhash",
     "oclif",
     "powerpoint",
-    "preversion"
+    "preversion",
+    "ssml"
   ]
 }

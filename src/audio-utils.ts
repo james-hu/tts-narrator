@@ -1,6 +1,7 @@
 /* eslint-disable brace-style */
 /* eslint-disable max-statements-per-line */
 import * as stream from 'stream';
+import fs from 'fs/promises';
 import { timeoutReject } from '@handy-common-utils/promise-utils';
 import * as AV from 'av';
 import 'mp3';
@@ -34,9 +35,10 @@ export async function playMp3File(filePath: string, infoLogger: (msg: string) =>
     infoLogger(`Skipped playing MP3 because underlying library is not available: ${filePath}`);
     return;
   }
+  const fileContent = await fs.readFile(filePath);
   return new Promise((resolve, reject) => {
     try {
-      const asset = AV.Asset.fromFile(filePath);
+      const asset = AV.Asset.fromBuffer(fileContent);
       asset.decodeToBuffer(buffer => {
         // Initiate the source
         const bufferStream = new stream.PassThrough();
@@ -62,8 +64,9 @@ export async function playMp3File(filePath: string, infoLogger: (msg: string) =>
   });
 }
 
-export function getAudioFileDuration(filePath: string): Promise<number> {
-  const asset = AV.Asset.fromFile(filePath);
+export async function getAudioFileDuration(filePath: string): Promise<number> {
+  const fileContent = await fs.readFile(filePath);
+  const asset = AV.Asset.fromBuffer(fileContent);
   return timeoutReject(new Promise((resolve, reject) => {
     try {
       asset.get('duration', duration => {
@@ -72,5 +75,5 @@ export function getAudioFileDuration(filePath: string): Promise<number> {
     } catch (error) {
       reject(error);
     }
-  }), 20000, new Error(`Unabled to determine audio duration, is the file '${filePath}' corrupted?`));
+  }), 20000, new Error(`Unable to determine audio duration, is the file '${filePath}' corrupted?`));
 }

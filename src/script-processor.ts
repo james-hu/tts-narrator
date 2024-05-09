@@ -8,13 +8,14 @@ import path from 'path';
 import * as murmurhash from 'murmurhash';
 import prompts from 'prompts';
 import chalk from 'chalk';
-import { flags } from '@oclif/command';
-import { cliConsoleWithColour, DefaultCliConsole, Flags } from '@handy-common-utils/oclif-utils';
+import { Flags } from '@oclif/core';
+import { ConsoleLineLogger, consoleWithColour } from '@handy-common-utils/misc-utils';
 import { MultiRange } from 'multi-integer-range';
 import { AzureAudioGenerationOptions, AzureTtsService } from './azure-tts-service';
 import { loadScript, NarrationParagraph, NarrationScript } from './narration-script';
 import { AudioGenerationOptions, TtsService } from './tts-service';
 import { getAudioFileDuration, playMp3File } from './audio-utils';
+import { CommandOptions } from '@handy-common-utils/oclif-utils';
 
 export enum TtsServiceType {
   Azure = 'azure'
@@ -24,35 +25,35 @@ export enum TtsServiceType {
  * CLI flags that are required/used by the ScriptProcessor.
  */
 export const scriptProcessorFlags = {
-  debug: flags.boolean({ char: 'd', description: 'output debug information' }),
-  quiet: flags.boolean({ char: 'q', description: 'output warn and error information only' }),
+  debug: Flags.boolean({ char: 'd', description: 'output debug information' }),
+  quiet: Flags.boolean({ char: 'q', description: 'output warn and error information only' }),
 
-  service: flags.string({ char: 's', options: Object.entries(TtsServiceType).map(([_name, value]) => value), description: 'text-to-speech service to use' }),
-  'subscription-key': flags.string({ char: 'k', description: 'Azure Speech service subscription key' }),
-  'subscription-key-env': flags.string({ description: 'Name of the environment variable that holds the subscription key' }),
-  region: flags.string({ char: 'r', description: 'region of the text-to-speech service' }),
+  service: Flags.string({ char: 's', options: Object.entries(TtsServiceType).map(([_name, value]) => value), description: 'text-to-speech service to use' }),
+  'subscription-key': Flags.string({ char: 'k', description: 'Azure Speech service subscription key' }),
+  'subscription-key-env': Flags.string({ description: 'Name of the environment variable that holds the subscription key' }),
+  region: Flags.string({ char: 'r', description: 'region of the text-to-speech service' }),
 
-  play: flags.boolean({ char: 'p', default: true, allowNo: true, description: 'play generated audio' }),
-  interactive: flags.boolean({ char: 'i', default: false, description: 'wait for key press before entering each section' }),
+  play: Flags.boolean({ char: 'p', default: true, allowNo: true, description: 'play generated audio' }),
+  interactive: Flags.boolean({ char: 'i', default: false, description: 'wait for key press before entering each section' }),
 
-  overwrite: flags.boolean({ char: 'o', default: false, description: 'always overwrite previously generated audio files' }),
-  'dry-run': flags.boolean({ default: false, description: 'don\'t try to generate or play audio' }),
-  ssml: flags.boolean({ default: false, exclusive: ['quiet'], description: 'display generated SSML' }),
+  overwrite: Flags.boolean({ char: 'o', default: false, description: 'always overwrite previously generated audio files' }),
+  'dry-run': Flags.boolean({ default: false, description: 'don\'t try to generate or play audio' }),
+  ssml: Flags.boolean({ default: false, exclusive: ['quiet'], description: 'display generated SSML' }),
 
-  chapters: flags.string({ description: 'list of chapters to process, examples: "1-10,13,15", "4-"' }),
-  sections: flags.string({ description: 'list of sections to process, examples: "1-10,13,15", "5-"' }),
+  chapters: Flags.string({ description: 'list of chapters to process, examples: "1-10,13,15", "4-"' }),
+  sections: Flags.string({ description: 'list of sections to process, examples: "1-10,13,15", "5-"' }),
 };
 
 export class ScriptProcessor {
-  protected cliConsole: DefaultCliConsole;
+  protected cliConsole: ConsoleLineLogger;
   protected ttsService!: TtsService;
   protected audioGenerationOptions: AudioGenerationOptions|undefined;
   protected _script!: NarrationScript;
   protected chapterRange: MultiRange|undefined;
   protected sectionRange: MultiRange|undefined;
 
-  constructor(protected scriptFilePath: string, protected flags: Flags<typeof scriptProcessorFlags>, cliConsole?: DefaultCliConsole) {
-    this.cliConsole = cliConsole ?? cliConsoleWithColour(this.flags, chalk);
+  constructor(protected scriptFilePath: string, protected flags: CommandOptions<{ flags: typeof scriptProcessorFlags}>['flags'], cliConsole?: ConsoleLineLogger) {
+    this.cliConsole = cliConsole ?? consoleWithColour(this.flags, chalk);
   }
 
   protected hash(ssml: string, _paragraph: NarrationParagraph): string {
@@ -173,7 +174,7 @@ export class ScriptProcessor {
                 this.cliConsole.debug('No action because of dry-run flag');
               } else {
                 // check to see if the .mp3 file already exists
-                if (!this.flags.overwrite && fs.existsSync(generatedAudioFilePath)) {
+                if (!this.flags.overwrite && fs.existsSync(generatedAudioFilePath) && fs.statSync(generatedAudioFilePath).size > 0) {
                   this.cliConsole.debug(`Re-using already existing audio file '${generatedAudioFilePath}' for ${chapterIndex}-${sectionIndex}-${paragraphIndex}`);
                 } else {
                   // generate .mp3 file if needed
