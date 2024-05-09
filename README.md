@@ -37,58 +37,47 @@ When running on MacOS, to avoid `illegal hardware instruction` issue, try `npm i
 <!-- help start -->
 ```
 USAGE
-  $ tts-narrator [FILE]
+  $ tts-narrator ttsnarratorcli FILE [-h] [-d] [-s azure] [-k <value>]
+    [--subscription-key-env <value>] [-r <value>] [-p] [-i] [-o] [--dry-run]
+    [--ssml | -q] [--chapters <value>] [--sections <value>] [-v]
 
 ARGUMENTS
   FILE  path to the script file (.yml)
 
-OPTIONS
-  -d, --debug                                  output debug information
-  -h, --help                                   show CLI help
+FLAGS
+  -d, --debug                         output debug information
+  -h, --help                          Show help
+  -i, --interactive                   wait for key press before entering each
+                                      section
+  -k, --subscription-key=<value>      Azure Speech service subscription key
+  -o, --overwrite                     always overwrite previously generated
+                                      audio files
+  -p, --[no-]play                     play generated audio
+  -q, --quiet                         output warn and error information only
+  -r, --region=<value>                region of the text-to-speech service
+  -s, --service=<option>              text-to-speech service to use
+                                      <options: azure>
+  -v, --version                       Show CLI version.
+      --chapters=<value>              list of chapters to process, examples:
+                                      "1-10,13,15", "4-"
+      --dry-run                       don't try to generate or play audio
+      --sections=<value>              list of sections to process, examples:
+                                      "1-10,13,15", "5-"
+      --ssml                          display generated SSML
+      --subscription-key-env=<value>  Name of the environment variable that
+                                      holds the subscription key
 
-  -i, --interactive                            wait for key press before
-                                               entering each section
-
-  -k, --subscription-key=subscription-key      Azure Speech service subscription
-                                               key
-
-  -o, --overwrite                              always overwrite previously
-                                               generated audio files
-
-  -p, --[no-]play                              play generated audio
-
-  -q, --quiet                                  output warn and error information
-                                               only
-
-  -r, --region=region                          region of the text-to-speech
-                                               service
-
-  -s, --service=azure                          text-to-speech service to use
-
-  -v, --version                                show CLI version
-
-  --chapters=chapters                          list of chapters to process,
-                                               examples: "1-10,13,15", "4-"
-
-  --dry-run                                    don't try to generate or play
-                                               audio
-
-  --sections=sections                          list of sections to process,
-                                               examples: "1-10,13,15", "5-"
-
-  --ssml                                       display generated SSML
-
-  --subscription-key-env=subscription-key-env  Name of the environment variable
-                                               that holds the subscription key
+DESCRIPTION
+  Generate narration with Text-To-Speech technology
 
 EXAMPLES
-  tts-narrator myscript.yml --play --interactive --service azure 
-  --subscription-key-env SUBSCRIPTION_KEY --region australiaeast
-  tts-narrator ./test/fixtures/script3.yml -s azure --ssml -r australiaeast 
-  --subscription-key-env=TTS_SUB_KEY  --no-play --interactive -d
-  tts-narrator ./test/fixtures/script3.yml -s azure -r australiaeast 
-  --subscription-key-env=TTS_SUB_KEY --quiet
-  tts-narrator ./test/fixtures/script3.yml
+  ^ myscript.yml --play --interactive --service azure --subscription-key-env SUBSCRIPTION_KEY --region australiaeast
+
+  ^ ./test/fixtures/script3.yml -s azure --ssml -r australiaeast --subscription-key-env=TTS_SUB_KEY  --no-play --interactive -d
+
+  ^ ./test/fixtures/script3.yml -s azure -r australiaeast --subscription-key-env=TTS_SUB_KEY --quiet
+
+  ^ ./test/fixtures/script3.yml
 ```
 
 <!-- help end -->

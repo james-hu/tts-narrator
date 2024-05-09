@@ -1,14 +1,14 @@
-import { Args, Command, Flags } from '@oclif/core';
+import { Args, Command } from '@oclif/core';
 import { enhancedFlags, reconstructCommandLine, withEnhancedFlagsHandled } from '@handy-common-utils/oclif-utils';
 import { ScriptProcessor, scriptProcessorFlags } from './script-processor';
 
 class TtsNarratorCli extends Command {
+  static id = ' '; // workaround for the correct USAGE section in help output
   static description = 'Generate narration with Text-To-Speech technology';
 
   static flags = {
     ...enhancedFlags,
     ...scriptProcessorFlags,
-    version: Flags.version({ char: 'v' }),
   }
 
   static args = {
@@ -19,10 +19,10 @@ class TtsNarratorCli extends Command {
   };
 
   static examples = [
-    '^ myscript.yml --play --interactive --service azure --subscription-key-env SUBSCRIPTION_KEY --region australiaeast',
-    '^ ./test/fixtures/script3.yml -s azure --ssml -r australiaeast --subscription-key-env=TTS_SUB_KEY  --no-play --interactive -d',
-    '^ ./test/fixtures/script3.yml -s azure -r australiaeast --subscription-key-env=TTS_SUB_KEY --quiet',
-    '^ ./test/fixtures/script3.yml',
+    '<%= config.bin %> myscript.yml --play --interactive --service azure --subscription-key-env SUBSCRIPTION_KEY --region australiaeast',
+    '<%= config.bin %> ./test/fixtures/script3.yml -s azure --ssml -r australiaeast --subscription-key-env=TTS_SUB_KEY  --no-play --interactive -d',
+    '<%= config.bin %> ./test/fixtures/script3.yml -s azure -r australiaeast --subscription-key-env=TTS_SUB_KEY --quiet',
+    '<%= config.bin %> ./test/fixtures/script3.yml',
   ];
 
   async run(): Promise<void> {
