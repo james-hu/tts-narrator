@@ -37,9 +37,9 @@ When running on MacOS, to avoid `illegal hardware instruction` issue, try `npm i
 <!-- help start -->
 ```
 USAGE
-  $ tts-narrator ttsnarratorcli FILE [-h] [-d] [-s azure] [-k <value>]
+  $ tts-narrator   FILE[-h] [-v] [-d] [-s azure] [-k <value>]
     [--subscription-key-env <value>] [-r <value>] [-p] [-i] [-o] [--dry-run]
-    [--ssml | -q] [--chapters <value>] [--sections <value>] [-v]
+    [--ssml | -q] [--chapters <value>] [--sections <value>]
 
 ARGUMENTS
   FILE  path to the script file (.yml)
@@ -57,7 +57,7 @@ FLAGS
   -r, --region=<value>                region of the text-to-speech service
   -s, --service=<option>              text-to-speech service to use
                                       <options: azure>
-  -v, --version                       Show CLI version.
+  -v, --version                       Show CLI version
       --chapters=<value>              list of chapters to process, examples:
                                       "1-10,13,15", "4-"
       --dry-run                       don't try to generate or play audio
@@ -71,13 +71,13 @@ DESCRIPTION
   Generate narration with Text-To-Speech technology
 
 EXAMPLES
-  ^ myscript.yml --play --interactive --service azure --subscription-key-env SUBSCRIPTION_KEY --region australiaeast
+  $ tts-narrator myscript.yml --play --interactive --service azure --subscription-key-env SUBSCRIPTION_KEY --region australiaeast
 
-  ^ ./test/fixtures/script3.yml -s azure --ssml -r australiaeast --subscription-key-env=TTS_SUB_KEY  --no-play --interactive -d
+  $ tts-narrator ./test/fixtures/script3.yml -s azure --ssml -r australiaeast --subscription-key-env=TTS_SUB_KEY  --no-play --interactive -d
 
-  ^ ./test/fixtures/script3.yml -s azure -r australiaeast --subscription-key-env=TTS_SUB_KEY --quiet
+  $ tts-narrator ./test/fixtures/script3.yml -s azure -r australiaeast --subscription-key-env=TTS_SUB_KEY --quiet
 
-  ^ ./test/fixtures/script3.yml
+  $ tts-narrator ./test/fixtures/script3.yml
 ```
 
 <!-- help end -->
@@ -87,182 +87,32 @@ EXAMPLES
 <!-- API start -->
 <a name="readmemd"></a>
 
-tts-narrator
-
 ## tts-narrator
 
-### Table of contents
+### Modules
 
-#### Namespaces
-
-- [NarrationScriptFile](#modulesnarrationscriptfilemd)
-
-#### Enumerations
-
-- [TtsServiceType](#enumsttsservicetypemd)
-
-#### Classes
-
-- [AzureTtsService](#classesazurettsservicemd)
-- [BaseTtsService](#classesbasettsservicemd)
-- [NarrationChapter](#classesnarrationchaptermd)
-- [NarrationParagraph](#classesnarrationparagraphmd)
-- [NarrationScript](#classesnarrationscriptmd)
-- [NarrationSection](#classesnarrationsectionmd)
-- [ScriptProcessor](#classesscriptprocessormd)
-
-#### Interfaces
-
-- [AudioGenerationOptions](#interfacesaudiogenerationoptionsmd)
-- [AzureAudioGenerationOptions](#interfacesazureaudiogenerationoptionsmd)
-- [ScriptSettings](#interfacesscriptsettingsmd)
-- [TtsService](#interfacesttsservicemd)
-- [VoiceSettings](#interfacesvoicesettingsmd)
-
-#### Variables
-
-- [scriptProcessorFlags](#scriptprocessorflags)
-
-#### Functions
-
-- [getAudioFileDuration](#getaudiofileduration)
-- [loadScript](#loadscript)
-- [playMp3File](#playmp3file)
-- [saveScript](#savescript)
-
-### Variables
-
-#### scriptProcessorFlags
-
-• `Const` **scriptProcessorFlags**: `Object`
-
-CLI flags that are required/used by the ScriptProcessor.
-
-##### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `chapters` | `IOptionFlag`<`undefined` \| `string`\> |
-| `debug` | `IBooleanFlag`<`boolean`\> |
-| `dry-run` | `IBooleanFlag`<`boolean`\> |
-| `interactive` | `IBooleanFlag`<`boolean`\> |
-| `overwrite` | `IBooleanFlag`<`boolean`\> |
-| `play` | `IBooleanFlag`<`boolean`\> |
-| `quiet` | `IBooleanFlag`<`boolean`\> |
-| `region` | `IOptionFlag`<`undefined` \| `string`\> |
-| `sections` | `IOptionFlag`<`undefined` \| `string`\> |
-| `service` | `IOptionFlag`<`undefined` \| `string`\> |
-| `ssml` | `IBooleanFlag`<`boolean`\> |
-| `subscription-key` | `IOptionFlag`<`undefined` \| `string`\> |
-| `subscription-key-env` | `IOptionFlag`<`undefined` \| `string`\> |
-
-### Functions
-
-#### getAudioFileDuration
-
-▸ **getAudioFileDuration**(`filePath`): `Promise`<`number`\>
-
-##### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `filePath` | `string` |
-
-##### Returns
-
-`Promise`<`number`\>
-
-___
-
-#### loadScript
-
-▸ **loadScript**(`scriptFilePath`): `Promise`<[`NarrationScript`](#classesnarrationscriptmd)\>
-
-##### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `scriptFilePath` | `string` |
-
-##### Returns
-
-`Promise`<[`NarrationScript`](#classesnarrationscriptmd)\>
-
-___
-
-#### playMp3File
-
-▸ **playMp3File**(`filePath`, `infoLogger`): `Promise`<`void`\>
-
-##### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `filePath` | `string` |
-| `infoLogger` | (`msg`: `string`) => `void` |
-
-##### Returns
-
-`Promise`<`void`\>
-
-___
-
-#### saveScript
-
-▸ **saveScript**(`script`): `Promise`<`void`\>
-
-##### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `script` | [`NarrationScript`](#classesnarrationscriptmd) |
-
-##### Returns
-
-`Promise`<`void`\>
-
-▸ **saveScript**(`script`, `scriptFilePath`): `Promise`<`void`\>
-
-##### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `script` | [`Script`](#interfacesnarrationscriptfilescriptmd) |
-| `scriptFilePath` | `string` |
-
-##### Returns
-
-`Promise`<`void`\>
+- [audio-utils](#modulesaudio_utilsmd)
+- [azure-tts-service](#modulesazure_tts_servicemd)
+- [index](#modulesindexmd)
+- [narration-script](#modulesnarration_scriptmd)
+- [script-processor](#modulesscript_processormd)
+- [tts-service](#modulestts_servicemd)
+- [types](#modulestypesmd)
 
 ## Classes
 
 
-<a name="classesazurettsservicemd"></a>
-
-[tts-narrator](#readmemd) / AzureTtsService
+<a name="classesazure_tts_serviceazurettsservicemd"></a>
 
 ### Class: AzureTtsService
 
+[azure-tts-service](#modulesazure_tts_servicemd).AzureTtsService
+
 #### Hierarchy
 
-- [`BaseTtsService`](#classesbasettsservicemd)
+- [`BaseTtsService`](#classestts_servicebasettsservicemd)
 
   ↳ **`AzureTtsService`**
-
-#### Table of contents
-
-##### Constructors
-
-- [constructor](#constructor)
-
-##### Methods
-
-- [buildSpeakStartTag](#buildspeakstarttag)
-- [buildVoiceStartTag](#buildvoicestarttag)
-- [generateAudio](#generateaudio)
-- [generateSSML](#generatessml)
-- [generateSsmlWithoutValidation](#generatessmlwithoutvalidation)
-- [validateXML](#validatexml)
 
 #### Constructors
 
@@ -272,7 +122,7 @@ ___
 
 ###### Inherited from
 
-[BaseTtsService](#classesbasettsservicemd).[constructor](#constructor)
+[BaseTtsService](#classestts_servicebasettsservicemd).[constructor](#constructor)
 
 #### Methods
 
@@ -284,7 +134,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `voiceSettings` | [`VoiceSettings`](#interfacesvoicesettingsmd) |
+| `voiceSettings` | [`VoiceSettings`](#interfacesnarration_scriptvoicesettingsmd) |
 
 ###### Returns
 
@@ -292,7 +142,7 @@ ___
 
 ###### Overrides
 
-[BaseTtsService](#classesbasettsservicemd).[buildSpeakStartTag](#buildspeakstarttag)
+[BaseTtsService](#classestts_servicebasettsservicemd).[buildSpeakStartTag](#buildspeakstarttag)
 
 ___
 
@@ -304,7 +154,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `voiceSettings` | [`VoiceSettings`](#interfacesvoicesettingsmd) |
+| `voiceSettings` | [`VoiceSettings`](#interfacesnarration_scriptvoicesettingsmd) |
 
 ###### Returns
 
@@ -312,48 +162,48 @@ ___
 
 ###### Inherited from
 
-[BaseTtsService](#classesbasettsservicemd).[buildVoiceStartTag](#buildvoicestarttag)
+[BaseTtsService](#classestts_servicebasettsservicemd).[buildVoiceStartTag](#buildvoicestarttag)
 
 ___
 
 ##### generateAudio
 
-▸ **generateAudio**(`ssml`, `options`): `Promise`<`any`\>
+▸ **generateAudio**(`ssml`, `options`): `Promise`\<`any`\>
 
 ###### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `ssml` | `string` |
-| `options` | [`AzureAudioGenerationOptions`](#interfacesazureaudiogenerationoptionsmd) |
+| `options` | [`AzureAudioGenerationOptions`](#interfacesazure_tts_serviceazureaudiogenerationoptionsmd) |
 
 ###### Returns
 
-`Promise`<`any`\>
+`Promise`\<`any`\>
 
 ###### Overrides
 
-[BaseTtsService](#classesbasettsservicemd).[generateAudio](#generateaudio)
+[BaseTtsService](#classestts_servicebasettsservicemd).[generateAudio](#generateaudio)
 
 ___
 
 ##### generateSSML
 
-▸ **generateSSML**(`paragraph`): `Promise`<`string`\>
+▸ **generateSSML**(`paragraph`): `Promise`\<`string`\>
 
 ###### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `paragraph` | [`NarrationParagraph`](#classesnarrationparagraphmd) |
+| `paragraph` | [`NarrationParagraph`](#classesnarration_scriptnarrationparagraphmd) |
 
 ###### Returns
 
-`Promise`<`string`\>
+`Promise`\<`string`\>
 
 ###### Inherited from
 
-[BaseTtsService](#classesbasettsservicemd).[generateSSML](#generatessml)
+[BaseTtsService](#classestts_servicebasettsservicemd).[generateSSML](#generatessml)
 
 ___
 
@@ -365,7 +215,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `paragraph` | [`NarrationParagraph`](#classesnarrationparagraphmd) |
+| `paragraph` | [`NarrationParagraph`](#classesnarration_scriptnarrationparagraphmd) |
 
 ###### Returns
 
@@ -378,7 +228,7 @@ ___
 
 ###### Inherited from
 
-[BaseTtsService](#classesbasettsservicemd).[generateSsmlWithoutValidation](#generatessmlwithoutvalidation)
+[BaseTtsService](#classestts_servicebasettsservicemd).[generateSsmlWithoutValidation](#generatessmlwithoutvalidation)
 
 ___
 
@@ -399,39 +249,534 @@ ___
 
 ###### Inherited from
 
-[BaseTtsService](#classesbasettsservicemd).[validateXML](#validatexml)
+[BaseTtsService](#classestts_servicebasettsservicemd).[validateXML](#validatexml)
 
 
-<a name="classesbasettsservicemd"></a>
+<a name="classesindexexport_md"></a>
 
-[tts-narrator](#readmemd) / BaseTtsService
+### Class: export=
+
+[index](#modulesindexmd).export=
+
+#### Hierarchy
+
+- `Command`
+
+  ↳ **`export=`**
+
+#### Constructors
+
+##### constructor
+
+• **new export=**(`argv`, `config`)
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `argv` | `string`[] |
+| `config` | `Config` |
+
+###### Inherited from
+
+Command.constructor
+
+#### Properties
+
+| Property | Description |
+| --- | --- |
+| `Static` **args**: `Object` | Type declaration<br><br>| Name | Type |<br>| :------ | :------ |<br>| `file` | `Arg`\<`string`, `Record`\<`string`, `unknown`\>\> |<br>Overrides<br><br>Command.args |
+| `Static` **description**: `string` = `'Generate narration with Text-To-Speech technology'` | Overrides<br><br>Command.description |
+| `Static` **examples**: `string`[] | Overrides<br><br>Command.examples |
+| `Static` **flags**: `Object` | Type declaration<br><br>| Name | Type |<br>| :------ | :------ |<br>| `chapters` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `debug` | `BooleanFlag`\<`boolean`\> |<br>| `dry-run` | `BooleanFlag`\<`boolean`\> |<br>| `interactive` | `BooleanFlag`\<`boolean`\> |<br>| `overwrite` | `BooleanFlag`\<`boolean`\> |<br>| `play` | `BooleanFlag`\<`boolean`\> |<br>| `quiet` | `BooleanFlag`\<`boolean`\> |<br>| `region` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `sections` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `service` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `ssml` | `BooleanFlag`\<`boolean`\> |<br>| `subscription-key` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `subscription-key-env` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>Overrides<br><br>Command.flags |
+| `Static` **id**: `string` = `' '` | Overrides<br><br>Command.id |
+
+
+#### Methods
+
+##### run
+
+▸ **run**(): `Promise`\<`void`\>
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Overrides
+
+Command.run
+
+
+<a name="classesnarration_scriptnarrationchaptermd"></a>
+
+### Class: NarrationChapter
+
+[narration-script](#modulesnarration_scriptmd).NarrationChapter
+
+#### Implements
+
+- [`Chapter`](#interfacesnarration_scriptnarrationscriptfilechaptermd)
+
+#### Constructors
+
+##### constructor
+
+• **new NarrationChapter**(`chapter`, `index`, `script`)
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `chapter` | [`Chapter`](#interfacesnarration_scriptnarrationscriptfilechaptermd) |
+| `index` | `number` |
+| `script` | [`NarrationScript`](#classesnarration_scriptnarrationscriptmd) |
+
+#### Properties
+
+| Property | Description |
+| --- | --- |
+| `Protected` **chapter**: [`Chapter`](#interfacesnarration_scriptnarrationscriptfilechaptermd) |  |
+| **index**: `number` |  |
+| **script**: [`NarrationScript`](#classesnarration_scriptnarrationscriptmd) |  |
+| **sections**: [`NarrationSection`](#classesnarration_scriptnarrationsectionmd)[] | Implementation of<br><br>[Chapter](#interfacesnarration_scriptnarrationscriptfilechaptermd).[sections](#sections) |
+
+
+#### Accessors
+
+##### key
+
+• `get` **key**(): `string`
+
+###### Returns
+
+`string`
+
+###### Implementation of
+
+[Chapter](#interfacesnarration_scriptnarrationscriptfilechaptermd).[key](#key)
+
+___
+
+##### settings
+
+• `get` **settings**(): [`VoiceSettings`](#interfacesnarration_scriptvoicesettingsmd)
+
+###### Returns
+
+[`VoiceSettings`](#interfacesnarration_scriptvoicesettingsmd)
+
+###### Implementation of
+
+[Chapter](#interfacesnarration_scriptnarrationscriptfilechaptermd).[settings](#settings)
+
+#### Methods
+
+##### getSectionByKey
+
+▸ **getSectionByKey**(`key`): `undefined` \| [`NarrationSection`](#classesnarration_scriptnarrationsectionmd)
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `key` | `string` |
+
+###### Returns
+
+`undefined` \| [`NarrationSection`](#classesnarration_scriptnarrationsectionmd)
+
+
+<a name="classesnarration_scriptnarrationparagraphmd"></a>
+
+### Class: NarrationParagraph
+
+[narration-script](#modulesnarration_scriptmd).NarrationParagraph
+
+#### Implements
+
+- [`Paragraph`](#interfacesnarration_scriptnarrationscriptfileparagraphmd)
+
+#### Constructors
+
+##### constructor
+
+• **new NarrationParagraph**(`paragraph`, `index`, `section`, `chapter`, `script`)
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `paragraph` | [`Paragraph`](#interfacesnarration_scriptnarrationscriptfileparagraphmd) |
+| `index` | `number` |
+| `section` | [`NarrationSection`](#classesnarration_scriptnarrationsectionmd) |
+| `chapter` | [`NarrationChapter`](#classesnarration_scriptnarrationchaptermd) |
+| `script` | [`NarrationScript`](#classesnarration_scriptnarrationscriptmd) |
+
+#### Properties
+
+| Property | Description |
+| --- | --- |
+| `Optional` **audioFilePath**: `string` | Path of the generated audio file. Only for in-memory processing, not supposed to be stored in file. |
+| **chapter**: [`NarrationChapter`](#classesnarration_scriptnarrationchaptermd) |  |
+| **index**: `number` |  |
+| `Protected` **paragraph**: [`Paragraph`](#interfacesnarration_scriptnarrationscriptfileparagraphmd) |  |
+| **script**: [`NarrationScript`](#classesnarration_scriptnarrationscriptmd) |  |
+| **section**: [`NarrationSection`](#classesnarration_scriptnarrationsectionmd) |  |
+
+
+#### Accessors
+
+##### key
+
+• `get` **key**(): `string`
+
+###### Returns
+
+`string`
+
+###### Implementation of
+
+[Paragraph](#interfacesnarration_scriptnarrationscriptfileparagraphmd).[key](#key)
+
+___
+
+##### settings
+
+• `get` **settings**(): [`VoiceSettings`](#interfacesnarration_scriptvoicesettingsmd)
+
+###### Returns
+
+[`VoiceSettings`](#interfacesnarration_scriptvoicesettingsmd)
+
+###### Implementation of
+
+[Paragraph](#interfacesnarration_scriptnarrationscriptfileparagraphmd).[settings](#settings)
+
+___
+
+##### text
+
+• `get` **text**(): `string`
+
+###### Returns
+
+`string`
+
+###### Implementation of
+
+[Paragraph](#interfacesnarration_scriptnarrationscriptfileparagraphmd).[text](#text)
+
+
+<a name="classesnarration_scriptnarrationscriptmd"></a>
+
+### Class: NarrationScript
+
+[narration-script](#modulesnarration_scriptmd).NarrationScript
+
+#### Implements
+
+- [`Script`](#interfacesnarration_scriptnarrationscriptfilescriptmd)
+
+#### Constructors
+
+##### constructor
+
+• **new NarrationScript**(`script`, `scriptFilePath`)
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `script` | [`Script`](#interfacesnarration_scriptnarrationscriptfilescriptmd) |
+| `scriptFilePath` | `string` |
+
+#### Properties
+
+| Property | Description |
+| --- | --- |
+| **chapters**: [`NarrationChapter`](#classesnarration_scriptnarrationchaptermd)[] | Implementation of<br><br>[Script](#interfacesnarration_scriptnarrationscriptfilescriptmd).[chapters](#chapters) |
+| `Protected` **script**: [`Script`](#interfacesnarration_scriptnarrationscriptfilescriptmd) |  |
+| **scriptFilePath**: `string` |  |
+
+
+#### Accessors
+
+##### settings
+
+• `get` **settings**(): [`ScriptSettings`](#interfacesnarration_scriptscriptsettingsmd)
+
+###### Returns
+
+[`ScriptSettings`](#interfacesnarration_scriptscriptsettingsmd)
+
+###### Implementation of
+
+[Script](#interfacesnarration_scriptnarrationscriptfilescriptmd).[settings](#settings)
+
+#### Methods
+
+##### export
+
+▸ **export**(): [`Script`](#interfacesnarration_scriptnarrationscriptfilescriptmd)
+
+###### Returns
+
+[`Script`](#interfacesnarration_scriptnarrationscriptfilescriptmd)
+
+___
+
+##### getChapterByKey
+
+▸ **getChapterByKey**(`key`): `undefined` \| [`NarrationChapter`](#classesnarration_scriptnarrationchaptermd)
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `key` | `string` |
+
+###### Returns
+
+`undefined` \| [`NarrationChapter`](#classesnarration_scriptnarrationchaptermd)
+
+
+<a name="classesnarration_scriptnarrationsectionmd"></a>
+
+### Class: NarrationSection
+
+[narration-script](#modulesnarration_scriptmd).NarrationSection
+
+#### Implements
+
+- [`Section`](#interfacesnarration_scriptnarrationscriptfilesectionmd)
+
+#### Constructors
+
+##### constructor
+
+• **new NarrationSection**(`section`, `index`, `chapter`, `script`)
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `section` | [`Section`](#interfacesnarration_scriptnarrationscriptfilesectionmd) |
+| `index` | `number` |
+| `chapter` | [`NarrationChapter`](#classesnarration_scriptnarrationchaptermd) |
+| `script` | [`NarrationScript`](#classesnarration_scriptnarrationscriptmd) |
+
+#### Properties
+
+| Property | Description |
+| --- | --- |
+| **chapter**: [`NarrationChapter`](#classesnarration_scriptnarrationchaptermd) |  |
+| **index**: `number` |  |
+| **paragraphs**: [`NarrationParagraph`](#classesnarration_scriptnarrationparagraphmd)[] | Implementation of<br><br>[Section](#interfacesnarration_scriptnarrationscriptfilesectionmd).[paragraphs](#paragraphs) |
+| **script**: [`NarrationScript`](#classesnarration_scriptnarrationscriptmd) |  |
+| `Protected` **section**: [`Section`](#interfacesnarration_scriptnarrationscriptfilesectionmd) |  |
+
+
+#### Accessors
+
+##### key
+
+• `get` **key**(): `string`
+
+###### Returns
+
+`string`
+
+###### Implementation of
+
+[Section](#interfacesnarration_scriptnarrationscriptfilesectionmd).[key](#key)
+
+___
+
+##### settings
+
+• `get` **settings**(): [`VoiceSettings`](#interfacesnarration_scriptvoicesettingsmd)
+
+###### Returns
+
+[`VoiceSettings`](#interfacesnarration_scriptvoicesettingsmd)
+
+###### Implementation of
+
+[Section](#interfacesnarration_scriptnarrationscriptfilesectionmd).[settings](#settings)
+
+
+<a name="classesscript_processorscriptprocessormd"></a>
+
+### Class: ScriptProcessor
+
+[script-processor](#modulesscript_processormd).ScriptProcessor
+
+#### Constructors
+
+##### constructor
+
+• **new ScriptProcessor**(`scriptFilePath`, `flags`, `cliConsole?`)
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `scriptFilePath` | `string` |
+| `flags` | `Object` & `FlagOutput` & {} |
+| `cliConsole?` | `LineLogger`\<(`message?`: `any`, ...`optionalParams`: `any`[]) => `void`, (`message?`: `any`, ...`optionalParams`: `any`[]) => `void`, (`message?`: `any`, ...`optionalParams`: `any`[]) => `void`, (`message?`: `any`, ...`optionalParams`: `any`[]) => `void`\> |
+
+#### Properties
+
+| Property | Description |
+| --- | --- |
+| `Protected` **\_script**: [`NarrationScript`](#classesnarration_scriptnarrationscriptmd) |  |
+| `Protected` **audioGenerationOptions**: `undefined` \| [`AudioGenerationOptions`](#interfacestts_serviceaudiogenerationoptionsmd) |  |
+| `Protected` **chapterRange**: `undefined` \| `MultiRange` |  |
+| `Protected` **cliConsole**: `LineLogger`\<(`message?`: `any`, ...`optionalParams`: `any`[]) => `void`, (`message?`: `any`, ...`optionalParams`: `any`[]) => `void`, (`message?`: `any`, ...`optionalParams`: `any`[]) => `void`, (`message?`: `any`, ...`optionalParams`: `any`[]) => `void`\> |  |
+| `Protected` **flags**: `Object` & `FlagOutput` & {} |  |
+| `Protected` **scriptFilePath**: `string` |  |
+| `Protected` **sectionRange**: `undefined` \| `MultiRange` |  |
+| `Protected` **ttsService**: [`TtsService`](#interfacestts_servicettsservicemd) |  |
+
+
+#### Accessors
+
+##### script
+
+• `get` **script**(): [`NarrationScript`](#classesnarration_scriptnarrationscriptmd)
+
+###### Returns
+
+[`NarrationScript`](#classesnarration_scriptnarrationscriptmd)
+
+#### Methods
+
+##### determineAudioFilePath
+
+▸ `Protected` **determineAudioFilePath**(`ssmlHash`, `_paragraph`): `Promise`\<`string`\>
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `ssmlHash` | `string` |
+| `_paragraph` | [`NarrationParagraph`](#classesnarration_scriptnarrationparagraphmd) |
+
+###### Returns
+
+`Promise`\<`string`\>
+
+___
+
+##### hash
+
+▸ `Protected` **hash**(`ssml`, `_paragraph`): `string`
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `ssml` | `string` |
+| `_paragraph` | [`NarrationParagraph`](#classesnarration_scriptnarrationparagraphmd) |
+
+###### Returns
+
+`string`
+
+___
+
+##### initialiseTtsServiceIfNeeded
+
+▸ `Protected` **initialiseTtsServiceIfNeeded**(): `Promise`\<`void`\>
+
+###### Returns
+
+`Promise`\<`void`\>
+
+___
+
+##### loadScript
+
+▸ `Protected` **loadScript**(): `Promise`\<`void`\>
+
+###### Returns
+
+`Promise`\<`void`\>
+
+___
+
+##### parseRanges
+
+▸ `Protected` **parseRanges**(): `void`
+
+###### Returns
+
+`void`
+
+___
+
+##### processGeneratedAudioFile
+
+▸ `Protected` **processGeneratedAudioFile**(`audioFilePath`): `Promise`\<`string`\>
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `audioFilePath` | `string` |
+
+###### Returns
+
+`Promise`\<`string`\>
+
+___
+
+##### run
+
+▸ **run**(`reconstructedcommandLine?`): `Promise`\<`void`\>
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `reconstructedcommandLine?` | `string` |
+
+###### Returns
+
+`Promise`\<`void`\>
+
+___
+
+##### runWithoutCatch
+
+▸ **runWithoutCatch**(`reconstructedcommandLine?`): `Promise`\<`void`\>
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `reconstructedcommandLine?` | `string` |
+
+###### Returns
+
+`Promise`\<`void`\>
+
+
+<a name="classestts_servicebasettsservicemd"></a>
 
 ### Class: BaseTtsService
+
+[tts-service](#modulestts_servicemd).BaseTtsService
 
 #### Hierarchy
 
 - **`BaseTtsService`**
 
-  ↳ [`AzureTtsService`](#classesazurettsservicemd)
+  ↳ [`AzureTtsService`](#classesazure_tts_serviceazurettsservicemd)
 
 #### Implements
 
-- [`TtsService`](#interfacesttsservicemd)
-
-#### Table of contents
-
-##### Constructors
-
-- [constructor](#constructor)
-
-##### Methods
-
-- [buildSpeakStartTag](#buildspeakstarttag)
-- [buildVoiceStartTag](#buildvoicestarttag)
-- [generateAudio](#generateaudio)
-- [generateSSML](#generatessml)
-- [generateSsmlWithoutValidation](#generatessmlwithoutvalidation)
-- [validateXML](#validatexml)
+- [`TtsService`](#interfacestts_servicettsservicemd)
 
 #### Constructors
 
@@ -449,7 +794,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `voiceSettings` | [`VoiceSettings`](#interfacesvoicesettingsmd) |
+| `voiceSettings` | [`VoiceSettings`](#interfacesnarration_scriptvoicesettingsmd) |
 
 ###### Returns
 
@@ -465,7 +810,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `voiceSettings` | [`VoiceSettings`](#interfacesvoicesettingsmd) |
+| `voiceSettings` | [`VoiceSettings`](#interfacesnarration_scriptvoicesettingsmd) |
 
 ###### Returns
 
@@ -475,42 +820,42 @@ ___
 
 ##### generateAudio
 
-▸ **generateAudio**(`_ssml`, `_options`): `Promise`<`void`\>
+▸ **generateAudio**(`_ssml`, `_options`): `Promise`\<`void`\>
 
 ###### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `_ssml` | `string` |
-| `_options` | [`AudioGenerationOptions`](#interfacesaudiogenerationoptionsmd) |
+| `_options` | [`AudioGenerationOptions`](#interfacestts_serviceaudiogenerationoptionsmd) |
 
 ###### Returns
 
-`Promise`<`void`\>
+`Promise`\<`void`\>
 
 ###### Implementation of
 
-[TtsService](#interfacesttsservicemd).[generateAudio](#generateaudio)
+[TtsService](#interfacestts_servicettsservicemd).[generateAudio](#generateaudio)
 
 ___
 
 ##### generateSSML
 
-▸ **generateSSML**(`paragraph`): `Promise`<`string`\>
+▸ **generateSSML**(`paragraph`): `Promise`\<`string`\>
 
 ###### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `paragraph` | [`NarrationParagraph`](#classesnarrationparagraphmd) |
+| `paragraph` | [`NarrationParagraph`](#classesnarration_scriptnarrationparagraphmd) |
 
 ###### Returns
 
-`Promise`<`string`\>
+`Promise`\<`string`\>
 
 ###### Implementation of
 
-[TtsService](#interfacesttsservicemd).[generateSSML](#generatessml)
+[TtsService](#interfacestts_servicettsservicemd).[generateSSML](#generatessml)
 
 ___
 
@@ -522,7 +867,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `paragraph` | [`NarrationParagraph`](#classesnarrationparagraphmd) |
+| `paragraph` | [`NarrationParagraph`](#classesnarration_scriptnarrationparagraphmd) |
 
 ###### Returns
 
@@ -550,1048 +895,529 @@ ___
 
 `void`
 
-
-<a name="classesnarrationchaptermd"></a>
-
-[tts-narrator](#readmemd) / NarrationChapter
-
-### Class: NarrationChapter
-
-#### Implements
-
-- [`Chapter`](#interfacesnarrationscriptfilechaptermd)
-
-#### Table of contents
-
-##### Constructors
-
-- [constructor](#constructor)
-
-##### Properties
-
-- [chapter](#chapter)
-- [index](#index)
-- [script](#script)
-- [sections](#sections)
-
-##### Accessors
-
-- [key](#key)
-- [settings](#settings)
-
-##### Methods
-
-- [getSectionByKey](#getsectionbykey)
-
-#### Constructors
-
-##### constructor
-
-• **new NarrationChapter**(`chapter`, `index`, `script`)
-
-###### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `chapter` | [`Chapter`](#interfacesnarrationscriptfilechaptermd) |
-| `index` | `number` |
-| `script` | [`NarrationScript`](#classesnarrationscriptmd) |
-
-#### Properties
-
-##### chapter
-
-• `Protected` **chapter**: [`Chapter`](#interfacesnarrationscriptfilechaptermd)
-
-___
-
-##### index
-
-• **index**: `number`
-
-___
-
-##### script
-
-• **script**: [`NarrationScript`](#classesnarrationscriptmd)
-
-___
-
-##### sections
-
-• **sections**: [`NarrationSection`](#classesnarrationsectionmd)[]
-
-###### Implementation of
-
-[Chapter](#interfacesnarrationscriptfilechaptermd).[sections](#sections)
-
-#### Accessors
-
-##### key
-
-• `get` **key**(): `string`
-
-###### Returns
-
-`string`
-
-###### Implementation of
-
-[Chapter](#interfacesnarrationscriptfilechaptermd).[key](#key)
-
-___
-
-##### settings
-
-• `get` **settings**(): [`VoiceSettings`](#interfacesvoicesettingsmd)
-
-###### Returns
-
-[`VoiceSettings`](#interfacesvoicesettingsmd)
-
-###### Implementation of
-
-[Chapter](#interfacesnarrationscriptfilechaptermd).[settings](#settings)
-
-#### Methods
-
-##### getSectionByKey
-
-▸ **getSectionByKey**(`key`): `undefined` \| [`NarrationSection`](#classesnarrationsectionmd)
-
-###### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `key` | `string` |
-
-###### Returns
-
-`undefined` \| [`NarrationSection`](#classesnarrationsectionmd)
-
-
-<a name="classesnarrationparagraphmd"></a>
-
-[tts-narrator](#readmemd) / NarrationParagraph
-
-### Class: NarrationParagraph
-
-#### Implements
-
-- [`Paragraph`](#interfacesnarrationscriptfileparagraphmd)
-
-#### Table of contents
-
-##### Constructors
-
-- [constructor](#constructor)
-
-##### Properties
-
-- [audioFilePath](#audiofilepath)
-- [chapter](#chapter)
-- [index](#index)
-- [paragraph](#paragraph)
-- [script](#script)
-- [section](#section)
-
-##### Accessors
-
-- [key](#key)
-- [settings](#settings)
-- [text](#text)
-
-#### Constructors
-
-##### constructor
-
-• **new NarrationParagraph**(`paragraph`, `index`, `section`, `chapter`, `script`)
-
-###### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `paragraph` | [`Paragraph`](#interfacesnarrationscriptfileparagraphmd) |
-| `index` | `number` |
-| `section` | [`NarrationSection`](#classesnarrationsectionmd) |
-| `chapter` | [`NarrationChapter`](#classesnarrationchaptermd) |
-| `script` | [`NarrationScript`](#classesnarrationscriptmd) |
-
-#### Properties
-
-##### audioFilePath
-
-• `Optional` **audioFilePath**: `string`
-
-Path of the generated audio file. Only for in-memory processing, not supposed to be stored in file.
-
-___
-
-##### chapter
-
-• **chapter**: [`NarrationChapter`](#classesnarrationchaptermd)
-
-___
-
-##### index
-
-• **index**: `number`
-
-___
-
-##### paragraph
-
-• `Protected` **paragraph**: [`Paragraph`](#interfacesnarrationscriptfileparagraphmd)
-
-___
-
-##### script
-
-• **script**: [`NarrationScript`](#classesnarrationscriptmd)
-
-___
-
-##### section
-
-• **section**: [`NarrationSection`](#classesnarrationsectionmd)
-
-#### Accessors
-
-##### key
-
-• `get` **key**(): `string`
-
-###### Returns
-
-`string`
-
-###### Implementation of
-
-[Paragraph](#interfacesnarrationscriptfileparagraphmd).[key](#key)
-
-___
-
-##### settings
-
-• `get` **settings**(): [`VoiceSettings`](#interfacesvoicesettingsmd)
-
-###### Returns
-
-[`VoiceSettings`](#interfacesvoicesettingsmd)
-
-###### Implementation of
-
-[Paragraph](#interfacesnarrationscriptfileparagraphmd).[settings](#settings)
-
-___
-
-##### text
-
-• `get` **text**(): `string`
-
-###### Returns
-
-`string`
-
-###### Implementation of
-
-[Paragraph](#interfacesnarrationscriptfileparagraphmd).[text](#text)
-
-
-<a name="classesnarrationscriptmd"></a>
-
-[tts-narrator](#readmemd) / NarrationScript
-
-### Class: NarrationScript
-
-#### Implements
-
-- [`Script`](#interfacesnarrationscriptfilescriptmd)
-
-#### Table of contents
-
-##### Constructors
-
-- [constructor](#constructor)
-
-##### Properties
-
-- [chapters](#chapters)
-- [script](#script)
-- [scriptFilePath](#scriptfilepath)
-
-##### Accessors
-
-- [settings](#settings)
-
-##### Methods
-
-- [export](#export)
-- [getChapterByKey](#getchapterbykey)
-
-#### Constructors
-
-##### constructor
-
-• **new NarrationScript**(`script`, `scriptFilePath`)
-
-###### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `script` | [`Script`](#interfacesnarrationscriptfilescriptmd) |
-| `scriptFilePath` | `string` |
-
-#### Properties
-
-##### chapters
-
-• **chapters**: [`NarrationChapter`](#classesnarrationchaptermd)[]
-
-###### Implementation of
-
-[Script](#interfacesnarrationscriptfilescriptmd).[chapters](#chapters)
-
-___
-
-##### script
-
-• `Protected` **script**: [`Script`](#interfacesnarrationscriptfilescriptmd)
-
-___
-
-##### scriptFilePath
-
-• **scriptFilePath**: `string`
-
-#### Accessors
-
-##### settings
-
-• `get` **settings**(): [`ScriptSettings`](#interfacesscriptsettingsmd)
-
-###### Returns
-
-[`ScriptSettings`](#interfacesscriptsettingsmd)
-
-###### Implementation of
-
-[Script](#interfacesnarrationscriptfilescriptmd).[settings](#settings)
-
-#### Methods
-
-##### export
-
-▸ **export**(): [`Script`](#interfacesnarrationscriptfilescriptmd)
-
-###### Returns
-
-[`Script`](#interfacesnarrationscriptfilescriptmd)
-
-___
-
-##### getChapterByKey
-
-▸ **getChapterByKey**(`key`): `undefined` \| [`NarrationChapter`](#classesnarrationchaptermd)
-
-###### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `key` | `string` |
-
-###### Returns
-
-`undefined` \| [`NarrationChapter`](#classesnarrationchaptermd)
-
-
-<a name="classesnarrationsectionmd"></a>
-
-[tts-narrator](#readmemd) / NarrationSection
-
-### Class: NarrationSection
-
-#### Implements
-
-- [`Section`](#interfacesnarrationscriptfilesectionmd)
-
-#### Table of contents
-
-##### Constructors
-
-- [constructor](#constructor)
-
-##### Properties
-
-- [chapter](#chapter)
-- [index](#index)
-- [paragraphs](#paragraphs)
-- [script](#script)
-- [section](#section)
-
-##### Accessors
-
-- [key](#key)
-- [settings](#settings)
-
-#### Constructors
-
-##### constructor
-
-• **new NarrationSection**(`section`, `index`, `chapter`, `script`)
-
-###### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `section` | [`Section`](#interfacesnarrationscriptfilesectionmd) |
-| `index` | `number` |
-| `chapter` | [`NarrationChapter`](#classesnarrationchaptermd) |
-| `script` | [`NarrationScript`](#classesnarrationscriptmd) |
-
-#### Properties
-
-##### chapter
-
-• **chapter**: [`NarrationChapter`](#classesnarrationchaptermd)
-
-___
-
-##### index
-
-• **index**: `number`
-
-___
-
-##### paragraphs
-
-• **paragraphs**: [`NarrationParagraph`](#classesnarrationparagraphmd)[]
-
-###### Implementation of
-
-[Section](#interfacesnarrationscriptfilesectionmd).[paragraphs](#paragraphs)
-
-___
-
-##### script
-
-• **script**: [`NarrationScript`](#classesnarrationscriptmd)
-
-___
-
-##### section
-
-• `Protected` **section**: [`Section`](#interfacesnarrationscriptfilesectionmd)
-
-#### Accessors
-
-##### key
-
-• `get` **key**(): `string`
-
-###### Returns
-
-`string`
-
-###### Implementation of
-
-[Section](#interfacesnarrationscriptfilesectionmd).[key](#key)
-
-___
-
-##### settings
-
-• `get` **settings**(): [`VoiceSettings`](#interfacesvoicesettingsmd)
-
-###### Returns
-
-[`VoiceSettings`](#interfacesvoicesettingsmd)
-
-###### Implementation of
-
-[Section](#interfacesnarrationscriptfilesectionmd).[settings](#settings)
-
-
-<a name="classesscriptprocessormd"></a>
-
-[tts-narrator](#readmemd) / ScriptProcessor
-
-### Class: ScriptProcessor
-
-#### Table of contents
-
-##### Constructors
-
-- [constructor](#constructor)
-
-##### Properties
-
-- [\_script](#_script)
-- [audioGenerationOptions](#audiogenerationoptions)
-- [chapterRange](#chapterrange)
-- [cliConsole](#cliconsole)
-- [flags](#flags)
-- [scriptFilePath](#scriptfilepath)
-- [sectionRange](#sectionrange)
-- [ttsService](#ttsservice)
-
-##### Accessors
-
-- [script](#script)
-
-##### Methods
-
-- [determineAudioFilePath](#determineaudiofilepath)
-- [hash](#hash)
-- [initialiseTtsServiceIfNeeded](#initialisettsserviceifneeded)
-- [loadScript](#loadscript)
-- [parseRanges](#parseranges)
-- [processGeneratedAudioFile](#processgeneratedaudiofile)
-- [run](#run)
-- [runWithoutCatch](#runwithoutcatch)
-
-#### Constructors
-
-##### constructor
-
-• **new ScriptProcessor**(`scriptFilePath`, `flags`, `cliConsole?`)
-
-###### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `scriptFilePath` | `string` |
-| `flags` | `Object` |
-| `cliConsole?` | `CliConsole`<`fn`, `fn`, `fn`, `fn`\> |
-
-#### Properties
-
-##### \_script
-
-• `Protected` **\_script**: [`NarrationScript`](#classesnarrationscriptmd)
-
-___
-
-##### audioGenerationOptions
-
-• `Protected` **audioGenerationOptions**: `undefined` \| [`AudioGenerationOptions`](#interfacesaudiogenerationoptionsmd)
-
-___
-
-##### chapterRange
-
-• `Protected` **chapterRange**: `undefined` \| `MultiRange`
-
-___
-
-##### cliConsole
-
-• `Protected` **cliConsole**: `CliConsole`<`fn`, `fn`, `fn`, `fn`\>
-
-___
-
-##### flags
-
-• `Protected` **flags**: `Object`
-
-___
-
-##### scriptFilePath
-
-• `Protected` **scriptFilePath**: `string`
-
-___
-
-##### sectionRange
-
-• `Protected` **sectionRange**: `undefined` \| `MultiRange`
-
-___
-
-##### ttsService
-
-• `Protected` **ttsService**: [`TtsService`](#interfacesttsservicemd)
-
-#### Accessors
-
-##### script
-
-• `get` **script**(): [`NarrationScript`](#classesnarrationscriptmd)
-
-###### Returns
-
-[`NarrationScript`](#classesnarrationscriptmd)
-
-#### Methods
-
-##### determineAudioFilePath
-
-▸ `Protected` **determineAudioFilePath**(`ssmlHash`, `_paragraph`): `Promise`<`string`\>
-
-###### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `ssmlHash` | `string` |
-| `_paragraph` | [`NarrationParagraph`](#classesnarrationparagraphmd) |
-
-###### Returns
-
-`Promise`<`string`\>
-
-___
-
-##### hash
-
-▸ `Protected` **hash**(`ssml`, `_paragraph`): `string`
-
-###### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `ssml` | `string` |
-| `_paragraph` | [`NarrationParagraph`](#classesnarrationparagraphmd) |
-
-###### Returns
-
-`string`
-
-___
-
-##### initialiseTtsServiceIfNeeded
-
-▸ `Protected` **initialiseTtsServiceIfNeeded**(): `Promise`<`void`\>
-
-###### Returns
-
-`Promise`<`void`\>
-
-___
-
-##### loadScript
-
-▸ `Protected` **loadScript**(): `Promise`<`void`\>
-
-###### Returns
-
-`Promise`<`void`\>
-
-___
-
-##### parseRanges
-
-▸ `Protected` **parseRanges**(): `void`
-
-###### Returns
-
-`void`
-
-___
-
-##### processGeneratedAudioFile
-
-▸ `Protected` **processGeneratedAudioFile**(`audioFilePath`): `Promise`<`string`\>
-
-###### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `audioFilePath` | `string` |
-
-###### Returns
-
-`Promise`<`string`\>
-
-___
-
-##### run
-
-▸ **run**(`reconstructedcommandLine?`): `Promise`<`void`\>
-
-###### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `reconstructedcommandLine?` | `string` |
-
-###### Returns
-
-`Promise`<`void`\>
-
-___
-
-##### runWithoutCatch
-
-▸ **runWithoutCatch**(`reconstructedcommandLine?`): `Promise`<`void`\>
-
-###### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `reconstructedcommandLine?` | `string` |
-
-###### Returns
-
-`Promise`<`void`\>
-
 ## Enums
 
 
-<a name="enumsttsservicetypemd"></a>
-
-[tts-narrator](#readmemd) / TtsServiceType
+<a name="enumsscript_processorttsservicetypemd"></a>
 
 ### Enumeration: TtsServiceType
 
-#### Table of contents
+[script-processor](#modulesscript_processormd).TtsServiceType
 
-##### Enumeration members
-
-- [Azure](#azure)
-
-#### Enumeration members
+#### Enumeration Members
 
 ##### Azure
 
-• **Azure** = `"azure"`
+• **Azure** = ``"azure"``
 
 ## Interfaces
 
 
-<a name="interfacesaudiogenerationoptionsmd"></a>
+<a name="interfacesazure_tts_serviceazureaudiogenerationoptionsmd"></a>
 
-[tts-narrator](#readmemd) / AudioGenerationOptions
+### Interface: AzureAudioGenerationOptions
+
+[azure-tts-service](#modulesazure_tts_servicemd).AzureAudioGenerationOptions
+
+#### Hierarchy
+
+- [`AudioGenerationOptions`](#interfacestts_serviceaudiogenerationoptionsmd)
+
+  ↳ **`AzureAudioGenerationOptions`**
+
+#### Properties
+
+| Property | Description |
+| --- | --- |
+| **outputFilePath**: `string` | Inherited from<br><br>[AudioGenerationOptions](#interfacestts_serviceaudiogenerationoptionsmd).[outputFilePath](#outputfilepath) |
+| `Optional` **serviceRegion**: `string` |  |
+| `Optional` **subscriptionKey**: `string` |  |
+
+
+
+<a name="interfacesnarration_scriptnarrationscriptfilechaptermd"></a>
+
+### Interface: Chapter
+
+[narration-script](#modulesnarration_scriptmd).[NarrationScriptFile](#modulesnarration_scriptnarrationscriptfilemd).Chapter
+
+#### Implemented by
+
+- [`NarrationChapter`](#classesnarration_scriptnarrationchaptermd)
+
+#### Properties
+
+| Property | Description |
+| --- | --- |
+| `Optional` **key**: `string` |  |
+| **sections**: [`Section`](#interfacesnarration_scriptnarrationscriptfilesectionmd)[] |  |
+| `Optional` **settings**: [`VoiceSettings`](#interfacesnarration_scriptvoicesettingsmd) |  |
+
+
+
+<a name="interfacesnarration_scriptnarrationscriptfileparagraphmd"></a>
+
+### Interface: Paragraph
+
+[narration-script](#modulesnarration_scriptmd).[NarrationScriptFile](#modulesnarration_scriptnarrationscriptfilemd).Paragraph
+
+#### Implemented by
+
+- [`NarrationParagraph`](#classesnarration_scriptnarrationparagraphmd)
+
+#### Properties
+
+| Property | Description |
+| --- | --- |
+| `Optional` **key**: `string` |  |
+| `Optional` **settings**: [`VoiceSettings`](#interfacesnarration_scriptvoicesettingsmd) |  |
+| **text**: `string` |  |
+
+
+
+<a name="interfacesnarration_scriptnarrationscriptfilescriptmd"></a>
+
+### Interface: Script
+
+[narration-script](#modulesnarration_scriptmd).[NarrationScriptFile](#modulesnarration_scriptnarrationscriptfilemd).Script
+
+#### Implemented by
+
+- [`NarrationScript`](#classesnarration_scriptnarrationscriptmd)
+
+#### Properties
+
+| Property | Description |
+| --- | --- |
+| **chapters**: [`Chapter`](#interfacesnarration_scriptnarrationscriptfilechaptermd)[] |  |
+| **settings**: [`ScriptSettings`](#interfacesnarration_scriptscriptsettingsmd) |  |
+
+
+
+<a name="interfacesnarration_scriptnarrationscriptfilesectionmd"></a>
+
+### Interface: Section
+
+[narration-script](#modulesnarration_scriptmd).[NarrationScriptFile](#modulesnarration_scriptnarrationscriptfilemd).Section
+
+#### Implemented by
+
+- [`NarrationSection`](#classesnarration_scriptnarrationsectionmd)
+
+#### Properties
+
+| Property | Description |
+| --- | --- |
+| `Optional` **key**: `string` |  |
+| **paragraphs**: [`Paragraph`](#interfacesnarration_scriptnarrationscriptfileparagraphmd)[] |  |
+| `Optional` **settings**: [`VoiceSettings`](#interfacesnarration_scriptvoicesettingsmd) |  |
+
+
+
+<a name="interfacesnarration_scriptscriptsettingsmd"></a>
+
+### Interface: ScriptSettings
+
+[narration-script](#modulesnarration_scriptmd).ScriptSettings
+
+#### Properties
+
+| Property | Description |
+| --- | --- |
+| `Optional` **service**: [`Azure`](#azure) |  |
+| `Optional` **voice**: [`VoiceSettings`](#interfacesnarration_scriptvoicesettingsmd) |  |
+
+
+
+<a name="interfacesnarration_scriptvoicesettingsmd"></a>
+
+### Interface: VoiceSettings
+
+[narration-script](#modulesnarration_scriptmd).VoiceSettings
+
+#### Properties
+
+| Property | Description |
+| --- | --- |
+| `Optional` **language**: `string` |  |
+| `Optional` **name**: `string` |  |
+
+
+
+<a name="interfacestts_serviceaudiogenerationoptionsmd"></a>
 
 ### Interface: AudioGenerationOptions
+
+[tts-service](#modulestts_servicemd).AudioGenerationOptions
 
 #### Hierarchy
 
 - **`AudioGenerationOptions`**
 
-  ↳ [`AzureAudioGenerationOptions`](#interfacesazureaudiogenerationoptionsmd)
-
-#### Table of contents
-
-##### Properties
-
-- [outputFilePath](#outputfilepath)
+  ↳ [`AzureAudioGenerationOptions`](#interfacesazure_tts_serviceazureaudiogenerationoptionsmd)
 
 #### Properties
 
-##### outputFilePath
+| Property | Description |
+| --- | --- |
+| **outputFilePath**: `string` |  |
 
-• **outputFilePath**: `string`
 
 
-<a name="interfacesazureaudiogenerationoptionsmd"></a>
-
-[tts-narrator](#readmemd) / AzureAudioGenerationOptions
-
-### Interface: AzureAudioGenerationOptions
-
-#### Hierarchy
-
-- [`AudioGenerationOptions`](#interfacesaudiogenerationoptionsmd)
-
-  ↳ **`AzureAudioGenerationOptions`**
-
-#### Table of contents
-
-##### Properties
-
-- [outputFilePath](#outputfilepath)
-- [serviceRegion](#serviceregion)
-- [subscriptionKey](#subscriptionkey)
-
-#### Properties
-
-##### outputFilePath
-
-• **outputFilePath**: `string`
-
-###### Inherited from
-
-[AudioGenerationOptions](#interfacesaudiogenerationoptionsmd).[outputFilePath](#outputfilepath)
-
-___
-
-##### serviceRegion
-
-• `Optional` **serviceRegion**: `string`
-
-___
-
-##### subscriptionKey
-
-• `Optional` **subscriptionKey**: `string`
-
-
-<a name="interfacesnarrationscriptfilechaptermd"></a>
-
-[tts-narrator](#readmemd) / [NarrationScriptFile](#modulesnarrationscriptfilemd) / Chapter
-
-### Interface: Chapter
-
-[NarrationScriptFile](#modulesnarrationscriptfilemd).Chapter
-
-#### Implemented by
-
-- [`NarrationChapter`](#classesnarrationchaptermd)
-
-#### Table of contents
-
-##### Properties
-
-- [key](#key)
-- [sections](#sections)
-- [settings](#settings)
-
-#### Properties
-
-##### key
-
-• `Optional` **key**: `string`
-
-___
-
-##### sections
-
-• **sections**: [`Section`](#interfacesnarrationscriptfilesectionmd)[]
-
-___
-
-##### settings
-
-• `Optional` **settings**: [`VoiceSettings`](#interfacesvoicesettingsmd)
-
-
-<a name="interfacesnarrationscriptfileparagraphmd"></a>
-
-[tts-narrator](#readmemd) / [NarrationScriptFile](#modulesnarrationscriptfilemd) / Paragraph
-
-### Interface: Paragraph
-
-[NarrationScriptFile](#modulesnarrationscriptfilemd).Paragraph
-
-#### Implemented by
-
-- [`NarrationParagraph`](#classesnarrationparagraphmd)
-
-#### Table of contents
-
-##### Properties
-
-- [key](#key)
-- [settings](#settings)
-- [text](#text)
-
-#### Properties
-
-##### key
-
-• `Optional` **key**: `string`
-
-___
-
-##### settings
-
-• `Optional` **settings**: [`VoiceSettings`](#interfacesvoicesettingsmd)
-
-___
-
-##### text
-
-• **text**: `string`
-
-
-<a name="interfacesnarrationscriptfilescriptmd"></a>
-
-[tts-narrator](#readmemd) / [NarrationScriptFile](#modulesnarrationscriptfilemd) / Script
-
-### Interface: Script
-
-[NarrationScriptFile](#modulesnarrationscriptfilemd).Script
-
-#### Implemented by
-
-- [`NarrationScript`](#classesnarrationscriptmd)
-
-#### Table of contents
-
-##### Properties
-
-- [chapters](#chapters)
-- [settings](#settings)
-
-#### Properties
-
-##### chapters
-
-• **chapters**: [`Chapter`](#interfacesnarrationscriptfilechaptermd)[]
-
-___
-
-##### settings
-
-• **settings**: [`ScriptSettings`](#interfacesscriptsettingsmd)
-
-
-<a name="interfacesnarrationscriptfilesectionmd"></a>
-
-[tts-narrator](#readmemd) / [NarrationScriptFile](#modulesnarrationscriptfilemd) / Section
-
-### Interface: Section
-
-[NarrationScriptFile](#modulesnarrationscriptfilemd).Section
-
-#### Implemented by
-
-- [`NarrationSection`](#classesnarrationsectionmd)
-
-#### Table of contents
-
-##### Properties
-
-- [key](#key)
-- [paragraphs](#paragraphs)
-- [settings](#settings)
-
-#### Properties
-
-##### key
-
-• `Optional` **key**: `string`
-
-___
-
-##### paragraphs
-
-• **paragraphs**: [`Paragraph`](#interfacesnarrationscriptfileparagraphmd)[]
-
-___
-
-##### settings
-
-• `Optional` **settings**: [`VoiceSettings`](#interfacesvoicesettingsmd)
-
-
-<a name="interfacesscriptsettingsmd"></a>
-
-[tts-narrator](#readmemd) / ScriptSettings
-
-### Interface: ScriptSettings
-
-#### Table of contents
-
-##### Properties
-
-- [service](#service)
-- [voice](#voice)
-
-#### Properties
-
-##### service
-
-• `Optional` **service**: [`Azure`](#azure)
-
-___
-
-##### voice
-
-• `Optional` **voice**: [`VoiceSettings`](#interfacesvoicesettingsmd)
-
-
-<a name="interfacesttsservicemd"></a>
-
-[tts-narrator](#readmemd) / TtsService
+<a name="interfacestts_servicettsservicemd"></a>
 
 ### Interface: TtsService
 
+[tts-service](#modulestts_servicemd).TtsService
+
 #### Implemented by
 
-- [`BaseTtsService`](#classesbasettsservicemd)
-
-#### Table of contents
-
-##### Methods
-
-- [generateAudio](#generateaudio)
-- [generateSSML](#generatessml)
+- [`BaseTtsService`](#classestts_servicebasettsservicemd)
 
 #### Methods
 
 ##### generateAudio
 
-▸ **generateAudio**(`ssml`, `options`): `Promise`<`void`\>
+▸ **generateAudio**(`ssml`, `options`): `Promise`\<`void`\>
 
 ###### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `ssml` | `string` |
-| `options` | [`AudioGenerationOptions`](#interfacesaudiogenerationoptionsmd) |
+| `options` | [`AudioGenerationOptions`](#interfacestts_serviceaudiogenerationoptionsmd) |
 
 ###### Returns
 
-`Promise`<`void`\>
+`Promise`\<`void`\>
 
 ___
 
 ##### generateSSML
 
-▸ **generateSSML**(`paragraph`): `Promise`<`string`\>
+▸ **generateSSML**(`paragraph`): `Promise`\<`string`\>
 
 ###### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `paragraph` | [`NarrationParagraph`](#classesnarrationparagraphmd) |
+| `paragraph` | [`NarrationParagraph`](#classesnarration_scriptnarrationparagraphmd) |
 
 ###### Returns
 
-`Promise`<`string`\>
-
-
-<a name="interfacesvoicesettingsmd"></a>
-
-[tts-narrator](#readmemd) / VoiceSettings
-
-### Interface: VoiceSettings
-
-#### Table of contents
-
-##### Properties
-
-- [language](#language)
-- [name](#name)
-
-#### Properties
-
-##### language
-
-• `Optional` **language**: `string`
-
-___
-
-##### name
-
-• `Optional` **name**: `string`
+`Promise`\<`string`\>
 
 ## Modules
 
 
-<a name="modulesnarrationscriptfilemd"></a>
+<a name="modulesaudio_utilsmd"></a>
 
-[tts-narrator](#readmemd) / NarrationScriptFile
+### Module: audio-utils
+
+#### Functions
+
+##### getAudioFileDuration
+
+▸ **getAudioFileDuration**(`filePath`): `Promise`\<`number`\>
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `filePath` | `string` |
+
+###### Returns
+
+`Promise`\<`number`\>
+
+___
+
+##### playMp3File
+
+▸ **playMp3File**(`filePath`, `infoLogger`): `Promise`\<`void`\>
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `filePath` | `string` |
+| `infoLogger` | (`msg`: `string`) => `void` |
+
+###### Returns
+
+`Promise`\<`void`\>
+
+
+<a name="modulesazure_tts_servicemd"></a>
+
+### Module: azure-tts-service
+
+#### Classes
+
+- [AzureTtsService](#classesazure_tts_serviceazurettsservicemd)
+
+#### Interfaces
+
+- [AzureAudioGenerationOptions](#interfacesazure_tts_serviceazureaudiogenerationoptionsmd)
+
+
+<a name="modulesindexmd"></a>
+
+### Module: index
+
+#### Classes
+
+- [export=](#classesindexexport_md)
+
+
+<a name="modulesnarration_scriptnarrationscriptfilemd"></a>
 
 ### Namespace: NarrationScriptFile
 
-#### Table of contents
+[narration-script](#modulesnarration_scriptmd).NarrationScriptFile
 
-##### Interfaces
+#### Interfaces
 
-- [Chapter](#interfacesnarrationscriptfilechaptermd)
-- [Paragraph](#interfacesnarrationscriptfileparagraphmd)
-- [Script](#interfacesnarrationscriptfilescriptmd)
-- [Section](#interfacesnarrationscriptfilesectionmd)
+- [Chapter](#interfacesnarration_scriptnarrationscriptfilechaptermd)
+- [Paragraph](#interfacesnarration_scriptnarrationscriptfileparagraphmd)
+- [Script](#interfacesnarration_scriptnarrationscriptfilescriptmd)
+- [Section](#interfacesnarration_scriptnarrationscriptfilesectionmd)
+
+
+<a name="modulesnarration_scriptmd"></a>
+
+### Module: narration-script
+
+#### Namespaces
+
+- [NarrationScriptFile](#modulesnarration_scriptnarrationscriptfilemd)
+
+#### Classes
+
+- [NarrationChapter](#classesnarration_scriptnarrationchaptermd)
+- [NarrationParagraph](#classesnarration_scriptnarrationparagraphmd)
+- [NarrationScript](#classesnarration_scriptnarrationscriptmd)
+- [NarrationSection](#classesnarration_scriptnarrationsectionmd)
+
+#### Interfaces
+
+- [ScriptSettings](#interfacesnarration_scriptscriptsettingsmd)
+- [VoiceSettings](#interfacesnarration_scriptvoicesettingsmd)
+
+#### Functions
+
+##### loadScript
+
+▸ **loadScript**(`scriptFilePath`): `Promise`\<[`NarrationScript`](#classesnarration_scriptnarrationscriptmd)\>
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `scriptFilePath` | `string` |
+
+###### Returns
+
+`Promise`\<[`NarrationScript`](#classesnarration_scriptnarrationscriptmd)\>
+
+___
+
+##### saveScript
+
+▸ **saveScript**(`script`): `Promise`\<`void`\>
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `script` | [`NarrationScript`](#classesnarration_scriptnarrationscriptmd) |
+
+###### Returns
+
+`Promise`\<`void`\>
+
+▸ **saveScript**(`script`, `scriptFilePath`): `Promise`\<`void`\>
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `script` | [`Script`](#interfacesnarration_scriptnarrationscriptfilescriptmd) |
+| `scriptFilePath` | `string` |
+
+###### Returns
+
+`Promise`\<`void`\>
+
+
+<a name="modulesscript_processormd"></a>
+
+### Module: script-processor
+
+#### Enumerations
+
+- [TtsServiceType](#enumsscript_processorttsservicetypemd)
+
+#### Classes
+
+- [ScriptProcessor](#classesscript_processorscriptprocessormd)
+
+#### Variables
+
+##### scriptProcessorFlags
+
+• `Const` **scriptProcessorFlags**: `Object`
+
+CLI flags that are required/used by the ScriptProcessor.
+
+###### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `chapters` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |
+| `debug` | `BooleanFlag`\<`boolean`\> |
+| `dry-run` | `BooleanFlag`\<`boolean`\> |
+| `interactive` | `BooleanFlag`\<`boolean`\> |
+| `overwrite` | `BooleanFlag`\<`boolean`\> |
+| `play` | `BooleanFlag`\<`boolean`\> |
+| `quiet` | `BooleanFlag`\<`boolean`\> |
+| `region` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |
+| `sections` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |
+| `service` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |
+| `ssml` | `BooleanFlag`\<`boolean`\> |
+| `subscription-key` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |
+| `subscription-key-env` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |
+
+
+<a name="modulestts_servicemd"></a>
+
+### Module: tts-service
+
+#### Classes
+
+- [BaseTtsService](#classestts_servicebasettsservicemd)
+
+#### Interfaces
+
+- [AudioGenerationOptions](#interfacestts_serviceaudiogenerationoptionsmd)
+- [TtsService](#interfacestts_servicettsservicemd)
+
+
+<a name="modulestypesmd"></a>
+
+### Module: types
+
+#### References
+
+##### AudioGenerationOptions
+
+Re-exports [AudioGenerationOptions](#interfacestts_serviceaudiogenerationoptionsmd)
+
+___
+
+##### AzureAudioGenerationOptions
+
+Re-exports [AzureAudioGenerationOptions](#interfacesazure_tts_serviceazureaudiogenerationoptionsmd)
+
+___
+
+##### AzureTtsService
+
+Re-exports [AzureTtsService](#classesazure_tts_serviceazurettsservicemd)
+
+___
+
+##### BaseTtsService
+
+Re-exports [BaseTtsService](#classestts_servicebasettsservicemd)
+
+___
+
+##### NarrationChapter
+
+Re-exports [NarrationChapter](#classesnarration_scriptnarrationchaptermd)
+
+___
+
+##### NarrationParagraph
+
+Re-exports [NarrationParagraph](#classesnarration_scriptnarrationparagraphmd)
+
+___
+
+##### NarrationScript
+
+Re-exports [NarrationScript](#classesnarration_scriptnarrationscriptmd)
+
+___
+
+##### NarrationScriptFile
+
+Re-exports [NarrationScriptFile](#modulesnarration_scriptnarrationscriptfilemd)
+
+___
+
+##### NarrationSection
+
+Re-exports [NarrationSection](#classesnarration_scriptnarrationsectionmd)
+
+___
+
+##### ScriptProcessor
+
+Re-exports [ScriptProcessor](#classesscript_processorscriptprocessormd)
+
+___
+
+##### ScriptSettings
+
+Re-exports [ScriptSettings](#interfacesnarration_scriptscriptsettingsmd)
+
+___
+
+##### TtsService
+
+Re-exports [TtsService](#interfacestts_servicettsservicemd)
+
+___
+
+##### TtsServiceType
+
+Re-exports [TtsServiceType](#enumsscript_processorttsservicetypemd)
+
+___
+
+##### VoiceSettings
+
+Re-exports [VoiceSettings](#interfacesnarration_scriptvoicesettingsmd)
+
+___
+
+##### getAudioFileDuration
+
+Re-exports [getAudioFileDuration](#getaudiofileduration)
+
+___
+
+##### loadScript
+
+Re-exports [loadScript](#loadscript)
+
+___
+
+##### playMp3File
+
+Re-exports [playMp3File](#playmp3file)
+
+___
+
+##### saveScript
+
+Re-exports [saveScript](#savescript)
+
+___
+
+##### scriptProcessorFlags
+
+Re-exports [scriptProcessorFlags](#scriptprocessorflags)
 <!-- API end -->
