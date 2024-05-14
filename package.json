@@ -35,7 +35,7 @@
   },
   "optionalDependencies": {
     "@handy-common-utils/oclif-utils": "^2.1.0",
-    "chalk": "^5.3.0",
+    "chalk": "^4.1.2",
     "prompts": "^2.4.2",
     "speaker": "^0.5.5"
   },
