@@ -96,6 +96,16 @@ To use the NPM package as a dependency, you just need to install it normally, li
 npm i tts-narrator
 ```
 
+Example:
+
+```typescript
+const ttsService = new AzureTtsService(...);
+const ttsNarrator = new TtsNarrator(ttsService, './output-folder');
+const script = await loadScript('./my-script.yml');
+await ttsNarrator.narrate(script);
+console.log(`One of the generated audio file is: ${script.chapters[0].sections[0].paragraphs[0].audioFilePath}`);
+```
+
 <!-- API start -->
 <a name="readmemd"></a>
 

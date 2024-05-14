@@ -26,6 +26,13 @@ const silentLogger: ConsoleLineLogger = {
 /**
  * Class for generating narration.
  * Instance of this class can be used to generate narration audio for scripts by calling the `narrate(...)` method. 
+ * 
+ * @example
+ * const ttsService = new AzureTtsService(...);
+ * const ttsNarrator = new TtsNarrator(ttsService, './output-folder');
+ * const script = await loadScript('./my-script.yml');
+ * await ttsNarrator.narrate(script);
+ * console.log(`One of the generated audio file is: ${script.chapters[0].sections[0].paragraphs[0].audioFilePath}`);
  */
 export class TtsNarrator extends ScriptProcessor {
   /**
