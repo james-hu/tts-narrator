@@ -6,8 +6,10 @@ script1.saved.yml
 *.tgz
 api-docs
 tmp1.mp3
+test/fixtures/script1.tts
 test/fixtures/script2.tts
 test/fixtures/script3.tts
 test/fixtures/scriptT.tts
 demo.sh
 test/fixtures/demo.*
+

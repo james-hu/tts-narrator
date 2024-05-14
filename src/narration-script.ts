@@ -4,7 +4,7 @@ import { cloneDeep } from 'lodash';
 import * as fs from 'node:fs';
 import { promisify } from 'node:util';
 
-import { TtsServiceType } from './script-processor';
+import { TtsServiceType } from './tts-service';
 
 const readFileAsPromise = promisify(fs.readFile);
 const writeFileAsPromise = promisify(fs.writeFile);

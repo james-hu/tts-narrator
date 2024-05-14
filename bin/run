@@ -15,7 +15,7 @@ if (dev) {
   oclif.settings.debug = true;
 }
 
-require(`../${dev ? 'src' : 'dist'}`)
+require(`../${dev ? 'src' : 'dist'}/tts-narrator-cli`)
 .run()
 .then(oclif.flush)
 .catch(oclif.Errors.handle)

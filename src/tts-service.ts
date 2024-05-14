@@ -10,6 +10,10 @@ export interface TtsService {
   generateAudio(ssml: string, options: AudioGenerationOptions): Promise<void>;
 }
 
+export enum TtsServiceType {
+  Azure = 'azure'
+}
+
 export abstract class BaseTtsService implements TtsService {
   async generateSSML(paragraph: NarrationParagraph): Promise<string> {
     const generated = this.generateSsmlWithoutValidation(paragraph);

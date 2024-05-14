@@ -1,52 +1,27 @@
 /* eslint-disable complexity */
 /* eslint-disable no-await-in-loop */
+import type chalkType from 'chalk';
 /* eslint-disable max-depth */
 import type promptsFunc from 'prompts';
 
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { ConsoleLineLogger, consoleWithColour } from '@handy-common-utils/misc-utils';
-import { CommandOptions } from '@handy-common-utils/oclif-utils';
-import { Flags } from '@oclif/core';
-import chalk from 'chalk';
+import { ConsoleLineLogger, consoleWithColour, consoleWithoutColour } from '@handy-common-utils/misc-utils';
 import { MultiRange } from 'multi-integer-range';
 import * as murmurhash from 'murmurhash';
 import * as fs from 'node:fs';
 import path from 'node:path';
 
+import type { ScriptProcessorFlags } from './script-processor-flags';
+
 import { getAudioFileDuration, playMp3File } from './audio-utils';
 import { AzureAudioGenerationOptions, AzureTtsService } from './azure-tts-service';
 import { NarrationParagraph, NarrationScript, loadScript } from './narration-script';
-import { AudioGenerationOptions, TtsService } from './tts-service';
+import { AudioGenerationOptions, TtsService, TtsServiceType } from './tts-service';
 
-export enum TtsServiceType {
-  Azure = 'azure'
-}
-
-/**
- * CLI flags that are required/used by the ScriptProcessor.
- */
-export const scriptProcessorFlags = {
-  debug: Flags.boolean({ char: 'd', description: 'output debug information' }),
-  quiet: Flags.boolean({ char: 'q', description: 'output warn and error information only' }),
-
-  service: Flags.string({ char: 's', options: Object.entries(TtsServiceType).map(([_name, value]) => value), description: 'text-to-speech service to use' }),
-  'subscription-key': Flags.string({ char: 'k', description: 'Azure Speech service subscription key' }),
-  'subscription-key-env': Flags.string({ description: 'Name of the environment variable that holds the subscription key' }),
-  region: Flags.string({ char: 'r', description: 'region of the text-to-speech service' }),
-
-  play: Flags.boolean({ char: 'p', default: true, allowNo: true, description: 'play generated audio' }),
-  interactive: Flags.boolean({ char: 'i', default: false, description: 'wait for key press before entering each section' }),
-
-  overwrite: Flags.boolean({ char: 'o', default: false, description: 'always overwrite previously generated audio files' }),
-  'dry-run': Flags.boolean({ default: false, description: 'don\'t try to generate or play audio' }),
-  ssml: Flags.boolean({ default: false, exclusive: ['quiet'], description: 'display generated SSML' }),
-
-  chapters: Flags.string({ description: 'list of chapters to process, examples: "1-10,13,15", "4-"' }),
-  sections: Flags.string({ description: 'list of sections to process, examples: "1-10,13,15", "5-"' }),
-};
 
 export class ScriptProcessor {
-  protected _prompts: typeof promptsFunc|undefined|null; // loaded function / not initialised / failed to load
+  protected _prompts: typeof promptsFunc|undefined|null; // prompts function / not initialised / failed to load
+  protected _chalk: typeof chalkType|undefined|null; // chalk / not initialised / failed to load
+  
   protected cliConsole: ConsoleLineLogger;
   protected ttsService!: TtsService;
   protected audioGenerationOptions: AudioGenerationOptions|undefined;
@@ -54,8 +29,8 @@ export class ScriptProcessor {
   protected chapterRange: MultiRange|undefined;
   protected sectionRange: MultiRange|undefined;
 
-  constructor(protected scriptFilePath: string, protected flags: CommandOptions<{ flags: typeof scriptProcessorFlags}>['flags'], cliConsole?: ConsoleLineLogger) {
-    this.cliConsole = cliConsole ?? consoleWithColour(this.flags, chalk);
+  constructor(protected scriptFilePath: string, protected flags: ScriptProcessorFlags, cliConsole?: ConsoleLineLogger) {
+    this.cliConsole = cliConsole ?? (this.chalk ? consoleWithColour(this.flags, this.chalk) : consoleWithoutColour(this.flags));
   }
 
   /**
@@ -73,6 +48,22 @@ export class ScriptProcessor {
     }
     return this._prompts;
   }
+
+  /**
+   * chalk, or null caused by library not available
+   */
+  protected get chalk() {
+    if (this._chalk === undefined) {
+      try {
+        // eslint-disable-next-line unicorn/prefer-module
+        this._chalk = require('chalk');
+      } catch (error) {
+        this._chalk = null;
+        this.cliConsole.debug(`Library for colourising console output is not available: ${error}`);
+      }
+    }
+    return this._prompts;
+  }  
 
   protected hash(ssml: string, _paragraph: NarrationParagraph): string {
     const hashNumber = murmurhash.v3(ssml, 2894);
