@@ -1,3 +1,5 @@
+import type SpeakerClass from 'speaker';
+
 import { timeoutReject } from '@handy-common-utils/promise-utils';
 import * as AV from 'av';
 import 'mp3';
@@ -13,18 +15,19 @@ function toBuffer(arr: Float32Array) {
     Buffer.from(arr);
 }
 
-let speakerClassOrError: any|Error;
+// loaded class / undefined as not initialised / null as failed to load
+let _speakerClass: typeof SpeakerClass | undefined | null;
 function getSpeakerClass(errorLogger: (msg: string) => void): any {
-  if (!speakerClassOrError) {
+  if (_speakerClass === undefined) {
     try {
       // eslint-disable-next-line unicorn/prefer-module
-      speakerClassOrError = require('speaker');
+      _speakerClass = require('speaker');
     } catch (error) {
-      speakerClassOrError = `${error}`;
-      errorLogger(`Library for playing MP3 is not available: ${speakerClassOrError}`);
+      _speakerClass = null;
+      errorLogger(`Library for playing MP3 is not available: ${error}`);
     }
   }
-  return typeof speakerClassOrError === 'string' ? undefined : speakerClassOrError;
+  return _speakerClass;
 }
 
 export async function playMp3File(filePath: string, infoLogger: (msg: string) => void): Promise<void> {

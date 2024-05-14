@@ -1,6 +1,8 @@
 /* eslint-disable complexity */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable max-depth */
+import type promptsFunc from 'prompts';
+
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { ConsoleLineLogger, consoleWithColour } from '@handy-common-utils/misc-utils';
 import { CommandOptions } from '@handy-common-utils/oclif-utils';
@@ -10,8 +12,6 @@ import { MultiRange } from 'multi-integer-range';
 import * as murmurhash from 'murmurhash';
 import * as fs from 'node:fs';
 import path from 'node:path';
-// eslint-disable-next-line import/no-named-as-default
-import prompts from 'prompts';
 
 import { getAudioFileDuration, playMp3File } from './audio-utils';
 import { AzureAudioGenerationOptions, AzureTtsService } from './azure-tts-service';
@@ -46,6 +46,7 @@ export const scriptProcessorFlags = {
 };
 
 export class ScriptProcessor {
+  protected _prompts: typeof promptsFunc|undefined|null; // loaded function / not initialised / failed to load
   protected cliConsole: ConsoleLineLogger;
   protected ttsService!: TtsService;
   protected audioGenerationOptions: AudioGenerationOptions|undefined;
@@ -55,6 +56,22 @@ export class ScriptProcessor {
 
   constructor(protected scriptFilePath: string, protected flags: CommandOptions<{ flags: typeof scriptProcessorFlags}>['flags'], cliConsole?: ConsoleLineLogger) {
     this.cliConsole = cliConsole ?? consoleWithColour(this.flags, chalk);
+  }
+
+  /**
+   * prompts function, or null caused by library not available
+   */
+  protected get prompts() {
+    if (this._prompts === undefined) {
+      try {
+        // eslint-disable-next-line unicorn/prefer-module
+        this._prompts = require('prompts');
+      } catch (error) {
+        this._prompts = null;
+        this.cliConsole.error(`Library for prompting user input is not available: ${error}`);
+      }
+    }
+    return this._prompts;
   }
 
   protected hash(ssml: string, _paragraph: NarrationParagraph): string {
@@ -149,8 +166,8 @@ export class ScriptProcessor {
             for (const paragraph of section.paragraphs) {
               const paragraphIndex = paragraph.index;
               // wait for user key press if needed
-              if (paragraphIndex === 1 && this.flags.interactive) {
-                const response = await prompts({
+              if (paragraphIndex === 1 && this.flags.interactive && this.prompts) {
+                const response = await this.prompts({
                   initial: true,
                   message: `Press ENTER to continue or CTRL-C to abort => [${chapterIndex}-${sectionIndex}] ${section.key}`,
                   name: 'r',
