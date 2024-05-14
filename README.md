@@ -77,7 +77,7 @@ DESCRIPTION
   Generate narration with Text-To-Speech technology
 
 EXAMPLES
-  $ tts-narrator myscript.yml --play --interactive --service azure --subscription-key-env SUBSCRIPTION_KEY --region australiaeast
+  $ tts-narrator myscript.yml --play --interactive --service azure --subscription-key-env TTS_SUBSCRIPTION_KEY --region australiaeast
 
   $ tts-narrator ./test/fixtures/script3.yml -s azure --ssml -r australiaeast --subscription-key-env=TTS_SUB_KEY  --no-play --interactive -d
 
@@ -102,8 +102,9 @@ EXAMPLES
 - [index](#modulesindexmd)
 - [narration-script](#modulesnarration_scriptmd)
 - [script-processor](#modulesscript_processormd)
+- [script-processor-flags](#modulesscript_processor_flagsmd)
+- [tts-narrator-cli](#modulestts_narrator_climd)
 - [tts-service](#modulestts_servicemd)
-- [types](#modulestypesmd)
 
 ## Classes
 
@@ -256,61 +257,6 @@ ___
 ###### Inherited from
 
 [BaseTtsService](#classestts_servicebasettsservicemd).[validateXML](#validatexml)
-
-
-<a name="classesindexexport_md"></a>
-
-### Class: export=
-
-[index](#modulesindexmd).export=
-
-#### Hierarchy
-
-- `Command`
-
-  ↳ **`export=`**
-
-#### Constructors
-
-##### constructor
-
-• **new export=**(`argv`, `config`)
-
-###### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `argv` | `string`[] |
-| `config` | `Config` |
-
-###### Inherited from
-
-Command.constructor
-
-#### Properties
-
-| Property | Description |
-| --- | --- |
-| `Static` **args**: `Object` | Type declaration<br><br>| Name | Type |<br>| :------ | :------ |<br>| `file` | `Arg`\<`string`, `Record`\<`string`, `unknown`\>\> |<br>Overrides<br><br>Command.args |
-| `Static` **description**: `string` = `'Generate narration with Text-To-Speech technology'` | Overrides<br><br>Command.description |
-| `Static` **examples**: `string`[] | Overrides<br><br>Command.examples |
-| `Static` **flags**: `Object` | Type declaration<br><br>| Name | Type |<br>| :------ | :------ |<br>| `chapters` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `debug` | `BooleanFlag`\<`boolean`\> |<br>| `dry-run` | `BooleanFlag`\<`boolean`\> |<br>| `interactive` | `BooleanFlag`\<`boolean`\> |<br>| `overwrite` | `BooleanFlag`\<`boolean`\> |<br>| `play` | `BooleanFlag`\<`boolean`\> |<br>| `quiet` | `BooleanFlag`\<`boolean`\> |<br>| `region` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `sections` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `service` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `ssml` | `BooleanFlag`\<`boolean`\> |<br>| `subscription-key` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `subscription-key-env` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>Overrides<br><br>Command.flags |
-| `Static` **id**: `string` = `' '` | Overrides<br><br>Command.id |
-
-
-#### Methods
-
-##### run
-
-▸ **run**(): `Promise`\<`void`\>
-
-###### Returns
-
-`Promise`\<`void`\>
-
-###### Overrides
-
-Command.run
 
 
 <a name="classesnarration_scriptnarrationchaptermd"></a>
@@ -635,6 +581,8 @@ ___
 
 | Property | Description |
 | --- | --- |
+| `Protected` **\_chalk**: `undefined` \| ``null`` \| `Chalk` & `ChalkFunction` & {} |  |
+| `Protected` **\_prompts**: `undefined` \| ``null`` \| typeof `prompts` |  |
 | `Protected` **\_script**: [`NarrationScript`](#classesnarration_scriptnarrationscriptmd) |  |
 | `Protected` **audioGenerationOptions**: `undefined` \| [`AudioGenerationOptions`](#interfacestts_serviceaudiogenerationoptionsmd) |  |
 | `Protected` **chapterRange**: `undefined` \| `MultiRange` |  |
@@ -646,6 +594,30 @@ ___
 
 
 #### Accessors
+
+##### chalk
+
+• `Protected` `get` **chalk**(): `undefined` \| ``null`` \| typeof `prompts`
+
+chalk, or null caused by library not available
+
+###### Returns
+
+`undefined` \| ``null`` \| typeof `prompts`
+
+___
+
+##### prompts
+
+• `Protected` `get` **prompts**(): `undefined` \| ``null`` \| typeof `prompts`
+
+prompts function, or null caused by library not available
+
+###### Returns
+
+`undefined` \| ``null`` \| typeof `prompts`
+
+___
 
 ##### script
 
@@ -766,6 +738,61 @@ ___
 ###### Returns
 
 `Promise`\<`void`\>
+
+
+<a name="classestts_narrator_cliexport_md"></a>
+
+### Class: export=
+
+[tts-narrator-cli](#modulestts_narrator_climd).export=
+
+#### Hierarchy
+
+- `Command`
+
+  ↳ **`export=`**
+
+#### Constructors
+
+##### constructor
+
+• **new export=**(`argv`, `config`)
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `argv` | `string`[] |
+| `config` | `Config` |
+
+###### Inherited from
+
+Command.constructor
+
+#### Properties
+
+| Property | Description |
+| --- | --- |
+| `Static` **args**: `Object` | Type declaration<br><br>| Name | Type |<br>| :------ | :------ |<br>| `file` | `Arg`\<`string`, `Record`\<`string`, `unknown`\>\> |<br>Overrides<br><br>Command.args |
+| `Static` **description**: `string` = `'Generate narration with Text-To-Speech technology'` | Overrides<br><br>Command.description |
+| `Static` **examples**: `string`[] | Overrides<br><br>Command.examples |
+| `Static` **flags**: `Object` | Type declaration<br><br>| Name | Type |<br>| :------ | :------ |<br>| `chapters` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `debug` | `BooleanFlag`\<`boolean`\> |<br>| `dry-run` | `BooleanFlag`\<`boolean`\> |<br>| `interactive` | `BooleanFlag`\<`boolean`\> |<br>| `overwrite` | `BooleanFlag`\<`boolean`\> |<br>| `play` | `BooleanFlag`\<`boolean`\> |<br>| `quiet` | `BooleanFlag`\<`boolean`\> |<br>| `region` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `sections` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `service` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `ssml` | `BooleanFlag`\<`boolean`\> |<br>| `subscription-key` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `subscription-key-env` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>Overrides<br><br>Command.flags |
+| `Static` **id**: `string` = `' '` | Overrides<br><br>Command.id |
+
+
+#### Methods
+
+##### run
+
+▸ **run**(): `Promise`\<`void`\>
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Overrides
+
+Command.run
 
 
 <a name="classestts_servicebasettsservicemd"></a>
@@ -904,11 +931,11 @@ ___
 ## Enums
 
 
-<a name="enumsscript_processorttsservicetypemd"></a>
+<a name="enumstts_servicettsservicetypemd"></a>
 
 ### Enumeration: TtsServiceType
 
-[script-processor](#modulesscript_processormd).TtsServiceType
+[tts-service](#modulestts_servicemd).TtsServiceType
 
 #### Enumeration Members
 
@@ -1171,9 +1198,113 @@ ___
 
 ### Module: index
 
-#### Classes
+#### References
 
-- [export=](#classesindexexport_md)
+##### AudioGenerationOptions
+
+Re-exports [AudioGenerationOptions](#interfacestts_serviceaudiogenerationoptionsmd)
+
+___
+
+##### AzureAudioGenerationOptions
+
+Re-exports [AzureAudioGenerationOptions](#interfacesazure_tts_serviceazureaudiogenerationoptionsmd)
+
+___
+
+##### AzureTtsService
+
+Re-exports [AzureTtsService](#classesazure_tts_serviceazurettsservicemd)
+
+___
+
+##### BaseTtsService
+
+Re-exports [BaseTtsService](#classestts_servicebasettsservicemd)
+
+___
+
+##### NarrationChapter
+
+Re-exports [NarrationChapter](#classesnarration_scriptnarrationchaptermd)
+
+___
+
+##### NarrationParagraph
+
+Re-exports [NarrationParagraph](#classesnarration_scriptnarrationparagraphmd)
+
+___
+
+##### NarrationScript
+
+Re-exports [NarrationScript](#classesnarration_scriptnarrationscriptmd)
+
+___
+
+##### NarrationScriptFile
+
+Re-exports [NarrationScriptFile](#modulesnarration_scriptnarrationscriptfilemd)
+
+___
+
+##### NarrationSection
+
+Re-exports [NarrationSection](#classesnarration_scriptnarrationsectionmd)
+
+___
+
+##### ScriptProcessor
+
+Re-exports [ScriptProcessor](#classesscript_processorscriptprocessormd)
+
+___
+
+##### ScriptSettings
+
+Re-exports [ScriptSettings](#interfacesnarration_scriptscriptsettingsmd)
+
+___
+
+##### TtsService
+
+Re-exports [TtsService](#interfacestts_servicettsservicemd)
+
+___
+
+##### TtsServiceType
+
+Re-exports [TtsServiceType](#enumstts_servicettsservicetypemd)
+
+___
+
+##### VoiceSettings
+
+Re-exports [VoiceSettings](#interfacesnarration_scriptvoicesettingsmd)
+
+___
+
+##### getAudioFileDuration
+
+Re-exports [getAudioFileDuration](#getaudiofileduration)
+
+___
+
+##### loadScript
+
+Re-exports [loadScript](#loadscript)
+
+___
+
+##### playMp3File
+
+Re-exports [playMp3File](#playmp3file)
+
+___
+
+##### saveScript
+
+Re-exports [saveScript](#savescript)
 
 
 <a name="modulesnarration_scriptnarrationscriptfilemd"></a>
@@ -1260,13 +1391,20 @@ ___
 
 ### Module: script-processor
 
-#### Enumerations
-
-- [TtsServiceType](#enumsscript_processorttsservicetypemd)
-
 #### Classes
 
 - [ScriptProcessor](#classesscript_processorscriptprocessormd)
+
+
+<a name="modulesscript_processor_flagsmd"></a>
+
+### Module: script-processor-flags
+
+#### Type Aliases
+
+##### ScriptProcessorFlags
+
+Ƭ **ScriptProcessorFlags**: `CommandOptions`\<\{ `flags`: typeof [`scriptProcessorFlags`](#scriptprocessorflags-1)  }\>[``"flags"``]
 
 #### Variables
 
@@ -1295,9 +1433,22 @@ CLI flags that are required/used by the ScriptProcessor.
 | `subscription-key-env` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |
 
 
+<a name="modulestts_narrator_climd"></a>
+
+### Module: tts-narrator-cli
+
+#### Classes
+
+- [export=](#classestts_narrator_cliexport_md)
+
+
 <a name="modulestts_servicemd"></a>
 
 ### Module: tts-service
+
+#### Enumerations
+
+- [TtsServiceType](#enumstts_servicettsservicetypemd)
 
 #### Classes
 
@@ -1307,123 +1458,4 @@ CLI flags that are required/used by the ScriptProcessor.
 
 - [AudioGenerationOptions](#interfacestts_serviceaudiogenerationoptionsmd)
 - [TtsService](#interfacestts_servicettsservicemd)
-
-
-<a name="modulestypesmd"></a>
-
-### Module: types
-
-#### References
-
-##### AudioGenerationOptions
-
-Re-exports [AudioGenerationOptions](#interfacestts_serviceaudiogenerationoptionsmd)
-
-___
-
-##### AzureAudioGenerationOptions
-
-Re-exports [AzureAudioGenerationOptions](#interfacesazure_tts_serviceazureaudiogenerationoptionsmd)
-
-___
-
-##### AzureTtsService
-
-Re-exports [AzureTtsService](#classesazure_tts_serviceazurettsservicemd)
-
-___
-
-##### BaseTtsService
-
-Re-exports [BaseTtsService](#classestts_servicebasettsservicemd)
-
-___
-
-##### NarrationChapter
-
-Re-exports [NarrationChapter](#classesnarration_scriptnarrationchaptermd)
-
-___
-
-##### NarrationParagraph
-
-Re-exports [NarrationParagraph](#classesnarration_scriptnarrationparagraphmd)
-
-___
-
-##### NarrationScript
-
-Re-exports [NarrationScript](#classesnarration_scriptnarrationscriptmd)
-
-___
-
-##### NarrationScriptFile
-
-Re-exports [NarrationScriptFile](#modulesnarration_scriptnarrationscriptfilemd)
-
-___
-
-##### NarrationSection
-
-Re-exports [NarrationSection](#classesnarration_scriptnarrationsectionmd)
-
-___
-
-##### ScriptProcessor
-
-Re-exports [ScriptProcessor](#classesscript_processorscriptprocessormd)
-
-___
-
-##### ScriptSettings
-
-Re-exports [ScriptSettings](#interfacesnarration_scriptscriptsettingsmd)
-
-___
-
-##### TtsService
-
-Re-exports [TtsService](#interfacestts_servicettsservicemd)
-
-___
-
-##### TtsServiceType
-
-Re-exports [TtsServiceType](#enumsscript_processorttsservicetypemd)
-
-___
-
-##### VoiceSettings
-
-Re-exports [VoiceSettings](#interfacesnarration_scriptvoicesettingsmd)
-
-___
-
-##### getAudioFileDuration
-
-Re-exports [getAudioFileDuration](#getaudiofileduration)
-
-___
-
-##### loadScript
-
-Re-exports [loadScript](#loadscript)
-
-___
-
-##### playMp3File
-
-Re-exports [playMp3File](#playmp3file)
-
-___
-
-##### saveScript
-
-Re-exports [saveScript](#savescript)
-
-___
-
-##### scriptProcessorFlags
-
-Re-exports [scriptProcessorFlags](#scriptprocessorflags)
 <!-- API end -->

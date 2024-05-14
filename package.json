@@ -1,6 +1,6 @@
 {
   "name": "tts-narrator",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "Generate narration with Text-To-Speech technology",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
