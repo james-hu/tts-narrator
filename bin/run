@@ -1,21 +1,25 @@
 #!/usr/bin/env node
+/* eslint-disable unicorn/prefer-top-level-await */
+/* eslint-disable node/no-extraneous-require */
+/* eslint-disable unicorn/prefer-node-protocol */
+/* eslint-disable unicorn/prefer-module */
 
-const fs = require('fs')
-const path = require('path')
-const oclif = require('@oclif/core')
+const fs = require('fs');
+const path = require('path');
+const oclif = require('@oclif/core');
 
-const project = path.join(__dirname, '..', 'tsconfig.json')
-const dev = fs.existsSync(project)
+const project = path.join(__dirname, '..', 'tsconfig.json');
+const dev = fs.existsSync(project);
 
 if (dev) {
   // In dev mode -> use ts-node and dev plugins
-  process.env.NODE_ENV = 'development'
+  process.env.NODE_ENV = 'development';
   
-  require('ts-node').register({project})
+  require('ts-node').register({ project });
   oclif.settings.debug = true;
 }
 
 require(`../${dev ? 'src' : 'dist'}/tts-narrator-cli`)
 .run()
 .then(oclif.flush)
-.catch(oclif.Errors.handle)
+.catch(oclif.Errors.handle);

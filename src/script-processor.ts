@@ -126,18 +126,18 @@ export class ScriptProcessor {
     return audioFilePath;
   }
 
-  async run(reconstructedcommandLine?: string): Promise<void> {
+  async run(reconstructedCommandLine?: string): Promise<void> {
     try {
-      await this.runWithoutCatch(reconstructedcommandLine);
+      await this.runWithoutCatch(reconstructedCommandLine);
     } catch (error: any) {
       this.cliConsole.error(error.message);
       this.cliConsole.debug(error);
     }
   }
 
-  async runWithoutCatch(reconstructedcommandLine?: string): Promise<void> {
-    if (reconstructedcommandLine) {
-      this.cliConsole.debug(`Executing command line: ${reconstructedcommandLine}`);
+  async runWithoutCatch(reconstructedCommandLine?: string): Promise<void> {
+    if (reconstructedCommandLine) {
+      this.cliConsole.debug(`Executing command line: ${reconstructedCommandLine}`);
     }
 
     await this.loadScript();
