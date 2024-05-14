@@ -34,6 +34,12 @@ When running on MacOS, to avoid `illegal hardware instruction` issue, try `npm i
 
 # CLI
 
+To use the CLI as an NPM package, you need to install it with all its optional dependencies, like this:
+
+```shell
+npm i -g --include=optional tts-narrator
+```
+
 <!-- help start -->
 ```
 USAGE
