@@ -24,7 +24,7 @@ export class ScriptProcessor {
   
   protected cliConsole: ConsoleLineLogger;
   protected ttsService!: TtsService;
-  protected audioGenerationOptions: AudioGenerationOptions|undefined;
+  protected audioGenerationOptions: Omit<AudioGenerationOptions, 'outputFilePath'>|undefined;
   protected _script!: NarrationScript;
   protected chapterRange: MultiRange|undefined;
   protected sectionRange: MultiRange|undefined;
@@ -43,7 +43,7 @@ export class ScriptProcessor {
         this._prompts = require('prompts');
       } catch (error) {
         this._prompts = null;
-        this.cliConsole.error(`Library for prompting user input is not available: ${error}`);
+        this.cliConsole.info(`Library for prompting user input is not available: ${error}`);
       }
     }
     return this._prompts;
@@ -70,9 +70,11 @@ export class ScriptProcessor {
     return String(hashNumber);
   }
 
-  protected async loadScript(): Promise<void> {
-    this._script = await loadScript(this.scriptFilePath);
-    this.cliConsole.debug(`Loaded script from ${this.scriptFilePath}`);
+  protected async loadScriptIfNeeded(): Promise<void> {
+    if (!this._script) {
+      this._script = await loadScript(this.scriptFilePath);
+      this.cliConsole.debug(`Loaded script from ${this.scriptFilePath}`);  
+    }
   }
 
   protected parseRanges(): void {
@@ -103,7 +105,7 @@ export class ScriptProcessor {
           this.audioGenerationOptions = {
             subscriptionKey: this.flags['subscription-key'] ?? (this.flags['subscription-key-env'] ? process.env[this.flags['subscription-key-env']] : undefined),
             serviceRegion: this.flags.region,
-          } as AzureAudioGenerationOptions;
+          } as Omit<AzureAudioGenerationOptions, 'outputFilePath'>;
           break;
         }
         default: {
@@ -140,7 +142,7 @@ export class ScriptProcessor {
       this.cliConsole.debug(`Executing command line: ${reconstructedCommandLine}`);
     }
 
-    await this.loadScript();
+    await this.loadScriptIfNeeded();
 
     // chapter and section ranges
     this.parseRanges();

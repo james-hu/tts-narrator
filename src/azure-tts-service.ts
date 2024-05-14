@@ -9,20 +9,27 @@ export interface AzureAudioGenerationOptions extends AudioGenerationOptions {
 }
 
 export class AzureTtsService extends BaseTtsService {
+  constructor();
+  constructor(protected options?: Omit<AzureAudioGenerationOptions, 'outputFilePath'>) {
+    super();
+  }
+
   protected buildSpeakStartTag(voiceSettings: VoiceSettings): string {
     return `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="https://www.w3.org/2001/mstts" xml:lang="${voiceSettings.language ?? 'en-US'}">`;
   }
 
-  generateAudio(ssml: string, options: AzureAudioGenerationOptions): Promise<any> {
+  generateAudio(ssml: string, options: AzureAudioGenerationOptions | Pick<AzureAudioGenerationOptions, 'outputFilePath'>): Promise<any> {
+    const allOptions = { ...this.options, ...options } as AzureAudioGenerationOptions;
+
     let speechConfig: SpeechConfig;
-    if (options.subscriptionKey && options.serviceRegion) {
-      speechConfig = SpeechConfig.fromSubscription(options.subscriptionKey, options.serviceRegion);
+    if (allOptions.subscriptionKey && allOptions.serviceRegion) {
+      speechConfig = SpeechConfig.fromSubscription(allOptions.subscriptionKey, allOptions.serviceRegion);
     } else {
       throw new Error('Can\'t find Azure service region and/or subscription key');
     }
     speechConfig.speechSynthesisOutputFormat = SpeechSynthesisOutputFormat.Audio16Khz32KBitRateMonoMp3;
 
-    const audioConfig = AudioConfig.fromAudioFileOutput(options.outputFilePath);
+    const audioConfig = AudioConfig.fromAudioFileOutput(allOptions.outputFilePath);
 
     const synthesizer = new SpeechSynthesizer(speechConfig, audioConfig);
 
