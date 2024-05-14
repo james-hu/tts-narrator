@@ -119,6 +119,7 @@ console.log(`One of the generated audio file is: ${script.chapters[0].sections[0
 - [narration-script](#modulesnarration_scriptmd)
 - [script-processor](#modulesscript_processormd)
 - [script-processor-flags](#modulesscript_processor_flagsmd)
+- [tts-narrator](#modulestts_narratormd)
 - [tts-narrator-cli](#modulestts_narrator_climd)
 - [tts-service](#modulestts_servicemd)
 
@@ -143,9 +144,16 @@ console.log(`One of the generated audio file is: ${script.chapters[0].sections[0
 
 • **new AzureTtsService**()
 
-###### Inherited from
+###### Overrides
 
 [BaseTtsService](#classestts_servicebasettsservicemd).[constructor](#constructor)
+
+#### Properties
+
+| Property | Description |
+| --- | --- |
+| `Protected` `Optional` **options**: `Omit`\<[`AzureAudioGenerationOptions`](#interfacesazure_tts_serviceazureaudiogenerationoptionsmd), ``"outputFilePath"``\> |  |
+
 
 #### Methods
 
@@ -198,7 +206,7 @@ ___
 | Name | Type |
 | :------ | :------ |
 | `ssml` | `string` |
-| `options` | [`AzureAudioGenerationOptions`](#interfacesazure_tts_serviceazureaudiogenerationoptionsmd) |
+| `options` | [`AzureAudioGenerationOptions`](#interfacesazure_tts_serviceazureaudiogenerationoptionsmd) \| `Pick`\<[`AzureAudioGenerationOptions`](#interfacesazure_tts_serviceazureaudiogenerationoptionsmd), ``"outputFilePath"``\> |
 
 ###### Returns
 
@@ -579,6 +587,12 @@ ___
 
 [script-processor](#modulesscript_processormd).ScriptProcessor
 
+#### Hierarchy
+
+- **`ScriptProcessor`**
+
+  ↳ [`TtsNarrator`](#classestts_narratorttsnarratormd)
+
 #### Constructors
 
 ##### constructor
@@ -600,7 +614,7 @@ ___
 | `Protected` **\_chalk**: `undefined` \| ``null`` \| `Chalk` & `ChalkFunction` & {} |  |
 | `Protected` **\_prompts**: `undefined` \| ``null`` \| typeof `prompts` |  |
 | `Protected` **\_script**: [`NarrationScript`](#classesnarration_scriptnarrationscriptmd) |  |
-| `Protected` **audioGenerationOptions**: `undefined` \| [`AudioGenerationOptions`](#interfacestts_serviceaudiogenerationoptionsmd) |  |
+| `Protected` **audioGenerationOptions**: `undefined` \| `Omit`\<[`AudioGenerationOptions`](#interfacestts_serviceaudiogenerationoptionsmd), ``"outputFilePath"``\> |  |
 | `Protected` **chapterRange**: `undefined` \| `MultiRange` |  |
 | `Protected` **cliConsole**: `LineLogger`\<(`message?`: `any`, ...`optionalParams`: `any`[]) => `void`, (`message?`: `any`, ...`optionalParams`: `any`[]) => `void`, (`message?`: `any`, ...`optionalParams`: `any`[]) => `void`, (`message?`: `any`, ...`optionalParams`: `any`[]) => `void`\> |  |
 | `Protected` **flags**: `Object` & `FlagOutput` & {} |  |
@@ -689,9 +703,9 @@ ___
 
 ___
 
-##### loadScript
+##### loadScriptIfNeeded
 
-▸ `Protected` **loadScript**(): `Promise`\<`void`\>
+▸ `Protected` **loadScriptIfNeeded**(): `Promise`\<`void`\>
 
 ###### Returns
 
@@ -727,13 +741,13 @@ ___
 
 ##### run
 
-▸ **run**(`reconstructedcommandLine?`): `Promise`\<`void`\>
+▸ **run**(`reconstructedCommandLine?`): `Promise`\<`void`\>
 
 ###### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `reconstructedcommandLine?` | `string` |
+| `reconstructedCommandLine?` | `string` |
 
 ###### Returns
 
@@ -743,17 +757,291 @@ ___
 
 ##### runWithoutCatch
 
-▸ **runWithoutCatch**(`reconstructedcommandLine?`): `Promise`\<`void`\>
+▸ **runWithoutCatch**(`reconstructedCommandLine?`): `Promise`\<`void`\>
 
 ###### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `reconstructedcommandLine?` | `string` |
+| `reconstructedCommandLine?` | `string` |
 
 ###### Returns
 
 `Promise`\<`void`\>
+
+
+<a name="classestts_narratorttsnarratormd"></a>
+
+### Class: TtsNarrator
+
+[tts-narrator](#modulestts_narratormd).TtsNarrator
+
+Class for generating narration.
+Instance of this class can be used to generate narration audio for scripts by calling the `narrate(...)` method.
+
+**`Example`**
+
+```ts
+const ttsService = new AzureTtsService(...);
+const ttsNarrator = new TtsNarrator(ttsService, './output-folder');
+const script = await loadScript('./my-script.yml');
+await ttsNarrator.narrate(script);
+console.log(`One of the generated audio file is: ${script.chapters[0].sections[0].paragraphs[0].audioFilePath}`);
+```
+
+#### Hierarchy
+
+- [`ScriptProcessor`](#classesscript_processorscriptprocessormd)
+
+  ↳ **`TtsNarrator`**
+
+#### Constructors
+
+##### constructor
+
+• **new TtsNarrator**(`ttsService`, `audioFileFolder`, `options?`, `cliConsole?`)
+
+Constructor
+
+###### Parameters
+
+| Name | Type | Default value | Description |
+| :------ | :------ | :------ | :------ |
+| `ttsService` | [`TtsService`](#interfacestts_servicettsservicemd) | `undefined` | The TTS service to be used for generating audio |
+| `audioFileFolder` | `string` | `undefined` | The folder that generated audio files will be placed |
+| `options?` | `Partial`\<`Object` & `FlagOutput` & {}\> | `undefined` | Optional settings |
+| `cliConsole` | `LineLogger`\<(`message?`: `any`, ...`optionalParams`: `any`[]) => `void`, (`message?`: `any`, ...`optionalParams`: `any`[]) => `void`, (`message?`: `any`, ...`optionalParams`: `any`[]) => `void`, (`message?`: `any`, ...`optionalParams`: `any`[]) => `void`\> | `silentLogger` | Optional logger |
+
+###### Overrides
+
+[ScriptProcessor](#classesscript_processorscriptprocessormd).[constructor](#constructor)
+
+#### Properties
+
+| Property | Description |
+| --- | --- |
+| `Protected` **\_chalk**: `undefined` \| ``null`` \| `Chalk` & `ChalkFunction` & {} | Inherited from<br><br>[ScriptProcessor](#classesscript_processorscriptprocessormd).[_chalk](#_chalk) |
+| `Protected` **\_prompts**: `undefined` \| ``null`` \| typeof `prompts` | Inherited from<br><br>[ScriptProcessor](#classesscript_processorscriptprocessormd).[_prompts](#_prompts) |
+| `Protected` **\_script**: [`NarrationScript`](#classesnarration_scriptnarrationscriptmd) | Inherited from<br><br>[ScriptProcessor](#classesscript_processorscriptprocessormd).[_script](#_script) |
+| `Protected` **audioFileFolder**: `string` | The folder that generated audio files will be placed |
+| `Protected` **audioGenerationOptions**: `undefined` \| `Omit`\<[`AudioGenerationOptions`](#interfacestts_serviceaudiogenerationoptionsmd), ``"outputFilePath"``\> | Inherited from<br><br>[ScriptProcessor](#classesscript_processorscriptprocessormd).[audioGenerationOptions](#audiogenerationoptions) |
+| `Protected` **chapterRange**: `undefined` \| `MultiRange` | Inherited from<br><br>[ScriptProcessor](#classesscript_processorscriptprocessormd).[chapterRange](#chapterrange) |
+| `Protected` **cliConsole**: `LineLogger`\<(`message?`: `any`, ...`optionalParams`: `any`[]) => `void`, (`message?`: `any`, ...`optionalParams`: `any`[]) => `void`, (`message?`: `any`, ...`optionalParams`: `any`[]) => `void`, (`message?`: `any`, ...`optionalParams`: `any`[]) => `void`\> | Inherited from<br><br>[ScriptProcessor](#classesscript_processorscriptprocessormd).[cliConsole](#cliconsole) |
+| `Protected` **flags**: `Object` & `FlagOutput` & {} | Inherited from<br><br>[ScriptProcessor](#classesscript_processorscriptprocessormd).[flags](#flags) |
+| `Protected` **scriptFilePath**: `string` | Inherited from<br><br>[ScriptProcessor](#classesscript_processorscriptprocessormd).[scriptFilePath](#scriptfilepath) |
+| `Protected` **sectionRange**: `undefined` \| `MultiRange` | Inherited from<br><br>[ScriptProcessor](#classesscript_processorscriptprocessormd).[sectionRange](#sectionrange) |
+| `Protected` **ttsService**: [`TtsService`](#interfacestts_servicettsservicemd) | Inherited from<br><br>[ScriptProcessor](#classesscript_processorscriptprocessormd).[ttsService](#ttsservice) |
+
+
+#### Accessors
+
+##### chalk
+
+• `Protected` `get` **chalk**(): `undefined` \| ``null`` \| typeof `prompts`
+
+chalk, or null caused by library not available
+
+###### Returns
+
+`undefined` \| ``null`` \| typeof `prompts`
+
+###### Inherited from
+
+ScriptProcessor.chalk
+
+___
+
+##### prompts
+
+• `Protected` `get` **prompts**(): `undefined` \| ``null`` \| typeof `prompts`
+
+prompts function, or null caused by library not available
+
+###### Returns
+
+`undefined` \| ``null`` \| typeof `prompts`
+
+###### Inherited from
+
+ScriptProcessor.prompts
+
+___
+
+##### script
+
+• `get` **script**(): [`NarrationScript`](#classesnarration_scriptnarrationscriptmd)
+
+###### Returns
+
+[`NarrationScript`](#classesnarration_scriptnarrationscriptmd)
+
+###### Inherited from
+
+ScriptProcessor.script
+
+#### Methods
+
+##### determineAudioFilePath
+
+▸ `Protected` **determineAudioFilePath**(`ssmlHash`, `_paragraph`): `Promise`\<`string`\>
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `ssmlHash` | `string` |
+| `_paragraph` | [`NarrationParagraph`](#classesnarration_scriptnarrationparagraphmd) |
+
+###### Returns
+
+`Promise`\<`string`\>
+
+###### Overrides
+
+[ScriptProcessor](#classesscript_processorscriptprocessormd).[determineAudioFilePath](#determineaudiofilepath)
+
+___
+
+##### hash
+
+▸ `Protected` **hash**(`ssml`, `_paragraph`): `string`
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `ssml` | `string` |
+| `_paragraph` | [`NarrationParagraph`](#classesnarration_scriptnarrationparagraphmd) |
+
+###### Returns
+
+`string`
+
+###### Inherited from
+
+[ScriptProcessor](#classesscript_processorscriptprocessormd).[hash](#hash)
+
+___
+
+##### initialiseTtsServiceIfNeeded
+
+▸ `Protected` **initialiseTtsServiceIfNeeded**(): `Promise`\<`void`\>
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+[ScriptProcessor](#classesscript_processorscriptprocessormd).[initialiseTtsServiceIfNeeded](#initialisettsserviceifneeded)
+
+___
+
+##### loadScriptIfNeeded
+
+▸ `Protected` **loadScriptIfNeeded**(): `Promise`\<`void`\>
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+[ScriptProcessor](#classesscript_processorscriptprocessormd).[loadScriptIfNeeded](#loadscriptifneeded)
+
+___
+
+##### narrate
+
+▸ **narrate**(`script`): `Promise`\<`void`\>
+
+Generate narration for the script
+
+###### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `script` | [`NarrationScript`](#classesnarration_scriptnarrationscriptmd) | the input script which will also be modified for recording audioFilePath |
+
+###### Returns
+
+`Promise`\<`void`\>
+
+nothing
+
+___
+
+##### parseRanges
+
+▸ `Protected` **parseRanges**(): `void`
+
+###### Returns
+
+`void`
+
+###### Inherited from
+
+[ScriptProcessor](#classesscript_processorscriptprocessormd).[parseRanges](#parseranges)
+
+___
+
+##### processGeneratedAudioFile
+
+▸ `Protected` **processGeneratedAudioFile**(`audioFilePath`): `Promise`\<`string`\>
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `audioFilePath` | `string` |
+
+###### Returns
+
+`Promise`\<`string`\>
+
+###### Inherited from
+
+[ScriptProcessor](#classesscript_processorscriptprocessormd).[processGeneratedAudioFile](#processgeneratedaudiofile)
+
+___
+
+##### run
+
+▸ **run**(`reconstructedCommandLine?`): `Promise`\<`void`\>
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `reconstructedCommandLine?` | `string` |
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+[ScriptProcessor](#classesscript_processorscriptprocessormd).[run](#run)
+
+___
+
+##### runWithoutCatch
+
+▸ **runWithoutCatch**(`reconstructedCommandLine?`): `Promise`\<`void`\>
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `reconstructedCommandLine?` | `string` |
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+[ScriptProcessor](#classesscript_processorscriptprocessormd).[runWithoutCatch](#runwithoutcatch)
 
 
 <a name="classestts_narrator_cliexport_md"></a>
@@ -1282,6 +1570,12 @@ Re-exports [ScriptSettings](#interfacesnarration_scriptscriptsettingsmd)
 
 ___
 
+##### TtsNarrator
+
+Re-exports [TtsNarrator](#classestts_narratorttsnarratormd)
+
+___
+
 ##### TtsService
 
 Re-exports [TtsService](#interfacestts_servicettsservicemd)
@@ -1447,6 +1741,15 @@ CLI flags that are required/used by the ScriptProcessor.
 | `ssml` | `BooleanFlag`\<`boolean`\> |
 | `subscription-key` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |
 | `subscription-key-env` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |
+
+
+<a name="modulestts_narratormd"></a>
+
+### Module: tts-narrator
+
+#### Classes
+
+- [TtsNarrator](#classestts_narratorttsnarratormd)
 
 
 <a name="modulestts_narrator_climd"></a>
