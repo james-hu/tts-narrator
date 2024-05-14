@@ -90,6 +90,12 @@ EXAMPLES
 
 # API
 
+To use the NPM package as a dependency, you just need to install it normally, like this:
+
+```shell
+npm i tts-narrator
+```
+
 <!-- API start -->
 <a name="readmemd"></a>
 
