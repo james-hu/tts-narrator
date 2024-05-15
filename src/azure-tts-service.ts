@@ -9,7 +9,6 @@ export interface AzureAudioGenerationOptions extends AudioGenerationOptions {
 }
 
 export class AzureTtsService extends BaseTtsService {
-  constructor();
   constructor(protected options?: Omit<AzureAudioGenerationOptions, 'outputFilePath'>) {
     super();
   }
