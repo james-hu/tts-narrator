@@ -142,7 +142,13 @@ console.log(`One of the generated audio file is: ${script.chapters[0].sections[0
 
 ##### constructor
 
-• **new AzureTtsService**()
+• **new AzureTtsService**(`options?`)
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `options?` | `Omit`\<[`AzureAudioGenerationOptions`](#interfacesazure_tts_serviceazureaudiogenerationoptionsmd), ``"outputFilePath"``\> |
 
 ###### Overrides
 
