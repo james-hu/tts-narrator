@@ -195,8 +195,10 @@ export class ScriptProcessor {
                     ...this.audioGenerationOptions,
                     outputFilePath: generatedAudioFilePath,
                   });
-                  const audioDuration = await getAudioFileDuration(generatedAudioFilePath);
-                  this.cliConsole.debug(`Generated audio of ${audioDuration / 1000}s: ${generatedAudioFilePath}`);
+                  if (this.cliConsole.isDebug) {
+                    const audioDuration = await getAudioFileDuration(generatedAudioFilePath);
+                    this.cliConsole.debug(`Generated audio of ${audioDuration / 1000}s: ${generatedAudioFilePath}`);  
+                  }
                 }
 
                 // post-processing
