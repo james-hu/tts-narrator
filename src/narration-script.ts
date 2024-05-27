@@ -10,8 +10,34 @@ const readFileAsPromise = promisify(fs.readFile);
 const writeFileAsPromise = promisify(fs.writeFile);
 
 export interface VoiceSettings {
-  name?: string;
+  /**
+   * Language, corresponding to `speak#xml:lang` in SSML.
+   */
   language?: string;
+  /**
+   * Voice name, corresponding to `speak.voice#name` in SSML.
+   */
+  name?: string;
+  /**
+   * Voice effect, corresponding to `speak.voice#effect` in SSML.
+   */
+  effect?: string;
+  /**
+   * Corresponding to `speak.voice.prosody` in SSML.
+   */
+  prosody?: {
+    rate?: string;
+    pitch?: string;
+    volume?: string;
+  };
+  /**
+   * Corresponding to `speak.voice.mstts:express-as` in SSML.
+   */
+  msttsExpressAs?: {
+    style?: string;
+    styleDegree?: string;
+    role?: string;
+  };
 }
 export interface ScriptSettings {
   service?: TtsServiceType;

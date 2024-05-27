@@ -37,6 +37,14 @@ export abstract class BaseTtsService implements TtsService {
     return `<voice name="${voiceSettings.name}">`;
   }
 
+  protected buildProsodyStartTag(prosodySettings: Exclude<VoiceSettings['prosody'], undefined>): string {
+    return `<prosody ${prosodySettings.pitch ? `pitch="${prosodySettings.pitch}"` : ''} ${prosodySettings.rate ? `rate="${prosodySettings.rate}"` : ''} ${prosodySettings.volume ? `volume="${prosodySettings.volume}"` : ''}>`;
+  }
+
+  protected buildMsttsExpressAsStartTag(msttsExpressAsSettings: Exclude<VoiceSettings['msttsExpressAs'], undefined>): string {
+    return `<mstts:express-as ${msttsExpressAsSettings.style ? `style="${msttsExpressAsSettings.style}"` : ''} ${msttsExpressAsSettings.role ? `role="${msttsExpressAsSettings.role}"` : ''} ${msttsExpressAsSettings.styleDegree ? `styledegree="${msttsExpressAsSettings.styleDegree}"` : ''}>`;
+  }
+
   protected generateSsmlWithoutValidation(paragraph: NarrationParagraph): {lineOffset: number, ssml: string} {
     const text = paragraph?.text?.trim();
     if (!text) {
@@ -65,8 +73,22 @@ export abstract class BaseTtsService implements TtsService {
     const voiceStartTag = this.buildVoiceStartTag(voiceSettings);
     const voiceEndTag = '</voice>';
 
+    let prosodyStartTagOrEmpty = '';
+    let prosodyEndTagOrEmpty = '';
+    if (voiceSettings.prosody) {
+      prosodyStartTagOrEmpty = this.buildProsodyStartTag(voiceSettings.prosody);
+      prosodyEndTagOrEmpty = '</prosody>';
+    }
+
+    let msttsExpressAsStartTagOrEmpty = '';
+    let msttsExpressAsEndTagOrEmpty = '';
+    if (voiceSettings.msttsExpressAs) {
+      msttsExpressAsStartTagOrEmpty = this.buildMsttsExpressAsStartTag(voiceSettings.msttsExpressAs);
+      msttsExpressAsEndTagOrEmpty = '</mstts:express-as>';
+    }
+
     // plain text or fragments containing other tags
-    return { lineOffset: 1, ssml: `${speakStartTag}${voiceStartTag}\n${text}\n${voiceEndTag}${speakEndTag}` };
+    return { lineOffset: 1, ssml: `${speakStartTag}${voiceStartTag}${prosodyStartTagOrEmpty}${msttsExpressAsStartTagOrEmpty}\n${text}\n${msttsExpressAsEndTagOrEmpty}${prosodyEndTagOrEmpty}${voiceEndTag}${speakEndTag}` };
   }
 
   generateAudio(_ssml: string, _options: AudioGenerationOptions): Promise<void> {
