@@ -163,6 +163,52 @@ console.log(`One of the generated audio file is: ${script.chapters[0].sections[0
 
 #### Methods
 
+##### buildMsttsExpressAsStartTag
+
+▸ `Protected` **buildMsttsExpressAsStartTag**(`msttsExpressAsSettings`): `string`
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `msttsExpressAsSettings` | `Object` |
+| `msttsExpressAsSettings.role?` | `string` |
+| `msttsExpressAsSettings.style?` | `string` |
+| `msttsExpressAsSettings.styleDegree?` | `string` |
+
+###### Returns
+
+`string`
+
+###### Inherited from
+
+[BaseTtsService](#classestts_servicebasettsservicemd).[buildMsttsExpressAsStartTag](#buildmsttsexpressasstarttag)
+
+___
+
+##### buildProsodyStartTag
+
+▸ `Protected` **buildProsodyStartTag**(`prosodySettings`): `string`
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `prosodySettings` | `Object` |
+| `prosodySettings.pitch?` | `string` |
+| `prosodySettings.rate?` | `string` |
+| `prosodySettings.volume?` | `string` |
+
+###### Returns
+
+`string`
+
+###### Inherited from
+
+[BaseTtsService](#classestts_servicebasettsservicemd).[buildProsodyStartTag](#buildprosodystarttag)
+
+___
+
 ##### buildSpeakStartTag
 
 ▸ `Protected` **buildSpeakStartTag**(`voiceSettings`): `string`
@@ -1129,6 +1175,44 @@ Command.run
 
 #### Methods
 
+##### buildMsttsExpressAsStartTag
+
+▸ `Protected` **buildMsttsExpressAsStartTag**(`msttsExpressAsSettings`): `string`
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `msttsExpressAsSettings` | `Object` |
+| `msttsExpressAsSettings.role?` | `string` |
+| `msttsExpressAsSettings.style?` | `string` |
+| `msttsExpressAsSettings.styleDegree?` | `string` |
+
+###### Returns
+
+`string`
+
+___
+
+##### buildProsodyStartTag
+
+▸ `Protected` **buildProsodyStartTag**(`prosodySettings`): `string`
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `prosodySettings` | `Object` |
+| `prosodySettings.pitch?` | `string` |
+| `prosodySettings.rate?` | `string` |
+| `prosodySettings.volume?` | `string` |
+
+###### Returns
+
+`string`
+
+___
+
 ##### buildSpeakStartTag
 
 ▸ `Protected` **buildSpeakStartTag**(`voiceSettings`): `string`
@@ -1382,8 +1466,11 @@ ___
 
 | Property | Description |
 | --- | --- |
-| `Optional` **language**: `string` |  |
-| `Optional` **name**: `string` |  |
+| `Optional` **effect**: `string` | Voice effect, corresponding to `speak.voice#effect` in SSML. |
+| `Optional` **language**: `string` | Language, corresponding to `speak#xml:lang` in SSML. |
+| `Optional` **msttsExpressAs**: `Object` | Corresponding to `speak.voice.mstts:express-as` in SSML.<br>Type declaration<br><br>| Name | Type |<br>| :------ | :------ |<br>| `role?` | `string` |<br>| `style?` | `string` |<br>| `styleDegree?` | `string` | |
+| `Optional` **name**: `string` | Voice name, corresponding to `speak.voice#name` in SSML. |
+| `Optional` **prosody**: `Object` | Corresponding to `speak.voice.prosody` in SSML.<br>Type declaration<br><br>| Name | Type |<br>| :------ | :------ |<br>| `pitch?` | `string` |<br>| `rate?` | `string` |<br>| `volume?` | `string` | |
 
 
 
