@@ -14,6 +14,31 @@ export enum TtsServiceType {
   Azure = 'azure'
 }
 
+function escapeXml(text: string) {
+  return text.replaceAll(/["&'<>]/g, (c: string) => {
+    switch (c) {
+      case '<': {
+        return '&lt;';
+      }
+      case '>': {
+        return '&gt;';
+      }
+      case '&': {
+        return '&amp;';
+      }
+      case '\'': {
+        return '&apos;';
+      }
+      case '"': {
+        return '&quot;';
+      }
+      default: {
+        return c;
+      }
+    }
+  });
+}
+
 export abstract class BaseTtsService implements TtsService {
   async generateSSML(paragraph: NarrationParagraph): Promise<string> {
     const generated = this.generateSsmlWithoutValidation(paragraph);
@@ -88,7 +113,7 @@ export abstract class BaseTtsService implements TtsService {
     }
 
     // plain text or fragments containing other tags
-    return { lineOffset: 1, ssml: `${speakStartTag}${voiceStartTag}${prosodyStartTagOrEmpty}${msttsExpressAsStartTagOrEmpty}\n${text}\n${msttsExpressAsEndTagOrEmpty}${prosodyEndTagOrEmpty}${voiceEndTag}${speakEndTag}` };
+    return { lineOffset: 1, ssml: `${speakStartTag}${voiceStartTag}${prosodyStartTagOrEmpty}${msttsExpressAsStartTagOrEmpty}\n${escapeXml(text)}\n${msttsExpressAsEndTagOrEmpty}${prosodyEndTagOrEmpty}${voiceEndTag}${speakEndTag}` };
   }
 
   generateAudio(_ssml: string, _options: AudioGenerationOptions): Promise<void> {

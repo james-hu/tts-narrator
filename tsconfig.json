@@ -4,6 +4,7 @@
     "src/**/*"
   ],
   "compilerOptions": {
+    "lib": ["ES2021"],
     "skipLibCheck": true,
     "outDir": "dist"
   }
