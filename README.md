@@ -43,7 +43,7 @@ npm i -g --include=optional tts-narrator
 <!-- help start -->
 ```
 USAGE
-  $ tts-narrator   FILE[-h] [-v] [-d] [-s azure] [-k <value>]
+  $ tts-narrator   FILE [-h] [-v] [-d] [-s azure] [-k <value>]
     [--subscription-key-env <value>] [-r <value>] [-p] [-i] [-o] [--dry-run]
     [--ssml | -q] [--chapters <value>] [--sections <value>]
 
