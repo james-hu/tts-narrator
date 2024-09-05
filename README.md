@@ -45,14 +45,15 @@ npm i -g --include=optional tts-narrator
 ```
 USAGE
   $ tts-narrator   FILE [-h] [-v] [-d] [-s azure] [-k <value>]
-    [--subscription-key-env <value>] [-r <value>] [-p] [-i] [-o] [--dry-run]
-    [--ssml | -q] [--chapters <value>] [--sections <value>]
+    [--subscription-key-env <value>] [-r <value>] [-f <value>] [-p] [-i] [-o]
+    [--dry-run] [--ssml | -q] [--chapters <value>] [--sections <value>]
 
 ARGUMENTS
   FILE  path to the script file (.yml)
 
 FLAGS
   -d, --debug                         output debug information
+  -f, --outputFormat=<value>          [default: 3] Output format for audio
   -h, --help                          Show help
   -i, --interactive                   wait for key press before entering each
                                       section
@@ -61,7 +62,7 @@ FLAGS
                                       audio files
   -p, --[no-]play                     play generated audio
   -q, --quiet                         output warn and error information only
-  -r, --region=<value>                region of the text-to-speech service
+  -r, --region=<value>                Region of the text-to-speech service
   -s, --service=<option>              text-to-speech service to use
                                       <options: azure>
   -v, --version                       Show CLI version
@@ -1133,7 +1134,7 @@ Command.constructor
 | `Static` **args**: `Object` | Type declaration<br><br>| Name | Type |<br>| :------ | :------ |<br>| `file` | `Arg`\<`string`, `Record`\<`string`, `unknown`\>\> |<br>Overrides<br><br>Command.args |
 | `Static` **description**: `string` = `'Generate narration with Text-To-Speech technology'` | Overrides<br><br>Command.description |
 | `Static` **examples**: `string`[] | Overrides<br><br>Command.examples |
-| `Static` **flags**: `Object` | Type declaration<br><br>| Name | Type |<br>| :------ | :------ |<br>| `chapters` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `debug` | `BooleanFlag`\<`boolean`\> |<br>| `dry-run` | `BooleanFlag`\<`boolean`\> |<br>| `interactive` | `BooleanFlag`\<`boolean`\> |<br>| `overwrite` | `BooleanFlag`\<`boolean`\> |<br>| `play` | `BooleanFlag`\<`boolean`\> |<br>| `quiet` | `BooleanFlag`\<`boolean`\> |<br>| `region` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `sections` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `service` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `ssml` | `BooleanFlag`\<`boolean`\> |<br>| `subscription-key` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `subscription-key-env` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>Overrides<br><br>Command.flags |
+| `Static` **flags**: `Object` | Type declaration<br><br>| Name | Type |<br>| :------ | :------ |<br>| `chapters` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `debug` | `BooleanFlag`\<`boolean`\> |<br>| `dry-run` | `BooleanFlag`\<`boolean`\> |<br>| `interactive` | `BooleanFlag`\<`boolean`\> |<br>| `outputFormat` | `OptionFlag`\<`number`, `CustomOptions`\> |<br>| `overwrite` | `BooleanFlag`\<`boolean`\> |<br>| `play` | `BooleanFlag`\<`boolean`\> |<br>| `quiet` | `BooleanFlag`\<`boolean`\> |<br>| `region` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `sections` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `service` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `ssml` | `BooleanFlag`\<`boolean`\> |<br>| `subscription-key` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `subscription-key-env` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>Overrides<br><br>Command.flags |
 | `Static` **id**: `string` = `' '` | Overrides<br><br>Command.id |
 
 
@@ -1358,6 +1359,7 @@ ___
 | Property | Description |
 | --- | --- |
 | **outputFilePath**: `string` | Inherited from<br><br>[AudioGenerationOptions](#interfacestts_serviceaudiogenerationoptionsmd).[outputFilePath](#outputfilepath) |
+| `Optional` **outputFormat**: `SpeechSynthesisOutputFormat` |  |
 | `Optional` **serviceRegion**: `string` |  |
 | `Optional` **subscriptionKey**: `string` |  |
 
@@ -1826,6 +1828,7 @@ CLI flags that are required/used by the ScriptProcessor.
 | `debug` | `BooleanFlag`\<`boolean`\> |
 | `dry-run` | `BooleanFlag`\<`boolean`\> |
 | `interactive` | `BooleanFlag`\<`boolean`\> |
+| `outputFormat` | `OptionFlag`\<`number`, `CustomOptions`\> |
 | `overwrite` | `BooleanFlag`\<`boolean`\> |
 | `play` | `BooleanFlag`\<`boolean`\> |
 | `quiet` | `BooleanFlag`\<`boolean`\> |
