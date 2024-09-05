@@ -105,6 +105,7 @@ export class ScriptProcessor {
           this.audioGenerationOptions = {
             subscriptionKey: this.flags['subscription-key'] ?? (this.flags['subscription-key-env'] ? process.env[this.flags['subscription-key-env']] : undefined),
             serviceRegion: this.flags.region,
+            outputFormat: this.flags.outputFormat,
           } as Omit<AzureAudioGenerationOptions, 'outputFilePath'>;
           break;
         }

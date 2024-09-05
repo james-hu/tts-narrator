@@ -6,6 +6,7 @@ import { AudioGenerationOptions, BaseTtsService } from './tts-service';
 export interface AzureAudioGenerationOptions extends AudioGenerationOptions {
   subscriptionKey?: string;
   serviceRegion?: string;
+  outputFormat?: SpeechSynthesisOutputFormat;
 }
 
 export class AzureTtsService extends BaseTtsService {
@@ -26,7 +27,7 @@ export class AzureTtsService extends BaseTtsService {
     } else {
       throw new Error('Can\'t find Azure service region and/or subscription key');
     }
-    speechConfig.speechSynthesisOutputFormat = SpeechSynthesisOutputFormat.Audio16Khz32KBitRateMonoMp3;
+    speechConfig.speechSynthesisOutputFormat = allOptions.outputFormat ?? SpeechSynthesisOutputFormat.Audio16Khz32KBitRateMonoMp3;
 
     const audioConfig = AudioConfig.fromAudioFileOutput(allOptions.outputFilePath);
 

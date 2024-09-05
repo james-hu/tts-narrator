@@ -14,7 +14,8 @@ export const scriptProcessorFlags = {
   service: Flags.string({ char: 's', options: Object.entries(TtsServiceType).map(([_name, value]) => value), description: 'text-to-speech service to use' }),
   'subscription-key': Flags.string({ char: 'k', description: 'Azure Speech service subscription key' }),
   'subscription-key-env': Flags.string({ description: 'Name of the environment variable that holds the subscription key' }),
-  region: Flags.string({ char: 'r', description: 'region of the text-to-speech service' }),
+  region: Flags.string({ char: 'r', description: 'Region of the text-to-speech service' }),
+  outputFormat: Flags.integer({ char: 'f', default: 3, description: 'Output format for audio' }), // https://learn.microsoft.com/en-us/javascript/api/microsoft-cognitiveservices-speech-sdk/speechsynthesisoutputformat
 
   play: Flags.boolean({ char: 'p', default: true, allowNo: true, description: 'play generated audio' }),
   interactive: Flags.boolean({ char: 'i', default: false, description: 'wait for key press before entering each section' }),
