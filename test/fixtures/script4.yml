@@ -25,6 +25,7 @@ chapters:
               prosody:
                 rate: slow
                 pitch: low
+                volume: -70%
               msttsExpressAs:
                 role: OlderAdultMale
                 style: sad

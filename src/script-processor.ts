@@ -172,7 +172,7 @@ export class ScriptProcessor {
                 }
               }
               this.cliConsole.debug(`Entering paragraph [${chapterIndex}-${sectionIndex}-${paragraphIndex}] ${paragraph.key}`);
-              this.cliConsole.debug(`Processing: ${paragraph.text}`);
+              this.cliConsole.debug(`Processing: ${paragraph.ssml || paragraph.text}`);
 
               // generate SSML and its hash
               await this.initialiseTtsServiceIfNeeded();   // initialise in first use

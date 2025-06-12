@@ -24,8 +24,12 @@ The script file is structured in this way:
           * each paragraph can contain settings and text:
             * `settings`: paragraph level voice settings that can override upper level voice settings
             * `text`: text content that needs to be converted into audio
+            * `ssml`: SSML content that needs to be converted into audio
 
-The `text` field of a paragraph can be pure text, or an SSML fragment. Multi-line strings are supported.
+The `text` field of a paragraph can only be pure text, any XML tags will be escaped. Multi-line strings are supported.
+
+The `ssml` field of a paragraph can be full or partial SSML fragment. Multi-line strings are supported.
+When it is present, the `text` field will be ignored.
 
 It has command line flags `--play` and `--no-play` to control whether generated MP3s should be played back.
 This feature is supported by a dev dependency [node-speaker](https://www.npmjs.com/package/speaker).

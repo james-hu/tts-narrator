@@ -72,15 +72,16 @@ export abstract class BaseTtsService implements TtsService {
 
   protected generateSsmlWithoutValidation(paragraph: NarrationParagraph): {lineOffset: number, ssml: string} {
     const text = paragraph?.text?.trim();
-    if (!text) {
+    const ssml = paragraph?.ssml?.trim();
+    if (!text && !ssml) {
       throw new Error('Empty content?');
     }
 
-    if (text.startsWith('<speak')) { // it is already full SSML
-      if (!text.endsWith('</speak>')) {
+    if (ssml && ssml.startsWith('<speak')) { // it is already full SSML
+      if (!ssml.endsWith('</speak>')) {
         throw new Error('Forgot to end the text with "</speak>"?');
       }
-      return { lineOffset: 0, ssml: text };
+      return { lineOffset: 0, ssml };
     }
 
     const voiceSettings = paragraph.settings;
@@ -88,11 +89,11 @@ export abstract class BaseTtsService implements TtsService {
     const speakEndTag = '</speak>';
 
     // <voice></voice> fragment
-    if (text.startsWith('<voice')) {
-      if (!text.endsWith('</voice>')) {
+    if (ssml && ssml.startsWith('<voice')) {
+      if (!ssml.endsWith('</voice>')) {
         throw new Error('Forgot to end the text with "</voice>"?');
       }
-      return { lineOffset: 1, ssml: `${speakStartTag}\n${text}\n${speakEndTag}` };
+      return { lineOffset: 1, ssml: `${speakStartTag}\n${ssml}\n${speakEndTag}` };
     }
 
     const voiceStartTag = this.buildVoiceStartTag(voiceSettings);
@@ -113,7 +114,7 @@ export abstract class BaseTtsService implements TtsService {
     }
 
     // plain text or fragments containing other tags
-    return { lineOffset: 1, ssml: `${speakStartTag}${voiceStartTag}${prosodyStartTagOrEmpty}${msttsExpressAsStartTagOrEmpty}\n${escapeXml(text)}\n${msttsExpressAsEndTagOrEmpty}${prosodyEndTagOrEmpty}${voiceEndTag}${speakEndTag}` };
+    return { lineOffset: 1, ssml: `${speakStartTag}${voiceStartTag}${prosodyStartTagOrEmpty}${msttsExpressAsStartTagOrEmpty}\n${ssml || escapeXml(text!)}\n${msttsExpressAsEndTagOrEmpty}${prosodyEndTagOrEmpty}${voiceEndTag}${speakEndTag}` };
   }
 
   generateAudio(_ssml: string, _options: AudioGenerationOptions): Promise<void> {

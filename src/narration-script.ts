@@ -48,7 +48,20 @@ export namespace NarrationScriptFile {
   export interface Paragraph {
     settings?: VoiceSettings;
     key?: string;
-    text: string;
+    /**
+     * Text to be narrated, it can't be XML.
+     * If you want to use XML, use `ssml` property instead.
+     * If both `text` and `ssml` are provided, `ssml` will be used.
+     * If both are empty, an error will be thrown.
+     */
+    text?: string;
+    /**
+     * Full or partial SSML (a kind of XML)
+     * If provided, it will be used instead of `text`.
+     * If both `text` and `ssml` are provided, `ssml` will be used.
+     * If both are empty, an error will be thrown.
+     */
+    ssml?: string;
   }
   export interface Section {
     settings?: VoiceSettings;
@@ -87,8 +100,12 @@ export class NarrationParagraph implements NarrationScriptFile.Paragraph {
     return this.paragraph.key ?? String(this.index);
   }
 
-  get text(): string {
+  get text(): string | undefined {
     return this.paragraph.text;
+  }
+
+  get ssml(): string | undefined {
+    return this.paragraph.ssml;
   }
 }
 export class NarrationSection implements NarrationScriptFile.Section {

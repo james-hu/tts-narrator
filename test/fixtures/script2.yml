@@ -6,16 +6,16 @@ chapters:
   - sections:
       - paragraphs:
           - text: 女儿看见父亲走了进来，问道：
-          - text: |- 
+          - ssml: |- 
               <voice name="zh-CN-XiaoxiaoNeural"><mstts:express-as role="Girl" style="cheerful">
                 您来的挺快的，怎么过来的？
               </mstts:express-as></voice>
           - text: 父亲放下手提包，说：
-          - text: |-
+          - ssml: |-
               <voice name="zh-CN-YunyeNeural"><mstts:express-as role="OlderAdultMale" style="calm">
                 刚打车过来的，路上还挺顺畅。
               </mstts:express-as></voice>
-          - text: |-
+          - ssml: |-
               <voice name="zh-CN-YunyeNeural"><mstts:express-as role="OlderAdultMale" style="sad">
                 不过，我的钱包被人偷了。
               </mstts:express-as></voice>
