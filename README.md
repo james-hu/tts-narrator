@@ -488,13 +488,37 @@ ___
 
 ___
 
-##### text
+##### ssml
 
-• `get` **text**(): `string`
+• `get` **ssml**(): `undefined` \| `string`
+
+Full or partial SSML (a kind of XML)
+If provided, it will be used instead of `text`.
+If both `text` and `ssml` are provided, `ssml` will be used.
+If both are empty, an error will be thrown.
 
 ###### Returns
 
-`string`
+`undefined` \| `string`
+
+###### Implementation of
+
+[Paragraph](#interfacesnarration_scriptnarrationscriptfileparagraphmd).[ssml](#ssml)
+
+___
+
+##### text
+
+• `get` **text**(): `undefined` \| `string`
+
+Text to be narrated, it can't be XML.
+If you want to use XML, use `ssml` property instead.
+If both `text` and `ssml` are provided, `ssml` will be used.
+If both are empty, an error will be thrown.
+
+###### Returns
+
+`undefined` \| `string`
 
 ###### Implementation of
 
@@ -1405,7 +1429,8 @@ ___
 | --- | --- |
 | `Optional` **key**: `string` |  |
 | `Optional` **settings**: [`VoiceSettings`](#interfacesnarration_scriptvoicesettingsmd) |  |
-| **text**: `string` |  |
+| `Optional` **ssml**: `string` | Full or partial SSML (a kind of XML)<br>If provided, it will be used instead of `text`.<br>If both `text` and `ssml` are provided, `ssml` will be used.<br>If both are empty, an error will be thrown. |
+| `Optional` **text**: `string` | Text to be narrated, it can't be XML.<br>If you want to use XML, use `ssml` property instead.<br>If both `text` and `ssml` are provided, `ssml` will be used.<br>If both are empty, an error will be thrown. |
 
 
 
