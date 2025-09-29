@@ -49,46 +49,48 @@ npm i -g --include=optional tts-narrator
 <!-- help start -->
 ```
 USAGE
-  $ tts-narrator   FILE [-h] [-v] [-d] [-s azure] [-k <value>]
-    [--subscription-key-env <value>] [-r <value>] [-f <value>] [-p] [-i] [-o]
-    [--dry-run] [--ssml | -q] [--chapters <value>] [--sections <value>]
+  $ tts-narrator   FILE [-h] [-v] [-d] [-s azure|elevenlabs]
+    [-k <value>] [--api-key-env <value>] [-r <value>] [-f <value>] [-p] [-i]
+    [-o] [--dry-run] [--ssml | -q] [--chapters <value>] [--sections <value>]
 
 ARGUMENTS
   FILE  path to the script file (.yml)
 
 FLAGS
-  -d, --debug                         output debug information
-  -f, --outputFormat=<value>          [default: 3] Output format for audio
-  -h, --help                          Show help
-  -i, --interactive                   wait for key press before entering each
-                                      section
-  -k, --subscription-key=<value>      Azure Speech service subscription key
-  -o, --overwrite                     always overwrite previously generated
-                                      audio files
-  -p, --[no-]play                     play generated audio
-  -q, --quiet                         output warn and error information only
-  -r, --region=<value>                Region of the text-to-speech service
-  -s, --service=<option>              text-to-speech service to use
-                                      <options: azure>
-  -v, --version                       Show CLI version
-      --chapters=<value>              list of chapters to process, examples:
-                                      "1-10,13,15", "4-"
-      --dry-run                       don't try to generate or play audio
-      --sections=<value>              list of sections to process, examples:
-                                      "1-10,13,15", "5-"
-      --ssml                          display generated SSML
-      --subscription-key-env=<value>  Name of the environment variable that
-                                      holds the subscription key
+  -d, --debug                 output debug information
+  -f, --outputFormat=<value>  [default: 3] Output format for audio
+  -h, --help                  Show help
+  -i, --interactive           wait for key press before entering each section
+  -k, --api-key=<value>       Azure Speech service subscription key or
+                              ElevenLabs API key
+  -o, --overwrite             always overwrite previously generated audio files
+  -p, --[no-]play             play generated audio
+  -q, --quiet                 output warn and error information only
+  -r, --region=<value>        Region of the text-to-speech service
+  -s, --service=<option>      text-to-speech service to use
+                              <options: azure|elevenlabs>
+  -v, --version               Show CLI version
+      --api-key-env=<value>   Name of the environment variable that holds the
+                              Azure Speech service subscription key or
+                              ElevenLabs API key
+      --chapters=<value>      list of chapters to process, examples:
+                              "1-10,13,15", "4-"
+      --dry-run               don't try to generate or play audio
+      --sections=<value>      list of sections to process, examples:
+                              "1-10,13,15", "5-"
+      --ssml                  display generated SSML
 
 DESCRIPTION
   Generate narration with Text-To-Speech technology
 
 EXAMPLES
-  $ tts-narrator myscript.yml --play --interactive --service azure --subscription-key-env TTS_SUBSCRIPTION_KEY --region australiaeast
+  $ tts-narrator myscript.yml --play --interactive --service azure --api-key-env TTS_SUBSCRIPTION_KEY --region australiaeast
 
-  $ tts-narrator ./test/fixtures/script3.yml -s azure --ssml -r australiaeast --subscription-key-env=TTS_SUB_KEY  --no-play --interactive -d
+  $ tts-narrator ./test/fixtures/script3.yml -s azure --ssml -r australiaeast --api-key-env=TTS_SUB_KEY  --no-play --interactive -d
 
-  $ tts-narrator ./test/fixtures/script3.yml -s azure -r australiaeast --subscription-key-env=TTS_SUB_KEY --quiet
+  $ tts-narrator ./test/fixtures/script3.yml -s azure -r australiaeast --api-key-env=TTS_SUB_KEY --quiet
+
+  $ tts-narrator ./test/fixtures/script4.yml -s elevenlabs --api-key-env=ELEVENLABS_API_KEY
 
   $ tts-narrator ./test/fixtures/script3.yml
 ```
@@ -122,6 +124,7 @@ console.log(`One of the generated audio file is: ${script.chapters[0].sections[0
 
 - [audio-utils](#modulesaudio_utilsmd)
 - [azure-tts-service](#modulesazure_tts_servicemd)
+- [elevenlabs-tts-service](#moduleselevenlabs_tts_servicemd)
 - [index](#modulesindexmd)
 - [narration-script](#modulesnarration_scriptmd)
 - [script-processor](#modulesscript_processormd)
@@ -292,6 +295,208 @@ ___
 `Promise`\<`string`\>
 
 ###### Inherited from
+
+[BaseTtsService](#classestts_servicebasettsservicemd).[generateSSML](#generatessml)
+
+___
+
+##### generateSsmlWithoutValidation
+
+▸ `Protected` **generateSsmlWithoutValidation**(`paragraph`): `Object`
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `paragraph` | [`NarrationParagraph`](#classesnarration_scriptnarrationparagraphmd) |
+
+###### Returns
+
+`Object`
+
+| Name | Type |
+| :------ | :------ |
+| `lineOffset` | `number` |
+| `ssml` | `string` |
+
+###### Inherited from
+
+[BaseTtsService](#classestts_servicebasettsservicemd).[generateSsmlWithoutValidation](#generatessmlwithoutvalidation)
+
+___
+
+##### validateXML
+
+▸ `Protected` **validateXML**(`xml`, `lineOffset`): `void`
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `xml` | `string` |
+| `lineOffset` | `number` |
+
+###### Returns
+
+`void`
+
+###### Inherited from
+
+[BaseTtsService](#classestts_servicebasettsservicemd).[validateXML](#validatexml)
+
+
+<a name="classeselevenlabs_tts_serviceelevenlabsttsservicemd"></a>
+
+### Class: ElevenLabsTtsService
+
+[elevenlabs-tts-service](#moduleselevenlabs_tts_servicemd).ElevenLabsTtsService
+
+#### Hierarchy
+
+- [`BaseTtsService`](#classestts_servicebasettsservicemd)
+
+  ↳ **`ElevenLabsTtsService`**
+
+#### Constructors
+
+##### constructor
+
+• **new ElevenLabsTtsService**(`options?`)
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `options` | \{ `apiKey?`: `string`  } & `Omit`\<[`ElevenLabsAudioGenerationOptions`](#elevenlabsaudiogenerationoptions), ``"outputFilePath"``\> |
+
+###### Overrides
+
+[BaseTtsService](#classestts_servicebasettsservicemd).[constructor](#constructor)
+
+#### Methods
+
+##### buildMsttsExpressAsStartTag
+
+▸ `Protected` **buildMsttsExpressAsStartTag**(`msttsExpressAsSettings`): `string`
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `msttsExpressAsSettings` | `Object` |
+| `msttsExpressAsSettings.role?` | `string` |
+| `msttsExpressAsSettings.style?` | `string` |
+| `msttsExpressAsSettings.styleDegree?` | `string` |
+
+###### Returns
+
+`string`
+
+###### Inherited from
+
+[BaseTtsService](#classestts_servicebasettsservicemd).[buildMsttsExpressAsStartTag](#buildmsttsexpressasstarttag)
+
+___
+
+##### buildProsodyStartTag
+
+▸ `Protected` **buildProsodyStartTag**(`prosodySettings`): `string`
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `prosodySettings` | `Object` |
+| `prosodySettings.pitch?` | `string` |
+| `prosodySettings.rate?` | `string` |
+| `prosodySettings.volume?` | `string` |
+
+###### Returns
+
+`string`
+
+###### Inherited from
+
+[BaseTtsService](#classestts_servicebasettsservicemd).[buildProsodyStartTag](#buildprosodystarttag)
+
+___
+
+##### buildSpeakStartTag
+
+▸ `Protected` **buildSpeakStartTag**(`voiceSettings`): `string`
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `voiceSettings` | [`VoiceSettings`](#interfacesnarration_scriptvoicesettingsmd) |
+
+###### Returns
+
+`string`
+
+###### Inherited from
+
+[BaseTtsService](#classestts_servicebasettsservicemd).[buildSpeakStartTag](#buildspeakstarttag)
+
+___
+
+##### buildVoiceStartTag
+
+▸ `Protected` **buildVoiceStartTag**(`voiceSettings`): `string`
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `voiceSettings` | [`VoiceSettings`](#interfacesnarration_scriptvoicesettingsmd) |
+
+###### Returns
+
+`string`
+
+###### Inherited from
+
+[BaseTtsService](#classestts_servicebasettsservicemd).[buildVoiceStartTag](#buildvoicestarttag)
+
+___
+
+##### generateAudio
+
+▸ **generateAudio**(`specJSON`, `options`): `Promise`\<`void`\>
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `specJSON` | `string` |
+| `options` | [`ElevenLabsAudioGenerationOptions`](#elevenlabsaudiogenerationoptions) \| `Pick`\<[`ElevenLabsAudioGenerationOptions`](#elevenlabsaudiogenerationoptions), ``"outputFilePath"``\> |
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Overrides
+
+[BaseTtsService](#classestts_servicebasettsservicemd).[generateAudio](#generateaudio)
+
+___
+
+##### generateSSML
+
+▸ **generateSSML**(`paragraph`): `Promise`\<`string`\>
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `paragraph` | [`NarrationParagraph`](#classesnarration_scriptnarrationparagraphmd) |
+
+###### Returns
+
+`Promise`\<`string`\>
+
+###### Overrides
 
 [BaseTtsService](#classestts_servicebasettsservicemd).[generateSSML](#generatessml)
 
@@ -1163,7 +1368,7 @@ Command.constructor
 | `Static` **args**: `Object` | Type declaration<br><br>| Name | Type |<br>| :------ | :------ |<br>| `file` | `Arg`\<`string`, `Record`\<`string`, `unknown`\>\> |<br>Overrides<br><br>Command.args |
 | `Static` **description**: `string` = `'Generate narration with Text-To-Speech technology'` | Overrides<br><br>Command.description |
 | `Static` **examples**: `string`[] | Overrides<br><br>Command.examples |
-| `Static` **flags**: `Object` | Type declaration<br><br>| Name | Type |<br>| :------ | :------ |<br>| `chapters` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `debug` | `BooleanFlag`\<`boolean`\> |<br>| `dry-run` | `BooleanFlag`\<`boolean`\> |<br>| `interactive` | `BooleanFlag`\<`boolean`\> |<br>| `outputFormat` | `OptionFlag`\<`number`, `CustomOptions`\> |<br>| `overwrite` | `BooleanFlag`\<`boolean`\> |<br>| `play` | `BooleanFlag`\<`boolean`\> |<br>| `quiet` | `BooleanFlag`\<`boolean`\> |<br>| `region` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `sections` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `service` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `ssml` | `BooleanFlag`\<`boolean`\> |<br>| `subscription-key` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `subscription-key-env` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>Overrides<br><br>Command.flags |
+| `Static` **flags**: `Object` | Type declaration<br><br>| Name | Type |<br>| :------ | :------ |<br>| `api-key` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `api-key-env` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `chapters` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `debug` | `BooleanFlag`\<`boolean`\> |<br>| `dry-run` | `BooleanFlag`\<`boolean`\> |<br>| `interactive` | `BooleanFlag`\<`boolean`\> |<br>| `outputFormat` | `OptionFlag`\<`number`, `CustomOptions`\> |<br>| `overwrite` | `BooleanFlag`\<`boolean`\> |<br>| `play` | `BooleanFlag`\<`boolean`\> |<br>| `quiet` | `BooleanFlag`\<`boolean`\> |<br>| `region` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `sections` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `service` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `ssml` | `BooleanFlag`\<`boolean`\> |<br>Overrides<br><br>Command.flags |
 | `Static` **id**: `string` = `' '` | Overrides<br><br>Command.id |
 
 
@@ -1193,6 +1398,8 @@ Command.run
 - **`BaseTtsService`**
 
   ↳ [`AzureTtsService`](#classesazure_tts_serviceazurettsservicemd)
+
+  ↳ [`ElevenLabsTtsService`](#classeselevenlabs_tts_serviceelevenlabsttsservicemd)
 
 #### Implements
 
@@ -1368,6 +1575,12 @@ ___
 
 • **Azure** = ``"azure"``
 
+___
+
+##### ElevenLabs
+
+• **ElevenLabs** = ``"elevenlabs"``
+
 ## Interfaces
 
 
@@ -1484,7 +1697,7 @@ ___
 
 | Property | Description |
 | --- | --- |
-| `Optional` **service**: [`Azure`](#azure) |  |
+| `Optional` **service**: [`TtsServiceType`](#enumstts_servicettsservicetypemd) |  |
 | `Optional` **voice**: [`VoiceSettings`](#interfacesnarration_scriptvoicesettingsmd) |  |
 
 
@@ -1624,6 +1837,21 @@ ___
 - [AzureAudioGenerationOptions](#interfacesazure_tts_serviceazureaudiogenerationoptionsmd)
 
 
+<a name="moduleselevenlabs_tts_servicemd"></a>
+
+### Module: elevenlabs-tts-service
+
+#### Classes
+
+- [ElevenLabsTtsService](#classeselevenlabs_tts_serviceelevenlabsttsservicemd)
+
+#### Type Aliases
+
+##### ElevenLabsAudioGenerationOptions
+
+Ƭ **ElevenLabsAudioGenerationOptions**: [`AudioGenerationOptions`](#interfacestts_serviceaudiogenerationoptionsmd) & `Omit`\<`ElevenLabs.TextToSpeechRequest`, ``"text"``\>
+
+
 <a name="modulesindexmd"></a>
 
 ### Module: index
@@ -1651,6 +1879,18 @@ ___
 ##### BaseTtsService
 
 Re-exports [BaseTtsService](#classestts_servicebasettsservicemd)
+
+___
+
+##### ElevenLabsAudioGenerationOptions
+
+Re-exports [ElevenLabsAudioGenerationOptions](#elevenlabsaudiogenerationoptions)
+
+___
+
+##### ElevenLabsTtsService
+
+Re-exports [ElevenLabsTtsService](#classeselevenlabs_tts_serviceelevenlabsttsservicemd)
 
 ___
 
@@ -1720,6 +1960,12 @@ Re-exports [VoiceSettings](#interfacesnarration_scriptvoicesettingsmd)
 
 ___
 
+##### escapeXml
+
+Re-exports [escapeXml](#escapexml)
+
+___
+
 ##### getAudioFileDuration
 
 Re-exports [getAudioFileDuration](#getaudiofileduration)
@@ -1729,6 +1975,12 @@ ___
 ##### loadScript
 
 Re-exports [loadScript](#loadscript)
+
+___
+
+##### normaliseRate
+
+Re-exports [normaliseRate](#normaliserate)
 
 ___
 
@@ -1854,6 +2106,8 @@ CLI flags that are required/used by the ScriptProcessor.
 
 | Name | Type |
 | :------ | :------ |
+| `api-key` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |
+| `api-key-env` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |
 | `chapters` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |
 | `debug` | `BooleanFlag`\<`boolean`\> |
 | `dry-run` | `BooleanFlag`\<`boolean`\> |
@@ -1866,8 +2120,6 @@ CLI flags that are required/used by the ScriptProcessor.
 | `sections` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |
 | `service` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |
 | `ssml` | `BooleanFlag`\<`boolean`\> |
-| `subscription-key` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |
-| `subscription-key-env` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |
 
 
 <a name="modulestts_narratormd"></a>
@@ -1904,4 +2156,38 @@ CLI flags that are required/used by the ScriptProcessor.
 
 - [AudioGenerationOptions](#interfacestts_serviceaudiogenerationoptionsmd)
 - [TtsService](#interfacestts_servicettsservicemd)
+
+#### Functions
+
+##### escapeXml
+
+▸ **escapeXml**(`text`): `string`
+
+###### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `text` | `string` |
+
+###### Returns
+
+`string`
+
+___
+
+##### normaliseRate
+
+▸ **normaliseRate**(`rate?`, `min?`, `max?`): `number` \| `undefined`
+
+###### Parameters
+
+| Name | Type | Default value |
+| :------ | :------ | :------ |
+| `rate?` | `string` | `undefined` |
+| `min` | `number` | `0.5` |
+| `max` | `number` | `2` |
+
+###### Returns
+
+`number` \| `undefined`
 <!-- API end -->
