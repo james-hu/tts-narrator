@@ -104,7 +104,7 @@ export class ScriptProcessor {
         case TtsServiceType.Azure: {
           this.ttsService = new AzureTtsService();
           this.audioGenerationOptions = {
-            subscriptionKey: this.flags['subscription-key'] ?? (this.flags['subscription-key-env'] ? process.env[this.flags['subscription-key-env']] : undefined),
+            subscriptionKey: this.flags['api-key'] ?? (this.flags['api-key-env'] ? process.env[this.flags['api-key-env']] : undefined),
             serviceRegion: this.flags.region,
             outputFormat: this.flags.outputFormat,
           } as Omit<AzureAudioGenerationOptions, 'outputFilePath'>;
@@ -112,7 +112,7 @@ export class ScriptProcessor {
         }
         case TtsServiceType.ElevenLabs: {
           this.ttsService = new ElevenLabsTtsService({
-            apiKey: this.flags['subscription-key'] ?? (this.flags['subscription-key-env'] ? process.env[this.flags['subscription-key-env']] : undefined),
+            apiKey: this.flags['api-key'] ?? (this.flags['api-key-env'] ? process.env[this.flags['api-key-env']] : undefined),
           });
           this.audioGenerationOptions = {} as Omit<ElevenLabsAudioGenerationOptions, 'outputFilePath'>;
           break;
