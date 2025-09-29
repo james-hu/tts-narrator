@@ -40,7 +40,7 @@ export async function playMp3File(filePath: string, infoLogger: (msg: string) =>
   return new Promise((resolve, reject) => {
     try {
       // eslint-disable-next-line import/namespace
-      const asset = AV.Asset.fromBuffer(fileContent);
+      const asset = AV.Asset.fromBuffer(new Uint8Array(fileContent));
       asset.decodeToBuffer(buffer => {
         // Initiate the source
         const bufferStream = new stream.PassThrough();
@@ -52,7 +52,7 @@ export async function playMp3File(filePath: string, infoLogger: (msg: string) =>
         const speaker = new Speaker({
           channels: 1,
           bitDepth: 32,
-          sampleRate: 16000,
+          sampleRate: asset.format?.sampleRate ?? 16000,
           float: true,
         }); // as Speaker.Options);
         bufferStream.pipe(speaker);
@@ -69,7 +69,7 @@ export async function playMp3File(filePath: string, infoLogger: (msg: string) =>
 export async function getAudioFileDuration(filePath: string): Promise<number> {
   const fileContent = await fs.readFile(filePath);
   // eslint-disable-next-line import/namespace
-  const asset = AV.Asset.fromBuffer(fileContent);
+  const asset = AV.Asset.fromBuffer(new Uint8Array(fileContent));
   return timeoutReject(new Promise((resolve, reject) => {
     try {
       asset.get('duration', duration => {

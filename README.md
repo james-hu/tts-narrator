@@ -1,7 +1,7 @@
 # tts-narrator
 
 Generate narration with Text-To-Speech technology.
-_Please note that you need to have an Azure TTS subscription key._
+_Please note that you need to have an Azure TTS subscription key or ElevenLabs API key._
 
 [![Version](https://img.shields.io/npm/v/tts-narrator.svg)](https://npmjs.org/package/tts-narrator)
 [![Downloads/week](https://img.shields.io/npm/dw/tts-narrator.svg)](https://npmjs.org/package/tts-narrator)
@@ -30,6 +30,7 @@ The `text` field of a paragraph can only be pure text, any XML tags will be esca
 
 The `ssml` field of a paragraph can be full or partial SSML fragment. Multi-line strings are supported.
 When it is present, the `text` field will be ignored.
+Please note that SSML is not supported by ElevenLabs. 
 
 It has command line flags `--play` and `--no-play` to control whether generated MP3s should be played back.
 This feature is supported by a dev dependency [node-speaker](https://www.npmjs.com/package/speaker).

@@ -14,6 +14,7 @@ import type { ScriptProcessorFlags } from './script-processor-flags';
 
 import { getAudioFileDuration, playMp3File } from './audio-utils';
 import { AzureAudioGenerationOptions, AzureTtsService } from './azure-tts-service';
+import { ElevenLabsAudioGenerationOptions, ElevenLabsTtsService } from './elevenlabs-tts-service';
 import { NarrationParagraph, NarrationScript, loadScript } from './narration-script';
 import { AudioGenerationOptions, TtsService, TtsServiceType } from './tts-service';
 
@@ -103,10 +104,17 @@ export class ScriptProcessor {
         case TtsServiceType.Azure: {
           this.ttsService = new AzureTtsService();
           this.audioGenerationOptions = {
-            subscriptionKey: this.flags['subscription-key'] ?? (this.flags['subscription-key-env'] ? process.env[this.flags['subscription-key-env']] : undefined),
+            subscriptionKey: this.flags['api-key'] ?? (this.flags['api-key-env'] ? process.env[this.flags['api-key-env']] : undefined),
             serviceRegion: this.flags.region,
             outputFormat: this.flags.outputFormat,
           } as Omit<AzureAudioGenerationOptions, 'outputFilePath'>;
+          break;
+        }
+        case TtsServiceType.ElevenLabs: {
+          this.ttsService = new ElevenLabsTtsService({
+            apiKey: this.flags['api-key'] ?? (this.flags['api-key-env'] ? process.env[this.flags['api-key-env']] : undefined),
+          });
+          this.audioGenerationOptions = {} as Omit<ElevenLabsAudioGenerationOptions, 'outputFilePath'>;
           break;
         }
         default: {

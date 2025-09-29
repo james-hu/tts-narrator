@@ -23,6 +23,7 @@
     "oclif": "^4.13.7"
   },
   "dependencies": {
+    "@elevenlabs/elevenlabs-js": "^2.16.0",
     "@handy-common-utils/misc-utils": ">=1.5.2",
     "av": "^0.4.9",
     "fast-xml-parser": "^4.3.5",

@@ -12,8 +12,8 @@ export const scriptProcessorFlags = {
   quiet: Flags.boolean({ char: 'q', description: 'output warn and error information only' }),
 
   service: Flags.string({ char: 's', options: Object.entries(TtsServiceType).map(([_name, value]) => value), description: 'text-to-speech service to use' }),
-  'subscription-key': Flags.string({ char: 'k', description: 'Azure Speech service subscription key' }),
-  'subscription-key-env': Flags.string({ description: 'Name of the environment variable that holds the subscription key' }),
+  'api-key': Flags.string({ char: 'k', description: 'Azure Speech service subscription key or ElevenLabs API key' }),
+  'api-key-env': Flags.string({ description: 'Name of the environment variable that holds the Azure Speech service subscription key or ElevenLabs API key' }),
   region: Flags.string({ char: 'r', description: 'Region of the text-to-speech service' }),
   outputFormat: Flags.integer({ char: 'f', default: 3, description: 'Output format for audio' }), // https://learn.microsoft.com/en-us/javascript/api/microsoft-cognitiveservices-speech-sdk/speechsynthesisoutputformat
 
