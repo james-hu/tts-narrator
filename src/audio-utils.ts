@@ -52,7 +52,7 @@ export async function playMp3File(filePath: string, infoLogger: (msg: string) =>
         const speaker = new Speaker({
           channels: 1,
           bitDepth: 32,
-          sampleRate: 16000,
+          sampleRate: asset.format?.sampleRate ?? 16000,
           float: true,
         }); // as Speaker.Options);
         bufferStream.pipe(speaker);
