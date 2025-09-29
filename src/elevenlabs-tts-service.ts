@@ -64,6 +64,9 @@ export class ElevenLabsTtsService extends BaseTtsService {
     const { voiceId, ...restOfTheSpec } = spec;
 
     const request = merge({}, restOfTheOptions, restOfTheSpec) as Omit<TtsSpec, 'voiceId'>;
+    if (!request.outputFormat) {
+      request.outputFormat = ElevenLabs.TextToSpeechConvertRequestOutputFormat.Mp32205032;
+    }
 
     const audioData = await this.client.textToSpeech.convert(voiceId!, request);
         
