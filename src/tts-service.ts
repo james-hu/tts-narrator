@@ -11,10 +11,11 @@ export interface TtsService {
 }
 
 export enum TtsServiceType {
-  Azure = 'azure'
+  Azure = 'azure',
+  ElevenLabs = 'elevenlabs'
 }
 
-function escapeXml(text: string) {
+export function escapeXml(text: string) {
   return text.replaceAll(/["&'<>]/g, (c: string) => {
     switch (c) {
       case '<': {
@@ -38,6 +39,53 @@ function escapeXml(text: string) {
     }
   });
 }
+
+export function normaliseRate(rate?: string, min: number = 0.5, max: number = 2): number | undefined {
+  if (rate == null) {
+    return undefined;
+  }
+
+  const trimmed = rate.trim().toLowerCase();
+
+  // Calculate named rates dynamically based on min/max
+  const medium = 1;
+  const namedRates: Record<string, number> = {
+    'x-slow': min,
+    'slow': (medium + min) / 2,   // midpoint between min and medium
+    'medium': medium,
+    'default': medium,
+    'fast': (medium + max) / 2,   // midpoint between medium and max
+    'x-fast': max,
+  };
+
+  let value: number | undefined;
+
+  if (trimmed in namedRates) {
+    value = namedRates[trimmed];
+  } else if (/^\d+(\.\d+)?%$/.test(trimmed)) {
+    // Percentage form, e.g. "150%" → 1.5
+    const pct = Number.parseFloat(trimmed.slice(0, -1));
+    if (Number.isNaN(pct) || pct < 0) {
+      throw new Error(`Invalid percentage rate: ${rate}`);
+    }
+    value = pct / 100;
+  } else if (/^\d+(\.\d+)?$/.test(trimmed)) {
+    // Plain number string, e.g. "1", "1.25"
+    const num = Number.parseFloat(trimmed);
+    if (Number.isNaN(num) || num < 0) {
+      throw new Error(`Invalid numeric rate: ${rate}`);
+    }
+    value = num;
+  } else {
+    throw new Error(`Invalid rate: ${rate}`);
+  }
+
+  // Clamp to min/max
+  value = Math.max(min, Math.min(max, value));
+
+  return value;
+}
+
 
 export abstract class BaseTtsService implements TtsService {
   async generateSSML(paragraph: NarrationParagraph): Promise<string> {

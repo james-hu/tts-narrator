@@ -24,6 +24,7 @@ class TtsNarratorCli extends Command {
     '<%= config.bin %> myscript.yml --play --interactive --service azure --subscription-key-env TTS_SUBSCRIPTION_KEY --region australiaeast',
     '<%= config.bin %> ./test/fixtures/script3.yml -s azure --ssml -r australiaeast --subscription-key-env=TTS_SUB_KEY  --no-play --interactive -d',
     '<%= config.bin %> ./test/fixtures/script3.yml -s azure -r australiaeast --subscription-key-env=TTS_SUB_KEY --quiet',
+    '<%= config.bin %> ./test/fixtures/script4.yml -s elevenlabs --api-key-env=ELEVENLABS_API_KEY',
     '<%= config.bin %> ./test/fixtures/script3.yml',
   ];
 
