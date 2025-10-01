@@ -66,6 +66,14 @@ export async function playMp3File(filePath: string, infoLogger: (msg: string) =>
   });
 }
 
+/**
+ * Get the duration of the audio file in milliseconds. If the file is corrupted or invalid,
+ * throws an error.
+ * Please note that the returned value could be inaccurate sometimes.
+ * 
+ * @param filePath Path to the audio file
+ * @returns Duration of the audio file in milliseconds.
+ */
 export async function getAudioFileDuration(filePath: string): Promise<number> {
   const fileContent = await fs.readFile(filePath);
   // eslint-disable-next-line import/namespace
