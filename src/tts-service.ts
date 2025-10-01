@@ -62,13 +62,24 @@ export function normaliseRate(rate?: string, min: number = 0.5, max: number = 2)
 
   if (trimmed in namedRates) {
     value = namedRates[trimmed];
-  } else if (/^\d+(\.\d+)?%$/.test(trimmed)) {
-    // Percentage form, e.g. "150%" → 1.5
+  } else if (/^[+-]?\d+(\.\d+)?%$/.test(trimmed)) {
+    // Percentage form, e.g. "150%", "+10%", "-20%"
     const pct = Number.parseFloat(trimmed.slice(0, -1));
-    if (Number.isNaN(pct) || pct < 0) {
+    if (Number.isNaN(pct)) {
+      // eslint-disable-next-line unicorn/prefer-type-error
       throw new Error(`Invalid percentage rate: ${rate}`);
     }
-    value = pct / 100;
+    // eslint-disable-next-line unicorn/prefer-ternary
+    if (trimmed.startsWith('+') || trimmed.startsWith('-')) {
+      // Relative to medium (1.0)
+      value = medium * (1 + pct / 100);
+    } else {
+      // Absolute percentage
+      value = pct / 100;
+    }
+    if (value < 0) {
+      throw new Error(`Invalid percentage rate: ${rate}`);
+    }
   } else if (/^\d+(\.\d+)?$/.test(trimmed)) {
     // Plain number string, e.g. "1", "1.25"
     const num = Number.parseFloat(trimmed);
