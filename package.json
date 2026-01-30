@@ -26,7 +26,7 @@
     "@elevenlabs/elevenlabs-js": "^2.16.0",
     "@handy-common-utils/misc-utils": ">=1.5.2",
     "av": "^0.4.9",
-    "fast-xml-parser": "^4.3.5",
+    "fast-xml-parser": "^5.3.4",
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
     "microsoft-cognitiveservices-speech-sdk": "^1.36.0",
