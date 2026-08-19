@@ -8,6 +8,7 @@ import { ConsoleLineLogger, consoleWithColour, consoleWithoutColour } from '@han
 import { MultiRange } from 'multi-integer-range';
 import * as murmurhash from 'murmurhash';
 import * as fs from 'node:fs';
+import { writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 import type { ScriptProcessorFlags } from './script-processor-flags';
@@ -160,7 +161,8 @@ export class ScriptProcessor {
     // chapter and section ranges
     this.parseRanges();
 
-    const outputFilePath = this.getOutputFileFolder();
+    const outputFileFolder = this.getOutputFileFolder();
+    const generatedParagraphs = new Array<{ text: string; durationMS: number; audioFilePath: string }>();
 
     // walk through the script
     for (const chapter of this._script.chapters) {
@@ -196,22 +198,24 @@ export class ScriptProcessor {
                 this.cliConsole.info(`SSML generated with hash ${ssmlHash}:`);
                 this.cliConsole.info(ssml);
               }
-              const generatedAudioFilePath = await this.determineAudioFilePath(ssmlHash, paragraph, outputFilePath);
+              const generatedAudioFilePath = await this.determineAudioFilePath(ssmlHash, paragraph, outputFileFolder);
 
               if (this.flags['dry-run']) {
                 this.cliConsole.debug('No action because of dry-run flag');
               } else {
+                let audioDuration: number;
                 // check to see if the .mp3 file already exists
                 if (!this.flags.overwrite && fs.existsSync(generatedAudioFilePath) && fs.statSync(generatedAudioFilePath).size > 0) {
-                  this.cliConsole.debug(`Re-using already existing audio file '${generatedAudioFilePath}' for ${chapterIndex}-${sectionIndex}-${paragraphIndex}`);
+                  audioDuration = await getAudioFileDuration(generatedAudioFilePath);
+                  this.cliConsole.debug(`Re-using already existing audio file '${generatedAudioFilePath}' of ${audioDuration / 1000}s for ${chapterIndex}-${sectionIndex}-${paragraphIndex}`);
                 } else {
                   // generate .mp3 file if needed
                   await this.ttsService.generateAudio(ssml, {
                     ...this.audioGenerationOptions,
                     outputFilePath: generatedAudioFilePath,
                   });
+                  audioDuration = await getAudioFileDuration(generatedAudioFilePath);
                   if (this.cliConsole.isDebug) {
-                    const audioDuration = await getAudioFileDuration(generatedAudioFilePath);
                     this.cliConsole.debug(`Generated audio of ${audioDuration / 1000}s: ${generatedAudioFilePath}`);  
                   }
                 }
@@ -219,6 +223,11 @@ export class ScriptProcessor {
                 // post-processing
                 const audioFilePath = await this.processGeneratedAudioFile(generatedAudioFilePath);
                 paragraph.audioFilePath = audioFilePath;
+                generatedParagraphs.push({
+                  text: paragraph.text?.trim() || paragraph.ssml?.replace(/^\s*<[^>]*>\s*/, '')?.replace(/\s*<\/[^>]*>\s*$/g, '') || '',
+                  durationMS: audioDuration,
+                  audioFilePath,
+                });
 
                 // play .mp3 file if needed
                 if (this.flags.play) {
@@ -228,6 +237,47 @@ export class ScriptProcessor {
             }
           }
         }
+      }
+    }
+
+    if (generatedParagraphs.length > 0) {
+      const srtFilePath = path.join(outputFileFolder, 'script.srt');
+      await writeFile(srtFilePath, generatedParagraphs.map((p, i) => {
+        const startTimeMS = generatedParagraphs.slice(0, i).reduce((sum, p) => sum + p.durationMS, 0) + i * this.flags.pause * 1000;
+        const endTimeMS = startTimeMS + p.durationMS ;
+        const startTimeStr = new Date(startTimeMS).toISOString().slice(11, 23).replace('.', ',');
+        const endTimeStr = new Date(endTimeMS).toISOString().slice(11, 23).replace('.', ',');
+        return `${i + 1}\n${startTimeStr} --> ${endTimeStr}\n${p.text}\n`;
+      }).join('\n'), 'utf8');
+      if (this.cliConsole.isDebug) {
+        this.cliConsole.debug(`Generated SRT file: ${srtFilePath}`);
+      }
+
+      const iParts = new Array<string>();
+      const concatParts = new Array<string>();
+      let silenceFileName!: string;
+      let silenceCli!: string;
+      for (const [i, p] of generatedParagraphs.entries()) {
+        const fileName = path.relative(outputFileFolder, p.audioFilePath);
+        iParts.push('-i', fileName);
+        if (i === 0) {
+          const fileExtension = path.extname(fileName).toLowerCase();
+          silenceFileName = `silence${fileExtension}`;
+          silenceCli = `ffmpeg -hide_banner -loglevel error -y -i ${fileName} -af "volume=0" -t ${this.flags.pause} ${silenceFileName}`;
+        }
+        concatParts.push(`file '${fileName}'`);
+      }
+      const joinScriptPath = path.join(outputFileFolder, 'join.sh');
+      await writeFile(joinScriptPath, `#!/bin/sh
+(cd ${outputFileFolder};
+${silenceCli};
+cat << EOF > join-list.txt
+${concatParts.join(`\nfile '${silenceFileName}'\n`)}
+EOF
+ffmpeg -hide_banner -loglevel error -y -f concat -safe 0 -i join-list.txt -c copy joined${path.extname(silenceFileName)})`
+      , 'utf8');
+      if (this.cliConsole.isDebug) {
+        this.cliConsole.debug(`Generated script for joining audio files: ${joinScriptPath}`);
       }
     }
     this.cliConsole.debug(`Finished processing ${this.scriptFilePath}`);

@@ -26,6 +26,8 @@ export const scriptProcessorFlags = {
 
   chapters: Flags.string({ description: 'list of chapters to process, examples: "1-10,13,15", "4-"' }),
   sections: Flags.string({ description: 'list of sections to process, examples: "1-10,13,15", "5-"' }),
+
+  pause: Flags.integer({ char: 'u', default: 0.2, description: 'pause in seconds between adjacent paragraphs in generated SRT file' }),
 };
 
 export type ScriptProcessorFlags = CommandOptions<{ flags: typeof scriptProcessorFlags}>['flags'];
