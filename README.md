@@ -1826,7 +1826,6 @@ ___
 
 Get the duration of the audio file in milliseconds. If the file is corrupted or invalid,
 throws an error.
-Please note that the returned value could be inaccurate sometimes.
 
 ###### Parameters
 
