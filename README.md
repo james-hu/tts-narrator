@@ -51,7 +51,8 @@ npm i -g --include=optional tts-narrator
 USAGE
   $ tts-narrator   FILE [-h] [-v] [-d] [-s azure|elevenlabs]
     [-k <value>] [--api-key-env <value>] [-r <value>] [-f <value>] [-p] [-i]
-    [-o] [--dry-run] [--ssml | -q] [--chapters <value>] [--sections <value>]
+    [-o] [--dry-run] [--ssml | -q] [--chapters <value>] [--sections <value>] [-u
+    <value>]
 
 ARGUMENTS
   FILE  path to the script file (.yml)
@@ -69,6 +70,8 @@ FLAGS
   -r, --region=<value>        Region of the text-to-speech service
   -s, --service=<option>      text-to-speech service to use
                               <options: azure|elevenlabs>
+  -u, --pause=<value>         [default: 0.2] pause in seconds between adjacent
+                              paragraphs in generated SRT file
   -v, --version               Show CLI version
       --api-key-env=<value>   Name of the environment variable that holds the
                               Azure Speech service subscription key or
@@ -949,7 +952,7 @@ ___
 
 ##### determineAudioFilePath
 
-▸ `Protected` **determineAudioFilePath**(`ssmlHash`, `_paragraph`): `Promise`\<`string`\>
+▸ `Protected` **determineAudioFilePath**(`ssmlHash`, `_paragraph`, `audioFileFolder?`): `Promise`\<`string`\>
 
 ###### Parameters
 
@@ -957,10 +960,21 @@ ___
 | :------ | :------ |
 | `ssmlHash` | `string` |
 | `_paragraph` | [`NarrationParagraph`](#classesnarration_scriptnarrationparagraphmd) |
+| `audioFileFolder` | `string` |
 
 ###### Returns
 
 `Promise`\<`string`\>
+
+___
+
+##### getOutputFileFolder
+
+▸ `Protected` **getOutputFileFolder**(): `string`
+
+###### Returns
+
+`string`
 
 ___
 
@@ -1190,6 +1204,20 @@ ScriptProcessor.script
 
 ___
 
+##### getOutputFileFolder
+
+▸ `Protected` **getOutputFileFolder**(): `string`
+
+###### Returns
+
+`string`
+
+###### Inherited from
+
+[ScriptProcessor](#classesscript_processorscriptprocessormd).[getOutputFileFolder](#getoutputfilefolder)
+
+___
+
 ##### hash
 
 ▸ `Protected` **hash**(`ssml`, `_paragraph`): `string`
@@ -1368,7 +1396,7 @@ Command.constructor
 | `Static` **args**: `Object` | Type declaration<br><br>| Name | Type |<br>| :------ | :------ |<br>| `file` | `Arg`\<`string`, `Record`\<`string`, `unknown`\>\> |<br>Overrides<br><br>Command.args |
 | `Static` **description**: `string` = `'Generate narration with Text-To-Speech technology'` | Overrides<br><br>Command.description |
 | `Static` **examples**: `string`[] | Overrides<br><br>Command.examples |
-| `Static` **flags**: `Object` | Type declaration<br><br>| Name | Type |<br>| :------ | :------ |<br>| `api-key` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `api-key-env` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `chapters` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `debug` | `BooleanFlag`\<`boolean`\> |<br>| `dry-run` | `BooleanFlag`\<`boolean`\> |<br>| `interactive` | `BooleanFlag`\<`boolean`\> |<br>| `outputFormat` | `OptionFlag`\<`number`, `CustomOptions`\> |<br>| `overwrite` | `BooleanFlag`\<`boolean`\> |<br>| `play` | `BooleanFlag`\<`boolean`\> |<br>| `quiet` | `BooleanFlag`\<`boolean`\> |<br>| `region` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `sections` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `service` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `ssml` | `BooleanFlag`\<`boolean`\> |<br>Overrides<br><br>Command.flags |
+| `Static` **flags**: `Object` | Type declaration<br><br>| Name | Type |<br>| :------ | :------ |<br>| `api-key` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `api-key-env` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `chapters` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `debug` | `BooleanFlag`\<`boolean`\> |<br>| `dry-run` | `BooleanFlag`\<`boolean`\> |<br>| `interactive` | `BooleanFlag`\<`boolean`\> |<br>| `outputFormat` | `OptionFlag`\<`number`, `CustomOptions`\> |<br>| `overwrite` | `BooleanFlag`\<`boolean`\> |<br>| `pause` | `OptionFlag`\<`number`, `CustomOptions`\> |<br>| `play` | `BooleanFlag`\<`boolean`\> |<br>| `quiet` | `BooleanFlag`\<`boolean`\> |<br>| `region` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `sections` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `service` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |<br>| `ssml` | `BooleanFlag`\<`boolean`\> |<br>Overrides<br><br>Command.flags |
 | `Static` **id**: `string` = `' '` | Overrides<br><br>Command.id |
 
 
@@ -1796,15 +1824,21 @@ ___
 
 ▸ **getAudioFileDuration**(`filePath`): `Promise`\<`number`\>
 
+Get the duration of the audio file in milliseconds. If the file is corrupted or invalid,
+throws an error.
+Please note that the returned value could be inaccurate sometimes.
+
 ###### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `filePath` | `string` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `filePath` | `string` | Path to the audio file |
 
 ###### Returns
 
 `Promise`\<`number`\>
+
+Duration of the audio file in milliseconds.
 
 ___
 
@@ -2114,6 +2148,7 @@ CLI flags that are required/used by the ScriptProcessor.
 | `interactive` | `BooleanFlag`\<`boolean`\> |
 | `outputFormat` | `OptionFlag`\<`number`, `CustomOptions`\> |
 | `overwrite` | `BooleanFlag`\<`boolean`\> |
+| `pause` | `OptionFlag`\<`number`, `CustomOptions`\> |
 | `play` | `BooleanFlag`\<`boolean`\> |
 | `quiet` | `BooleanFlag`\<`boolean`\> |
 | `region` | `OptionFlag`\<`undefined` \| `string`, `CustomOptions`\> |
