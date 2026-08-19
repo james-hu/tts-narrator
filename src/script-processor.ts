@@ -124,11 +124,15 @@ export class ScriptProcessor {
     }
   }
 
-  protected async determineAudioFilePath(ssmlHash: string, _paragraph: NarrationParagraph): Promise<string> {
-    const audioFileFolder = this._script.scriptFilePath.split('.').slice(0, -1).join('.') + '.tts';
-    if (!fs.existsSync(audioFileFolder)) {
-      fs.mkdirSync(audioFileFolder, { recursive: true });
+  protected getOutputFileFolder(): string {
+    const outputFilePath = this._script.scriptFilePath.split('.').slice(0, -1).join('.') + '.tts';
+    if (!fs.existsSync(outputFilePath)) {
+      fs.mkdirSync(outputFilePath, { recursive: true });
     }
+    return outputFilePath;
+  }
+
+  protected async determineAudioFilePath(ssmlHash: string, _paragraph: NarrationParagraph, audioFileFolder: string = this.getOutputFileFolder()): Promise<string> {
     const audioFilePath = path.join(audioFileFolder, `${ssmlHash}.mp3`);
     return audioFilePath;
   }
@@ -155,6 +159,8 @@ export class ScriptProcessor {
 
     // chapter and section ranges
     this.parseRanges();
+
+    const outputFilePath = this.getOutputFileFolder();
 
     // walk through the script
     for (const chapter of this._script.chapters) {
@@ -190,7 +196,7 @@ export class ScriptProcessor {
                 this.cliConsole.info(`SSML generated with hash ${ssmlHash}:`);
                 this.cliConsole.info(ssml);
               }
-              const generatedAudioFilePath = await this.determineAudioFilePath(ssmlHash, paragraph);
+              const generatedAudioFilePath = await this.determineAudioFilePath(ssmlHash, paragraph, outputFilePath);
 
               if (this.flags['dry-run']) {
                 this.cliConsole.debug('No action because of dry-run flag');
