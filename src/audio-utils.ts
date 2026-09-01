@@ -1,6 +1,7 @@
 import type SpeakerClass from 'speaker';
 
 import { getMediaInfoFromFile } from '@handy-common-utils/media-utils';
+import { timeoutReject } from '@handy-common-utils/promise-utils';
 import * as AV from 'av';
 import 'mp3';
 import fs from 'node:fs/promises';
@@ -76,8 +77,28 @@ export async function playMp3File(filePath: string, infoLogger: (msg: string) =>
 export async function getAudioFileDuration(filePath: string): Promise<number> {
   try {
     const info = await getMediaInfoFromFile(filePath);
-    return info.durationInSeconds! * 1000;
+    if (info.durationInSeconds != null) {
+      return info.durationInSeconds! * 1000;
+    }
   } catch (error) {
     throw new Error(`Unable to determine audio duration, is the file '${filePath}' corrupted? (${error})`);
   }
+
+  // Switching to AV.js to get the duration of the audio file
+  return getAudioFileDurationUsingAV(filePath);
+}
+
+async function getAudioFileDurationUsingAV(filePath: string): Promise<number> {
+  const fileContent = await fs.readFile(filePath);
+  // eslint-disable-next-line import/namespace
+  const asset = AV.Asset.fromBuffer(new Uint8Array(fileContent));
+  return timeoutReject(new Promise((resolve, reject) => {
+    try {
+      asset.get('duration', duration => {
+        resolve(duration);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  }), 20000, new Error(`Unable to determine audio duration, is the file '${filePath}' corrupted?`));
 }
