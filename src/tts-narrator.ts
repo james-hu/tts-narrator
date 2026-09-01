@@ -2,9 +2,10 @@ import { ConsoleLineLogger } from '@handy-common-utils/misc-utils';
 import * as fs from 'node:fs';
 import path from 'node:path';
 
+import type { ScriptProcessorFlags } from './script-processor-flags';
+
 import { NarrationParagraph, NarrationScript } from './narration-script';
 import { ScriptProcessor } from './script-processor';
-import { DEFAULT_PAUSE_SECONDS, ScriptProcessorFlags } from './script-processor-flags';
 import { TtsService } from './tts-service';
 
 type UndefinedProperties<T> = {
@@ -52,7 +53,7 @@ export class TtsNarrator extends ScriptProcessor {
         interactive: false,
         overwrite: false,
         ssml: false,
-        pause: DEFAULT_PAUSE_SECONDS,
+        pause: 0.2, // hard coded same value as the default of the command line argument
         ...options,
       } as ToOptional<ScriptProcessorFlags> as ScriptProcessorFlags,
       cliConsole,

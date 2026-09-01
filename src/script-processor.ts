@@ -11,11 +11,12 @@ import * as fs from 'node:fs';
 import { writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
+import type { ScriptProcessorFlags } from './script-processor-flags';
+
 import { getAudioFileDuration, playMp3File } from './audio-utils';
 import { AzureAudioGenerationOptions, AzureTtsService } from './azure-tts-service';
 import { ElevenLabsAudioGenerationOptions, ElevenLabsTtsService } from './elevenlabs-tts-service';
 import { NarrationParagraph, NarrationScript, loadScript } from './narration-script';
-import { DEFAULT_PAUSE_SECONDS, type ScriptProcessorFlags } from './script-processor-flags';
 import { AudioGenerationOptions, TtsService, TtsServiceType } from './tts-service';
 
 
@@ -240,7 +241,7 @@ export class ScriptProcessor {
     }
 
     if (generatedParagraphs.length > 0) {
-      const pauseSeconds = this.flags.pause ?? DEFAULT_PAUSE_SECONDS;
+      const pauseSeconds = this.flags.pause;
       const srtFilePath = path.join(outputFileFolder, 'script.srt');
       await writeFile(srtFilePath, generatedParagraphs.map((p, i) => {
         const startTimeMS = generatedParagraphs.slice(0, i).reduce((sum, p) => sum + p.durationMS, 0) + i * pauseSeconds * 1000;
