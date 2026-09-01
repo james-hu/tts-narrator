@@ -2129,6 +2129,12 @@ ___
 
 #### Variables
 
+##### DEFAULT\_PAUSE\_SECONDS
+
+• `Const` **DEFAULT\_PAUSE\_SECONDS**: ``0.2``
+
+___
+
 ##### scriptProcessorFlags
 
 • `Const` **scriptProcessorFlags**: `Object`
