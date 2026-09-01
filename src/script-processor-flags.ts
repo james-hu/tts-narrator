@@ -4,6 +4,8 @@ import { Flags } from '@oclif/core';
 
 import { TtsServiceType } from './tts-service';
 
+export const DEFAULT_PAUSE_SECONDS = 0.2;
+
 /**
  * CLI flags that are required/used by the ScriptProcessor.
  */
@@ -27,7 +29,7 @@ export const scriptProcessorFlags = {
   chapters: Flags.string({ description: 'list of chapters to process, examples: "1-10,13,15", "4-"' }),
   sections: Flags.string({ description: 'list of sections to process, examples: "1-10,13,15", "5-"' }),
 
-  pause: Flags.integer({ char: 'u', default: 0.2, description: 'pause in seconds between adjacent paragraphs in generated SRT file' }),
+  pause: Flags.integer({ char: 'u', default: DEFAULT_PAUSE_SECONDS, description: 'pause in seconds between adjacent paragraphs in generated SRT file' }),
 };
 
 export type ScriptProcessorFlags = CommandOptions<{ flags: typeof scriptProcessorFlags}>['flags'];

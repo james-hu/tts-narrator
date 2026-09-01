@@ -77,8 +77,9 @@ export async function playMp3File(filePath: string, infoLogger: (msg: string) =>
 export async function getAudioFileDuration(filePath: string): Promise<number> {
   try {
     const info = await getMediaInfoFromFile(filePath);
-    if (info.durationInSeconds != null) {
-      return info.durationInSeconds! * 1000;
+    const durationInSeconds = info.durationInSeconds;
+    if (durationInSeconds != null && Number.isFinite(durationInSeconds)) {
+      return durationInSeconds * 1000;
     }
   } catch (error) {
     throw new Error(`Unable to determine audio duration, is the file '${filePath}' corrupted? (${error})`);
@@ -92,13 +93,19 @@ async function getAudioFileDurationUsingAV(filePath: string): Promise<number> {
   const fileContent = await fs.readFile(filePath);
   // eslint-disable-next-line import/namespace
   const asset = AV.Asset.fromBuffer(new Uint8Array(fileContent));
+  const corruptedError = new Error(`Unable to determine audio duration, is the file '${filePath}' corrupted?`);
   return timeoutReject(new Promise((resolve, reject) => {
     try {
+      asset.on('error', (error: unknown) => reject(error));
       asset.get('duration', duration => {
+        if (duration == null || !Number.isFinite(duration)) {
+          reject(corruptedError);
+          return;
+        }
         resolve(duration);
       });
     } catch (error) {
       reject(error);
     }
-  }), 20000, new Error(`Unable to determine audio duration, is the file '${filePath}' corrupted?`));
+  }), 20000, corruptedError);
 }

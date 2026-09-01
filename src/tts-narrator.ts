@@ -4,7 +4,7 @@ import path from 'node:path';
 
 import { NarrationParagraph, NarrationScript } from './narration-script';
 import { ScriptProcessor } from './script-processor';
-import { ScriptProcessorFlags } from './script-processor-flags';
+import { DEFAULT_PAUSE_SECONDS, ScriptProcessorFlags } from './script-processor-flags';
 import { TtsService } from './tts-service';
 
 type UndefinedProperties<T> = {
@@ -52,6 +52,7 @@ export class TtsNarrator extends ScriptProcessor {
         interactive: false,
         overwrite: false,
         ssml: false,
+        pause: DEFAULT_PAUSE_SECONDS,
         ...options,
       } as ToOptional<ScriptProcessorFlags> as ScriptProcessorFlags,
       cliConsole,

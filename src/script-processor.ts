@@ -11,12 +11,11 @@ import * as fs from 'node:fs';
 import { writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
-import type { ScriptProcessorFlags } from './script-processor-flags';
-
 import { getAudioFileDuration, playMp3File } from './audio-utils';
 import { AzureAudioGenerationOptions, AzureTtsService } from './azure-tts-service';
 import { ElevenLabsAudioGenerationOptions, ElevenLabsTtsService } from './elevenlabs-tts-service';
 import { NarrationParagraph, NarrationScript, loadScript } from './narration-script';
+import { DEFAULT_PAUSE_SECONDS, type ScriptProcessorFlags } from './script-processor-flags';
 import { AudioGenerationOptions, TtsService, TtsServiceType } from './tts-service';
 
 
@@ -241,9 +240,10 @@ export class ScriptProcessor {
     }
 
     if (generatedParagraphs.length > 0) {
+      const pauseSeconds = this.flags.pause ?? DEFAULT_PAUSE_SECONDS;
       const srtFilePath = path.join(outputFileFolder, 'script.srt');
       await writeFile(srtFilePath, generatedParagraphs.map((p, i) => {
-        const startTimeMS = generatedParagraphs.slice(0, i).reduce((sum, p) => sum + p.durationMS, 0) + i * this.flags.pause * 1000;
+        const startTimeMS = generatedParagraphs.slice(0, i).reduce((sum, p) => sum + p.durationMS, 0) + i * pauseSeconds * 1000;
         const endTimeMS = startTimeMS + p.durationMS ;
         const startTimeStr = new Date(startTimeMS).toISOString().slice(11, 23).replace('.', ',');
         const endTimeStr = new Date(endTimeMS).toISOString().slice(11, 23).replace('.', ',');
@@ -263,7 +263,7 @@ export class ScriptProcessor {
         if (i === 0) {
           const fileExtension = path.extname(fileName).toLowerCase();
           silenceFileName = `silence${fileExtension}`;
-          silenceCli = `ffmpeg -hide_banner -loglevel error -y -i ${fileName} -af "volume=0" -t ${this.flags.pause} ${silenceFileName}`;
+          silenceCli = `ffmpeg -hide_banner -loglevel error -y -i ${fileName} -af "volume=0" -t ${pauseSeconds} ${silenceFileName}`;
         }
         concatParts.push(`file '${fileName}'`);
       }
