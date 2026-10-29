@@ -71,7 +71,7 @@ export class TtsNarrator extends ScriptProcessor {
 
   /**
    * Generate narration for the script
-   * @param script the input script which will also be modified for recording audioFilePath
+   * @param script the input script which will also be modified for recording audioFilePath and audioDurationMS
    * @returns nothing
    */
   async narrate(script: NarrationScript): Promise<void> {

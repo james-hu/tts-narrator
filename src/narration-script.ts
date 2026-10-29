@@ -84,6 +84,11 @@ export class NarrationParagraph implements NarrationScriptFile.Paragraph {
    * Path of the generated audio file. Only for in-memory processing, not supposed to be stored in file.
    */
   public audioFilePath?: string;
+  /**
+   * Duration of the generated audio in milliseconds.
+   * When it is 0, it could be that the TTS service returned no audio, that means the file could have zero-length.
+   */
+  public audioDurationMS?: number;
   constructor(
     protected paragraph: NarrationScriptFile.Paragraph,
     public index: number,

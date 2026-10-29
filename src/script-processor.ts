@@ -19,6 +19,20 @@ import { ElevenLabsAudioGenerationOptions, ElevenLabsTtsService } from './eleven
 import { NarrationParagraph, NarrationScript, loadScript } from './narration-script';
 import { AudioGenerationOptions, TtsService, TtsServiceType } from './tts-service';
 
+/**
+ * An audio file generated for a paragraph, together with its duration.
+ */
+export interface GeneratedAudio {
+  /**
+   * Path of the audio file
+   */
+  filePath: string;
+  /**
+   * Duration of the audio in milliseconds.
+   * When it is 0, it could be that the TTS service returned no audio, that means the file could have zero-length.
+   */
+  durationMS: number;
+}
 
 export class ScriptProcessor {
   protected _prompts: typeof promptsFunc|undefined|null; // prompts function / not initialised / failed to load
@@ -138,8 +152,20 @@ export class ScriptProcessor {
     return audioFilePath;
   }
 
-  protected async processGeneratedAudioFile(audioFilePath: string): Promise<string> {
-    return audioFilePath;
+  /**
+   * Post-process the audio file generated for a paragraph.
+   * Subclasses can override this method to transform the audio, for example to adjust its volume.
+   * It is called for audio files both newly generated and re-used from previous runs,
+   * so an override should write the processed audio to a new file rather than modifying the input file in place,
+   * otherwise a re-used file would be processed more than once.
+   * It is not called for empty audio (zero duration).
+   *
+   * @param audio The generated audio file and its duration in milliseconds
+   * @param _paragraph The paragraph that the audio was generated for
+   * @returns The processed audio file and its duration in milliseconds. The default implementation returns the input as is.
+   */
+  protected async processGeneratedAudioFile(audio: GeneratedAudio, _paragraph: NarrationParagraph): Promise<GeneratedAudio> {
+    return audio;
   }
 
   async run(reconstructedCommandLine?: string): Promise<void> {
@@ -222,12 +248,14 @@ export class ScriptProcessor {
                   }
                 }
 
-                // post-processing
-                const audioFilePath = await this.processGeneratedAudioFile(generatedAudioFilePath);
+                // post-processing, which is not needed for empty audio
+                const generatedAudio: GeneratedAudio = { filePath: generatedAudioFilePath, durationMS: audioDuration };
+                const { filePath: audioFilePath, durationMS } = audioDuration === 0 ? generatedAudio : await this.processGeneratedAudioFile(generatedAudio, paragraph);
                 paragraph.audioFilePath = audioFilePath;
+                paragraph.audioDurationMS = durationMS;
                 generatedParagraphs.push({
                   text: paragraph.text?.trim() || paragraph.ssml?.replace(/^\s*<[^>]*>\s*/, '')?.replace(/\s*<\/[^>]*>\s*$/g, '') || '',
-                  durationMS: audioDuration,
+                  durationMS,
                   audioFilePath,
                 });
 
