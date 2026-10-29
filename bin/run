@@ -12,10 +12,10 @@ const project = path.join(__dirname, '..', 'tsconfig.json');
 const dev = fs.existsSync(project);
 
 if (dev) {
-  // In dev mode -> use ts-node and dev plugins
+  // In dev mode -> use tsx and dev plugins
   process.env.NODE_ENV = 'development';
   
-  require('ts-node').register({ project });
+  require('tsx/cjs');
   oclif.settings.debug = true;
 }
 
