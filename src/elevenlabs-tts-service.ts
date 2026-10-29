@@ -7,7 +7,7 @@ import { AudioGenerationOptions, BaseTtsService, normaliseRate } from './tts-ser
 
 export type ElevenLabsAudioGenerationOptions = AudioGenerationOptions & Omit<ElevenLabs.TextToSpeechRequest, 'text'>;
 
-type TtsSpec = ElevenLabs.TextToSpeechRequest & {
+type TtsSpec = ElevenLabs.BodyTextToSpeechFull & {
   voiceId?: string;
 };
 
@@ -15,7 +15,7 @@ export class ElevenLabsTtsService extends BaseTtsService {
   private client: ElevenLabsClient;
   private options: Omit<ElevenLabsAudioGenerationOptions, 'outputFilePath'>;
 
-  constructor(options: { apiKey?: string } & Omit<ElevenLabsAudioGenerationOptions, 'outputFilePath'> = {}) {
+  constructor(options: Omit<ElevenLabsAudioGenerationOptions, 'outputFilePath'> & { apiKey?: string } = {}) {
     super();
     const { apiKey, ...restOfTheOptions } = options;
     this.client = new ElevenLabsClient({
@@ -63,7 +63,7 @@ export class ElevenLabsTtsService extends BaseTtsService {
     const spec = JSON.parse(specJSON) as TtsSpec;
     const { voiceId, ...restOfTheSpec } = spec;
 
-    const request = merge({}, restOfTheOptions, restOfTheSpec) as Omit<TtsSpec, 'voiceId'>;
+    const request = merge({}, restOfTheOptions, restOfTheSpec) as ElevenLabs.BodyTextToSpeechFull;
     if (!request.outputFormat) {
       request.outputFormat = ElevenLabs.TextToSpeechConvertRequestOutputFormat.Mp32205032;
     }

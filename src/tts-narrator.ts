@@ -8,11 +8,7 @@ import { NarrationParagraph, NarrationScript } from './narration-script';
 import { ScriptProcessor } from './script-processor';
 import { TtsService } from './tts-service';
 
-type UndefinedProperties<T> = {
-  [P in keyof T]-?: undefined extends T[P] ? P : never;
-}[keyof T];
 
-type ToOptional<T> = Partial<Pick<T, UndefinedProperties<T>>> & Pick<T, Exclude<keyof T, UndefinedProperties<T>>>;
 
 function dummyFunc() {}
 const silentLogger: ConsoleLineLogger = {
@@ -44,6 +40,10 @@ export class TtsNarrator extends ScriptProcessor {
    * @param cliConsole Optional logger
    */
   constructor(ttsService: TtsService, protected audioFileFolder: string, options?: Partial<ScriptProcessorFlags>, cliConsole: ConsoleLineLogger = silentLogger) {
+    type UndefinedProperties<T> = {
+      [P in keyof T]-?: undefined extends T[P] ? P : never;
+    }[keyof T];
+    type ToOptional<T> = Partial<Pick<T, UndefinedProperties<T>>> & Pick<T, Exclude<keyof T, UndefinedProperties<T>>>;
     super(
       'dummy-value',
       {

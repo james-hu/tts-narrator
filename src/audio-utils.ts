@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import type SpeakerClass from 'speaker';
 
 import { getMediaInfoFromFile } from '@handy-common-utils/media-utils';
@@ -40,7 +41,6 @@ export async function playMp3File(filePath: string, infoLogger: (msg: string) =>
   const fileContent = await fs.readFile(filePath);
   return new Promise((resolve, reject) => {
     try {
-      // eslint-disable-next-line import/namespace
       const asset = AV.Asset.fromBuffer(new Uint8Array(fileContent));
       asset.decodeToBuffer(buffer => {
         // Initiate the source
@@ -89,7 +89,7 @@ export async function getAudioFileDuration(filePath: string): Promise<number> {
       return durationInSeconds * 1000;
     }
   } catch (error) {
-    throw new Error(`Unable to determine audio duration, is the file '${filePath}' corrupted? (${error})`);
+    throw new Error(`Unable to determine audio duration, is the file '${filePath}' corrupted? (${error})`, { cause: error });
   }
 
   // Switching to AV.js to get the duration of the audio file
@@ -98,7 +98,6 @@ export async function getAudioFileDuration(filePath: string): Promise<number> {
 
 async function getAudioFileDurationUsingAV(filePath: string): Promise<number> {
   const fileContent = await fs.readFile(filePath);
-  // eslint-disable-next-line import/namespace
   const asset = AV.Asset.fromBuffer(new Uint8Array(fileContent));
   const corruptedError = new Error(`Unable to determine audio duration, is the file '${filePath}' corrupted?`);
   return timeoutReject(new Promise((resolve, reject) => {

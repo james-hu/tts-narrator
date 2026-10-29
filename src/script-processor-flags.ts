@@ -11,7 +11,7 @@ export const scriptProcessorFlags = {
   debug: Flags.boolean({ char: 'd', description: 'output debug information' }),
   quiet: Flags.boolean({ char: 'q', description: 'output warn and error information only' }),
 
-  service: Flags.string({ char: 's', options: Object.entries(TtsServiceType).map(([_name, value]) => value), description: 'text-to-speech service to use' }),
+  service: Flags.string({ char: 's', options: Object.values(TtsServiceType), description: 'text-to-speech service to use' }),
   'api-key': Flags.string({ char: 'k', description: 'Azure Speech service subscription key or ElevenLabs API key' }),
   'api-key-env': Flags.string({ description: 'Name of the environment variable that holds the Azure Speech service subscription key or ElevenLabs API key' }),
   region: Flags.string({ char: 'r', description: 'Region of the text-to-speech service' }),

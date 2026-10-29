@@ -1,5 +1,6 @@
 spec:
-  - test/**/*.spec.ts
-  - test/**/*.spec.int.ts
+  - test/*.spec.ts
 require:
-  - ts-node/register
+  - source-map-support/register
+node-option:
+  - import=tsx

@@ -1,5 +1,4 @@
-/* eslint-disable complexity */
-/* eslint-disable no-await-in-loop */
+/* eslint-disable @typescript-eslint/no-require-imports */
 import type chalkType from 'chalk';
 /* eslint-disable max-depth */
 import type promptsFunc from 'prompts';
@@ -16,7 +15,7 @@ import type { ScriptProcessorFlags } from './script-processor-flags';
 import { getAudioFileDuration, playMp3File } from './audio-utils';
 import { AzureAudioGenerationOptions, AzureTtsService } from './azure-tts-service';
 import { ElevenLabsAudioGenerationOptions, ElevenLabsTtsService } from './elevenlabs-tts-service';
-import { NarrationParagraph, NarrationScript, loadScript } from './narration-script';
+import { loadScript, NarrationParagraph, NarrationScript } from './narration-script';
 import { AudioGenerationOptions, TtsService, TtsServiceType } from './tts-service';
 
 /**
@@ -87,10 +86,12 @@ export class ScriptProcessor {
   }
 
   protected async loadScriptIfNeeded(): Promise<void> {
-    if (!this._script) {
-      this._script = await loadScript(this.scriptFilePath);
-      this.cliConsole.debug(`Loaded script from ${this.scriptFilePath}`);  
+    if (this._script) {
+      return;
     }
+
+    this._script = await loadScript(this.scriptFilePath);
+    this.cliConsole.debug(`Loaded script from ${this.scriptFilePath}`);
   }
 
   protected parseRanges(): void {
@@ -99,7 +100,7 @@ export class ScriptProcessor {
       try {
         this.chapterRange = new MultiRange(chapterRangeFlag);
       } catch (error) {
-        throw new Error(`Invalid chapter range '${chapterRangeFlag}': ${error}`);
+        throw new Error(`Invalid chapter range '${chapterRangeFlag}': ${error}`, { cause: error });
       }
     }
     const sectionRangeFlag = this.flags.sections;
@@ -107,34 +108,36 @@ export class ScriptProcessor {
       try {
         this.sectionRange = new MultiRange(sectionRangeFlag);
       } catch (error) {
-        throw new Error(`Invalid section range '${sectionRangeFlag}': ${error}`);
+        throw new Error(`Invalid section range '${sectionRangeFlag}': ${error}`, { cause: error });
       }
     }
   }
 
   protected async initialiseTtsServiceIfNeeded(): Promise<void> {
-    if (!this.ttsService) {
-      const ttsServiceType = this.flags.service ?? this._script.settings.service;
-      switch (ttsServiceType) {
-        case TtsServiceType.Azure: {
-          this.ttsService = new AzureTtsService();
-          this.audioGenerationOptions = {
-            subscriptionKey: this.flags['api-key'] ?? (this.flags['api-key-env'] ? process.env[this.flags['api-key-env']] : undefined),
-            serviceRegion: this.flags.region,
-            outputFormat: this.flags.outputFormat,
-          } as Omit<AzureAudioGenerationOptions, 'outputFilePath'>;
-          break;
-        }
-        case TtsServiceType.ElevenLabs: {
-          this.ttsService = new ElevenLabsTtsService({
-            apiKey: this.flags['api-key'] ?? (this.flags['api-key-env'] ? process.env[this.flags['api-key-env']] : undefined),
-          });
-          this.audioGenerationOptions = {} as Omit<ElevenLabsAudioGenerationOptions, 'outputFilePath'>;
-          break;
-        }
-        default: {
-          throw new Error(`Unknown TTS service: ${ttsServiceType}`);
-        }
+    if (this.ttsService) {
+      return;
+    }
+
+    const ttsServiceType = this.flags.service ?? this._script.settings.service;
+    switch (ttsServiceType) {
+      case TtsServiceType.Azure: {
+        this.ttsService = new AzureTtsService();
+        this.audioGenerationOptions = {
+          subscriptionKey: this.flags['api-key'] ?? (this.flags['api-key-env'] ? process.env[this.flags['api-key-env']] : undefined),
+          serviceRegion: this.flags.region,
+          outputFormat: this.flags.outputFormat,
+        } as Omit<AzureAudioGenerationOptions, 'outputFilePath'>;
+        break;
+      }
+      case TtsServiceType.ElevenLabs: {
+        this.ttsService = new ElevenLabsTtsService({
+          apiKey: this.flags['api-key'] ?? (this.flags['api-key-env'] ? process.env[this.flags['api-key-env']] : undefined),
+        });
+        this.audioGenerationOptions = {} as Omit<ElevenLabsAudioGenerationOptions, 'outputFilePath'>;
+        break;
+      }
+      default: {
+        throw new Error(`Unknown TTS service: ${ttsServiceType}`);
       }
     }
   }
@@ -193,77 +196,81 @@ export class ScriptProcessor {
     // walk through the script
     for (const chapter of this._script.chapters) {
       const chapterIndex = chapter.index;
-      if (!this.chapterRange || this.chapterRange.has(chapterIndex)) {
-        this.cliConsole.debug(`Entering chapter [${chapterIndex}] ${chapter.key}`);
-        for (const section of chapter.sections) {
-          const sectionIndex = section.index;
-          if (!this.sectionRange || this.sectionRange.has(sectionIndex)) {
-            this.cliConsole.debug(`Entering section [${chapterIndex}-${sectionIndex}] ${section.key}`);
-            for (const paragraph of section.paragraphs) {
-              const paragraphIndex = paragraph.index;
-              // wait for user key press if needed
-              if (paragraphIndex === 1 && this.flags.interactive && this.prompts) {
-                const response = await this.prompts({
-                  initial: true,
-                  message: `Press ENTER to continue or CTRL-C to abort => [${chapterIndex}-${sectionIndex}] ${section.key}`,
-                  name: 'r',
-                  type: 'confirm',
-                });
-                if (response.r === undefined) { // CTRL-C
-                  return;
-                }
+      if (this.chapterRange && !this.chapterRange.has(chapterIndex)) {
+        continue;
+      }
+
+      this.cliConsole.debug(`Entering chapter [${chapterIndex}] ${chapter.key}`);
+      for (const section of chapter.sections) {
+        const sectionIndex = section.index;
+        if (this.sectionRange && !this.sectionRange.has(sectionIndex)) {
+          continue;
+        }
+
+        this.cliConsole.debug(`Entering section [${chapterIndex}-${sectionIndex}] ${section.key}`);
+        for (const paragraph of section.paragraphs) {
+          const paragraphIndex = paragraph.index;
+          // wait for user key press if needed
+          if (paragraphIndex === 1 && this.flags.interactive && this.prompts) {
+            const response = await this.prompts({
+              initial: true,
+              message: `Press ENTER to continue or CTRL-C to abort => [${chapterIndex}-${sectionIndex}] ${section.key}`,
+              name: 'r',
+              type: 'confirm',
+            });
+            if (response.r === undefined) { // CTRL-C
+              return;
+            }
+          }
+          this.cliConsole.debug(`Entering paragraph [${chapterIndex}-${sectionIndex}-${paragraphIndex}] ${paragraph.key}`);
+          this.cliConsole.debug(`Processing: ${paragraph.ssml || paragraph.text}`);
+
+          // generate SSML and its hash
+          await this.initialiseTtsServiceIfNeeded();   // initialise in first use
+          const ssml = await this.ttsService.generateSSML(paragraph);
+          const ssmlHash = this.hash(ssml, paragraph);
+          if (this.flags.ssml) {
+            this.cliConsole.info(`SSML generated with hash ${ssmlHash}:`);
+            this.cliConsole.info(ssml);
+          }
+          const generatedAudioFilePath = await this.determineAudioFilePath(ssmlHash, paragraph, outputFileFolder);
+
+          if (this.flags['dry-run']) {
+            this.cliConsole.debug('No action because of dry-run flag');
+          } else {
+            let audioDuration: number;
+            // check to see if the .mp3 file already exists
+            if (!this.flags.overwrite && fs.existsSync(generatedAudioFilePath) && fs.statSync(generatedAudioFilePath).size > 0) {
+              audioDuration = await getAudioFileDuration(generatedAudioFilePath);
+              this.cliConsole.debug(`Re-using already existing audio file '${generatedAudioFilePath}' of ${audioDuration / 1000}s for ${chapterIndex}-${sectionIndex}-${paragraphIndex}`);
+            } else {
+              // generate .mp3 file if needed
+              await this.ttsService.generateAudio(ssml, {
+                ...this.audioGenerationOptions,
+                outputFilePath: generatedAudioFilePath,
+              });
+              audioDuration = await getAudioFileDuration(generatedAudioFilePath);
+              if (audioDuration === 0) {
+                this.cliConsole.warn(`Generated audio is empty for ${chapterIndex}-${sectionIndex}-${paragraphIndex}: ${generatedAudioFilePath}`);
+              } else if (this.cliConsole.isDebug) {
+                this.cliConsole.debug(`Generated audio of ${audioDuration / 1000}s: ${generatedAudioFilePath}`);
               }
-              this.cliConsole.debug(`Entering paragraph [${chapterIndex}-${sectionIndex}-${paragraphIndex}] ${paragraph.key}`);
-              this.cliConsole.debug(`Processing: ${paragraph.ssml || paragraph.text}`);
+            }
 
-              // generate SSML and its hash
-              await this.initialiseTtsServiceIfNeeded();   // initialise in first use
-              const ssml = await this.ttsService.generateSSML(paragraph);
-              const ssmlHash = this.hash(ssml, paragraph);
-              if (this.flags.ssml) {
-                this.cliConsole.info(`SSML generated with hash ${ssmlHash}:`);
-                this.cliConsole.info(ssml);
-              }
-              const generatedAudioFilePath = await this.determineAudioFilePath(ssmlHash, paragraph, outputFileFolder);
+            // post-processing, which is not needed for empty audio
+            const generatedAudio: GeneratedAudio = { filePath: generatedAudioFilePath, durationMS: audioDuration };
+            const { filePath: audioFilePath, durationMS } = audioDuration === 0 ? generatedAudio : await this.processGeneratedAudioFile(generatedAudio, paragraph);
+            paragraph.audioFilePath = audioFilePath;
+            paragraph.audioDurationMS = durationMS;
+            generatedParagraphs.push({
+              text: paragraph.text?.trim() || paragraph.ssml?.replace(/^\s*<[^>]*>\s*/, '')?.replaceAll(/\s*<\/[^>]*>\s*$/g, '') || '',
+              durationMS,
+              audioFilePath,
+            });
 
-              if (this.flags['dry-run']) {
-                this.cliConsole.debug('No action because of dry-run flag');
-              } else {
-                let audioDuration: number;
-                // check to see if the .mp3 file already exists
-                if (!this.flags.overwrite && fs.existsSync(generatedAudioFilePath) && fs.statSync(generatedAudioFilePath).size > 0) {
-                  audioDuration = await getAudioFileDuration(generatedAudioFilePath);
-                  this.cliConsole.debug(`Re-using already existing audio file '${generatedAudioFilePath}' of ${audioDuration / 1000}s for ${chapterIndex}-${sectionIndex}-${paragraphIndex}`);
-                } else {
-                  // generate .mp3 file if needed
-                  await this.ttsService.generateAudio(ssml, {
-                    ...this.audioGenerationOptions,
-                    outputFilePath: generatedAudioFilePath,
-                  });
-                  audioDuration = await getAudioFileDuration(generatedAudioFilePath);
-                  if (audioDuration === 0) {
-                    this.cliConsole.warn(`Generated audio is empty for ${chapterIndex}-${sectionIndex}-${paragraphIndex}: ${generatedAudioFilePath}`);
-                  } else if (this.cliConsole.isDebug) {
-                    this.cliConsole.debug(`Generated audio of ${audioDuration / 1000}s: ${generatedAudioFilePath}`);
-                  }
-                }
-
-                // post-processing, which is not needed for empty audio
-                const generatedAudio: GeneratedAudio = { filePath: generatedAudioFilePath, durationMS: audioDuration };
-                const { filePath: audioFilePath, durationMS } = audioDuration === 0 ? generatedAudio : await this.processGeneratedAudioFile(generatedAudio, paragraph);
-                paragraph.audioFilePath = audioFilePath;
-                paragraph.audioDurationMS = durationMS;
-                generatedParagraphs.push({
-                  text: paragraph.text?.trim() || paragraph.ssml?.replace(/^\s*<[^>]*>\s*/, '')?.replace(/\s*<\/[^>]*>\s*$/g, '') || '',
-                  durationMS,
-                  audioFilePath,
-                });
-
-                // play .mp3 file if needed
-                if (this.flags.play) {
-                  await playMp3File(audioFilePath, this.cliConsole.info);
-                }
-              }
+            // play .mp3 file if needed
+            if (this.flags.play) {
+              await playMp3File(audioFilePath, this.cliConsole.info);
             }
           }
         }

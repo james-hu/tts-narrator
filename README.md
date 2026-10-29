@@ -93,7 +93,7 @@ EXAMPLES
 
   $ tts-narrator ./test/fixtures/script3.yml -s azure -r australiaeast --api-key-env=TTS_SUB_KEY --quiet
 
-  $ tts-narrator ./test/fixtures/script4.yml -s elevenlabs --api-key-env=ELEVENLABS_API_KEY
+  $ tts-narrator ./test/fixtures/script5.yml -s elevenlabs --api-key-env=ELEVENLABS_API_KEY
 
   $ tts-narrator ./test/fixtures/script3.yml
 ```

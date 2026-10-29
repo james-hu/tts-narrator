@@ -33,7 +33,6 @@ describe('normaliseRate', function () {
   });
 
   it('returns undefined for null/undefined', function () {
-    // eslint-disable-next-line unicorn/no-useless-undefined
     expect(normaliseRate(undefined)).to.be.undefined;
     expect(normaliseRate(null as any)).to.be.undefined;
   });

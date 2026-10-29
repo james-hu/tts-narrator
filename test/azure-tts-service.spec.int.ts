@@ -18,6 +18,7 @@ describe.skip('azure-tts-service', () => {
   });
 
   it('should be able to generate audio', async function () {
+    // eslint-disable-next-line unicorn/no-this-outside-of-class
     this.timeout(30000);
     await tts.generateAudio(`
       <speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US">

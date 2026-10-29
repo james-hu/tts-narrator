@@ -60,11 +60,11 @@ export function normaliseRate(rate?: string, min: number = 0.5, max: number = 2)
 
   let value: number | undefined;
 
-  if (trimmed in namedRates) {
+  if (Object.hasOwn(namedRates, trimmed)) {
     value = namedRates[trimmed];
   } else if (/^[+-]?\d+(\.\d+)?%$/.test(trimmed)) {
     // Percentage form, e.g. "150%", "+10%", "-20%"
-    const pct = Number.parseFloat(trimmed.slice(0, -1));
+    const pct = Number(trimmed.slice(0, -1));
     if (Number.isNaN(pct)) {
       // eslint-disable-next-line unicorn/prefer-type-error
       throw new Error(`Invalid percentage rate: ${rate}`);
@@ -82,7 +82,7 @@ export function normaliseRate(rate?: string, min: number = 0.5, max: number = 2)
     }
   } else if (/^\d+(\.\d+)?$/.test(trimmed)) {
     // Plain number string, e.g. "1", "1.25"
-    const num = Number.parseFloat(trimmed);
+    const num = Number(trimmed);
     if (Number.isNaN(num) || num < 0) {
       throw new Error(`Invalid numeric rate: ${rate}`);
     }
@@ -107,10 +107,11 @@ export abstract class BaseTtsService implements TtsService {
 
   protected validateXML(xml: string, lineOffset: number): void {
     const validationResult = XMLValidator.validate(xml);
-    if (validationResult !== true) {
-      const err = validationResult.err;
-      throw new Error(`Invalid markup at line ${err.line - lineOffset}. ${err.code}: ${err.msg}`);
+    if (validationResult === true) {
+      return;
     }
+    const err = validationResult.err;
+    throw new Error(`Invalid markup at line ${err.line - lineOffset}. ${err.code}: ${err.msg}`);
   }
 
   protected buildSpeakStartTag(voiceSettings: VoiceSettings): string {
