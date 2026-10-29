@@ -36,7 +36,7 @@
     "murmurhash": "^2.0.1"
   },
   "optionalDependencies": {
-    "@handy-common-utils/oclif-utils": "^3.1.1",
+    "@handy-common-utils/oclif-utils": "^3.2.0",
     "chalk": "^4.1.2",
     "prompts": "^2.4.2",
     "speaker": "^0.5.5"
