@@ -11,6 +11,16 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
+      - name: Install sound card related system libraries
+        run: |
+          sudo apt-get install libasound2-dev
+          echo 'pcm.!default {
+          type file
+          file "/dev/null"
+          slave {
+            pcm null
+          }
+          }' > ~/.asoundrc
       - uses: handy-common-utils/automation/github/actions/prepare-node@main
         with:
           fetch-depth: 0
