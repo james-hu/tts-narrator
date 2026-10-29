@@ -68,13 +68,20 @@ export async function playMp3File(filePath: string, infoLogger: (msg: string) =>
 }
 
 /**
- * Get the duration of the audio file in milliseconds. If the file is corrupted or invalid,
- * throws an error.
- * 
+ * Get the duration of the audio file in milliseconds.
+ * An empty (zero-byte) file is treated as audio of zero duration, which can happen when a TTS service
+ * reports success but returns no audio data, for example when the text can't be spoken by the voice.
+ * If the file is not empty but is corrupted or invalid, throws an error.
+ *
  * @param filePath Path to the audio file
- * @returns Duration of the audio file in milliseconds.
+ * @returns Duration of the audio file in milliseconds, or 0 if the file is empty.
  */
 export async function getAudioFileDuration(filePath: string): Promise<number> {
+  const { size } = await fs.stat(filePath);
+  if (size === 0) {
+    return 0;
+  }
+
   try {
     const info = await getMediaInfoFromFile(filePath);
     const durationInSeconds = info.durationInSeconds;

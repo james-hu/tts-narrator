@@ -215,8 +215,10 @@ export class ScriptProcessor {
                     outputFilePath: generatedAudioFilePath,
                   });
                   audioDuration = await getAudioFileDuration(generatedAudioFilePath);
-                  if (this.cliConsole.isDebug) {
-                    this.cliConsole.debug(`Generated audio of ${audioDuration / 1000}s: ${generatedAudioFilePath}`);  
+                  if (audioDuration === 0) {
+                    this.cliConsole.warn(`Generated audio is empty for ${chapterIndex}-${sectionIndex}-${paragraphIndex}: ${generatedAudioFilePath}`);
+                  } else if (this.cliConsole.isDebug) {
+                    this.cliConsole.debug(`Generated audio of ${audioDuration / 1000}s: ${generatedAudioFilePath}`);
                   }
                 }
 
@@ -240,11 +242,13 @@ export class ScriptProcessor {
       }
     }
 
-    if (generatedParagraphs.length > 0) {
+    // Empty audio files can't be joined, and they have nothing to show in the SRT either
+    const audibleParagraphs = generatedParagraphs.filter(p => p.durationMS > 0);
+    if (audibleParagraphs.length > 0) {
       const pauseSeconds = this.flags.pause;
       const srtFilePath = path.join(outputFileFolder, 'script.srt');
-      await writeFile(srtFilePath, generatedParagraphs.map((p, i) => {
-        const startTimeMS = generatedParagraphs.slice(0, i).reduce((sum, p) => sum + p.durationMS, 0) + i * pauseSeconds * 1000;
+      await writeFile(srtFilePath, audibleParagraphs.map((p, i) => {
+        const startTimeMS = audibleParagraphs.slice(0, i).reduce((sum, p) => sum + p.durationMS, 0) + i * pauseSeconds * 1000;
         const endTimeMS = startTimeMS + p.durationMS ;
         const startTimeStr = new Date(startTimeMS).toISOString().slice(11, 23).replace('.', ',');
         const endTimeStr = new Date(endTimeMS).toISOString().slice(11, 23).replace('.', ',');
@@ -258,7 +262,7 @@ export class ScriptProcessor {
       const concatParts = new Array<string>();
       let silenceFileName!: string;
       let silenceCli!: string;
-      for (const [i, p] of generatedParagraphs.entries()) {
+      for (const [i, p] of audibleParagraphs.entries()) {
         const fileName = path.relative(outputFileFolder, p.audioFilePath);
         iParts.push('-i', fileName);
         if (i === 0) {
